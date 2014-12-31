@@ -2,6 +2,9 @@
 # -- BEGIN LICENSE BLOCK ----------------------------------
 #
 # This file is part of Related, a plugin for DotClear2.
+#
+# Copyright(c) 2014 Nicolas Roudaire <nikrou77@gmail.com> http://www.nikrou.net
+#
 # Copyright (c) 2006-2010 Pep and contributors.
 # Licensed under the GPL version 2.0 license.
 # See LICENSE file or
@@ -29,17 +32,17 @@ unset($url_prefix,$url_pattern);
 $core->setPostType('related','plugin.php?p=related&do=edit&id=%d',$core->url->getBase('related').'/%s');
 
 /**
- * 
+ *
  */
 class relatedUrlHandlers extends dcUrlHandlers
 {
 	/**
-	 * 
+	 *
 	 */
 	public static function related($args)
 	{
 		global $core, $_ctx;
-		
+
 		if ($args == '') {
 			self::p404();
 		}
@@ -70,7 +73,7 @@ class relatedUrlHandlers extends dcUrlHandlers
 			else {
 				$pwd_cookie = array();
 			}
-			
+
 			# Check for match
 			if ((!empty($_POST['password']) && $_POST['password'] == $post_password)
 			|| (isset($pwd_cookie[$post_id]) && $pwd_cookie[$post_id] == $post_password)) {
@@ -91,13 +94,13 @@ class relatedUrlHandlers extends dcUrlHandlers
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public static function relatedpreview($args)
 	{
 		$core = $GLOBALS['core'];
 		$_ctx = $GLOBALS['_ctx'];
-		
+
 		if (!preg_match('#^(.+?)/([0-9a-z]{40})/(.+?)$#',$args,$m)) {
 			# The specified Preview URL is malformed.
 			self::p404();
@@ -119,17 +122,17 @@ class relatedUrlHandlers extends dcUrlHandlers
 }
 
 /**
- * 
+ *
  */
 class rsRelatedBase
 {
 	public static function getRelatedFilename($rs)
 	{
 		if ($rs->core->blog->settings->related->related_files_path === null) return false;
-		
+
 		$meta = new dcMeta($rs->core);
 		$meta_rs = $meta->getMetaRecordset($rs->post_meta,'related_file');
-		
+
 		if (!$meta_rs->isEmpty()) {
 			$filename = $rs->core->blog->settings->related->related_files_path.'/'.$meta_rs->meta_id;
 			if (file_exists($filename) && is_readable($filename)) {
@@ -139,22 +142,21 @@ class rsRelatedBase
 				return false;
 			}
 		}
-		
+
 		return false;
 	}
 
 	public static function getPosition($rs)
 	{
 		if ($rs->core->blog->settings->related->related_files_path === null) return false;
-		
+
 		$meta = new dcMeta($rs->core);
 		$meta_rs = $meta->getMetaRecordset($rs->post_meta,'related_position');
-		
+
 		if (!$meta_rs->isEmpty()) {
 			return (integer)$meta_rs->meta_id;
 		}
-			
+
 		return -1;
 	}
 }
-?>

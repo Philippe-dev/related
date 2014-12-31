@@ -2,6 +2,9 @@
 # -- BEGIN LICENSE BLOCK ----------------------------------
 #
 # This file is part of Related, a plugin for DotClear2.
+#
+# Copyright(c) 2014 Nicolas Roudaire <nikrou77@gmail.com> http://www.nikrou.net
+#
 # Copyright (c) 2006-2010 Pep and contributors.
 # Licensed under the GPL version 2.0 license.
 # See LICENSE file or
@@ -65,11 +68,11 @@ $core->callBehavior('adminPagesActionsCombo',array(&$combo_action));
 if (isset($_POST['pages_upd']))
 {
 	$default_tab = 'pages_order';
-	
+
 	$public_pages = relatedHelpers::getPublicList($pages);
 	$visible = (!empty($_POST['p_visibles']) && is_array($_POST['p_visibles']))?$_POST['p_visibles']:array();
 	$order = (!empty($_POST['public_order']))?explode(',',$_POST['public_order']):array();
-	
+
 	try {
 		$i = 1;
 		$meta = new dcMeta($core);
@@ -105,22 +108,22 @@ if (!empty($_GET['reord'])) {
 if (isset($_POST['saveconfig']))
 {
 	$default_tab = 'pages_config';
-	
+
 	if (trim($_POST['repository']) == '') {
 		$tmp_repository = $core->blog->public_path.'/related';
 	} else {
 		$tmp_repository = trim($_POST['repository']);
 	}
-	
+
 	if (trim($_POST['url_prefix']) == '') {
 		$url_prefix = 'static';
 	} else {
 		$url_prefix = text::str2URL(trim($_POST['url_prefix']));
 	}
-	
+
 	$core->blog->settings->addNamespace('related');
 	$core->blog->settings->related->put('related_url_prefix',$url_prefix);
-	
+
 	if (is_dir($tmp_repository) && is_writable($tmp_repository) && is_writable($tmp_repository)) {
 		$core->blog->settings->related->put('related_files_path', $tmp_repository);
 		$repository = $tmp_repository;
@@ -175,7 +178,7 @@ if (!$core->error->flag())
 echo '</div>';
 
 // "Arrange public list" tab
-echo 
+echo
 '<div class="multi-part" id="pages_order" title="'.__('Arrange public list').'">';
 if (!$core->error->flag())
 {
@@ -220,7 +223,7 @@ echo '</div>';
 // "Options" tab
 if ($core->auth->check('admin',$core->blog->id))
 {
-	echo 
+	echo
 	'<div class="multi-part" id="pages_config" title="'.__('Options').'">'.
 	'<form method="post" action="plugin.php">'.
 	'<fieldset>'.

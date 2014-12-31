@@ -17,6 +17,7 @@ $cat_id = '';
 $post_dt = '';
 $post_type = 'related';
 $post_format = $core->auth->getOption('post_format');
+$post_editor = $core->auth->getOption('editor');
 $post_password = '';
 $post_url = '';
 $post_lang = $core->auth->getInfo('user_lang');
@@ -48,11 +49,30 @@ if (!$can_publish) {
 foreach ($core->blog->getAllPostStatus() as $k => $v) {
 	$status_combo[$v] = (string) $k;
 }
+$img_status_pattern = '<img class="img_select_option" alt="%1$s" title="%1$s" src="images/%2$s" />';
+$img_status = '';
+
+# Languages combo
+$rs = $core->blog->getLangs(array('order'=>'asc'));
+$lang_combo = dcAdminCombos::getLangsCombo($rs,true);
 
 # Formaters combo
-foreach ($core->getFormaters() as $v) {
-	$formaters_combo[$v] = $v;
+if (version_compare(DC_VERSION, '2.7-dev', '>=')) {
+    $core_formaters = $core->getFormaters();
+    $available_formats = array('' => '');
+    foreach ($core_formaters as $editor => $formats) {
+        foreach ($formats as $format) {
+            $available_formats[$format] = $format;
+        }
+    }
+} else {
+    foreach ($core->getFormaters() as $v) {
+        $available_formats[$v] = $v;
+    }
 }
+
+# Validation flag
+$bad_dt = false;
 
 $page_isfile = (!empty($_REQUEST['st']) && $_REQUEST['st'] == 'file')?true:false;
 $page_relatedfile = '';
@@ -63,10 +83,10 @@ if (!empty($_REQUEST['id']))
 	$params = array();
 	$params['post_id'] = $_REQUEST['id'];
 	$params['post_type'] = 'related';
-	
+
 	$post = $core->blog->getPosts($params, false);
 	$post->extend("rsRelated");
-	
+
 	if ($post->isEmpty())
 	{
 		$core->error->add(__('This page does not exist.'));
@@ -91,9 +111,9 @@ if (!empty($_REQUEST['id']))
 		$post_selected = (boolean) $post->post_selected;
 		$post_open_comment = false;
 		$post_open_tb = false;
-		
+
 		$page_title = __('Edit page');
-		
+
 		$can_edit_post = $post->isEditable();
 		$can_delete = $post->isDeletable();
 
@@ -105,7 +125,7 @@ if (!empty($_REQUEST['id']))
 				$page_isfile = true;
 			}
 		} catch (Exception $e) {}
-		
+
 	}
 }
 
@@ -116,7 +136,7 @@ if ($page_isfile) {
 	$related_pages_files = array('-' => '');
 	$dir = @dir($core->blog->settings->related->related_files_path);
 	$allowed_exts = array('php','html','xml','txt');
-	
+
 	if ($dir)
 	{
 		while (($entry = $dir->read()) !== false) {
@@ -128,7 +148,7 @@ if ($page_isfile) {
 			}
 		}
 	}
-}	
+}
 
 # Format excerpt and content
 if (!empty($_POST) && $can_edit_post)
@@ -138,34 +158,34 @@ if (!empty($_POST) && $can_edit_post)
 	if (!$page_isfile) {
 		$post_content = $_POST['post_content'];
 	}
-	
+
 	$post_title = $_POST['post_title'];
-		
+
 	if (isset($_POST['post_status'])) {
 		$post_status = (integer) $_POST['post_status'];
 	}
-	
+
 	if (empty($_POST['post_dt'])) {
 		$post_dt = '';
 	} else {
 		$post_dt = strtotime($_POST['post_dt']);
 		$post_dt = date('Y-m-d H:i',$post_dt);
 	}
-	
+
 	$post_lang = $_POST['post_lang'];
 	$post_password = !empty($_POST['post_password']) ? $_POST['post_password'] : null;
-	
+
 	$post_notes = $_POST['post_notes'];
-	
+
 	if (isset($_POST['post_url'])) {
 		$post_url = $_POST['post_url'];
 	}
-	
+
 	$core->blog->setPostContent(
 		$post_id,$post_format,$post_lang,
 		$post_excerpt,$post_excerpt_xhtml,$post_content,$post_content_xhtml
 	);
-	
+
 	$preview = !empty($_POST['preview']);
 
 	if ($page_isfile)
@@ -176,7 +196,7 @@ if (!empty($_POST) && $can_edit_post)
 		} elseif (!empty($_POST['repository_file']) && in_array($_POST['repository_file'],$related_pages_files)) {
 			$related_upl = false;
 		}
-		
+
 		if ($related_upl !== null) {
 			try
 			{
@@ -203,7 +223,7 @@ if (!empty($_POST) && $can_edit_post)
 if (!empty($_POST) && !empty($_POST['save']) && $can_edit_post)
 {
 	$cur = $core->con->openCursor($core->prefix.'post');
-	
+
 	$cur->post_title = $post_title;
 	$cur->cat_id = null;
 	$cur->post_dt = $post_dt ? date('Y-m-d H:i:00',strtotime($post_dt)) : '';
@@ -221,25 +241,41 @@ if (!empty($_POST) && !empty($_POST['save']) && $can_edit_post)
 	$cur->post_selected = (integer)$post_selected;
 	$cur->post_open_comment = 0;
 	$cur->post_open_tb = 0;
-	
+
 	if (isset($_POST['post_url'])) {
 		$cur->post_url = $post_url;
 	}
-		
+
 	# Update post
-	if ($post_id)
-	{
+	if ($post_id) {
+        switch ($post_status) {
+		case 1:
+			$img_status = sprintf($img_status_pattern,__('Published'),'check-on.png');
+			break;
+		case 0:
+			$img_status = sprintf($img_status_pattern,__('Unpublished'),'check-off.png');
+			break;
+		case -1:
+			$img_status = sprintf($img_status_pattern,__('Scheduled'),'scheduled.png');
+			break;
+		case -2:
+			$img_status = sprintf($img_status_pattern,__('Pending'),'check-wrn.png');
+			break;
+		default:
+			$img_status = '';
+        }
+
 		try
 		{
 			if ($page_isfile && empty($page_relatedfile)) {
 				throw new Exception(__('Missing file.'));
 			}
-	
+
 			# --BEHAVIOR-- adminBeforePostUpdate
 			$core->callBehavior('adminBeforePostUpdate',$cur,$post_id);
 			# --BEHAVIOR-- adminBeforePageUpdate
 			$core->callBehavior('adminBeforePageUpdate',$cur,$post_id);
-			
+
 			$core->con->begin();
 			$core->blog->updPost($post_id,$cur);
 			if ($page_isfile) {
@@ -256,12 +292,12 @@ if (!empty($_POST) && !empty($_POST['save']) && $can_edit_post)
 				}
 			}
 			$core->con->commit();
-			
+
 			# --BEHAVIOR-- adminAfterPostUpdate
 			$core->callBehavior('adminAfterPostUpdate',$cur,$post_id);
 			# --BEHAVIOR-- adminAfterPageUpdate
 			$core->callBehavior('adminAfterPageUpdate',$cur,$post_id);
-			
+
 			http::redirect('plugin.php?p=related&do=edit&id='.$post_id.'&upd=1');
 		}
 		catch (Exception $e)
@@ -275,18 +311,18 @@ if (!empty($_POST) && !empty($_POST['save']) && $can_edit_post)
 		if (!isset($_POST['post_url'])) {
 			$cur->post_url = text::str2URL($post_title);
 		}
-		
+
 		try
 		{
 			if ($page_isfile && empty($page_relatedfile)) {
 				throw new Exception(__('Missing file.'));
 			}
-	
+
 			# --BEHAVIOR-- adminBeforePostCreate
 			$core->callBehavior('adminBeforePostCreate',$cur);
 			# --BEHAVIOR-- adminBeforePageCreate
 			$core->callBehavior('adminBeforePageCreate',$cur);
-			
+
 			$core->con->begin();
 			$return_id = $core->blog->addPost($cur);
 			if ($page_isfile) {
@@ -302,12 +338,12 @@ if (!empty($_POST) && !empty($_POST['save']) && $can_edit_post)
 				}
 			}
 			$core->con->commit();
-			
+
 			# --BEHAVIOR-- adminAfterPostCreate
 			$core->callBehavior('adminAfterPostCreate',$cur,$return_id);
 			# --BEHAVIOR-- adminAfterPageCreate
 			$core->callBehavior('adminAfterPageCreate',$cur,$return_id);
-			
+
 			http::redirect('plugin.php?p=related&do=edit&id='.$return_id.'&crea=1');
 		}
 		catch (Exception $e)
@@ -333,6 +369,13 @@ $default_tab = 'edit-entry';
 if (!$can_edit_post || !empty($_POST['preview'])) {
 	$default_tab = 'preview-entry';
 }
+$admin_post_behavior = '';
+if ($post_editor && !empty($post_editor[$post_format])) {
+	$admin_post_behavior = $core->callBehavior('adminPostEditor', $post_editor[$post_format],
+                                               'related', array('#post_content', '#post_excerpt')
+    );
+}
+
 ?>
 <html>
 <head>
@@ -341,10 +384,11 @@ if (!$can_edit_post || !empty($_POST['preview'])) {
 echo dcPage::jsDatePicker().
 	dcPage::jsToolBar().
   	dcPage::jsModal().
-	dcPage::jsLoad(DC_ADMIN_URL.'?pf=related/js/_page.js').
+    $admin_post_behavior.
+	dcPage::jsLoad('js/_post.js').
 	dcPage::jsConfirmClose('entry-form').
 	# --BEHAVIOR-- adminRelatedHeaders
-	$core->callBehavior('adminRelatedHeaders').	
+	$core->callBehavior('adminRelatedHeaders').
 	dcPage::jsPageTabs($default_tab);
 ?>
 </head>
@@ -379,115 +423,154 @@ if (!$can_view_page) {
 
 /* Page form if we can edit page
 -------------------------------------------------------- */
-if ($can_edit_post)
-{
-	echo '<div class="multi-part" title="'.__('Edit page').'" id="edit-entry">';
-	echo '<form action="plugin.php?p=related&amp;do=edit" method="post" id="entry-form" enctype="multipart/form-data">';
-	echo '<div id="entry-sidebar">';
-	
-	echo
-	'<p><label>'.__('Page status:').dcPage::help('post','p_status').
-	form::combo('post_status',$status_combo,$post_status,'',3,!$can_publish).
-	'</label></p>'.
-	
-	'<p><label>'.__('Text formating:').dcPage::help('post','p_format').
-	form::combo('post_format',$formaters_combo,$post_format,'',3).
-	'</label></p>'.
-	
-	'<div class="lockable">'.
-	'<p><label>'.__('Basename:').dcPage::help('post','p_basename').
-	form::field('post_url',10,255,html::escapeHTML($post_url),'maximal',3).
-	'</label></p>'.
-	'<p class="form-note warn">'.
-	__('Warning: If you set the URL manually, it may conflict with another entry.').
-	'</p>'.
-	'</div>';
+if ($can_edit_post) {
+	$sidebar_items = new ArrayObject(array(
+		'status-box' => array(
+			'title' => __('Status'),
+			'items' => array(
+				'post_status' =>
+					'<p class="entry-status"><label for="post_status">'.__('Page status').' '.$img_status.'</label>'.
+					form::combo('post_status',$status_combo,$post_status,'maximal','',!$can_publish).
+					'</p>',
+				'post_dt' =>
+					'<p><label for="post_dt">'.__('Publication date and hour').'</label>'.
+					form::field('post_dt',16,16,$post_dt,($bad_dt ? 'invalid' : '')).
+					'</p>',
+				'post_lang' =>
+					'<p><label for="post_lang">'.__('Entry language').'</label>'.
+					form::combo('post_lang',$lang_combo,$post_lang).
+					'</p>',
+				'post_format' =>
+					'<div>'.
+					'<h5 id="label_format"><label for="post_format" class="classic">'.__('Text formatting').'</label></h5>'.
+					'<p>'.form::combo('post_format',$available_formats,$post_format,'maximal').'</p>'.
+					'<p class="format_control control_no_xhtml">'.
+					'<a id="convert-xhtml" class="button'.($post_id && $post_format != 'wiki' ? ' hide' : '').'" href="'.
+					$core->adminurl->get('admin.post',array('id'=> $post_id,'xconv'=> '1')).
+					'">'.
+					__('Convert to XHTML').'</a></p></div>')),
+		'options-box' => array(
+			'title' => __('Options'),
+			'items' => array(
+				'post_password' =>
+					'<p><label for="post_password">'.__('Password').'</label>'.
+					form::field('post_password',10,32,html::escapeHTML($post_password),'maximal').
+					'</p>',
+				'post_url' =>
+					'<div class="lockable">'.
+					'<p><label for="post_url">'.__('Edit basename').'</label>'.
+					form::field('post_url',10,255,html::escapeHTML($post_url),'maximal').
+					'</p>'.
+					'<p class="form-note warn">'.
+					__('Warning: If you set the URL manually, it may conflict with another entry.').
+					'</p></div>'
+	))));
 
-	echo	
-	'<div id="page_options">'.
-	'<h3 style="display:inline;">'.__('More options').'</h3>'.
-	'<p><label>'.__('Page lang:').dcPage::help('post','p_lang').
-	form::field('post_lang',5,255,html::escapeHTML($post_lang),'',3).
-	'</label></p>'.
+	$main_items = new ArrayObject(array(
+		"post_title" =>
+        '<p class="col">'.
+        '<label class="required no-margin bold" for="post_title"><abbr title="'.__('Required field').'">*</abbr> '.__('Title:').'</label>'.
+        form::field('post_title',20,255,html::escapeHTML($post_title),'maximal').
+        '</p>',
 
-	'<p><label>'.__('Published on:').dcPage::help('post','p_date').
-	form::field('post_dt',16,16,$post_dt,'',3).
-	'</label></p>'.
-	
-	'<p><label>'.__('Page password:').dcPage::help('post','p_password').
-	form::field('post_password',10,32,html::escapeHTML($post_password),'maximal',3).
-	'</label></p>'.	
-	'</div>';
-		
-	# --BEHAVIOR-- adminPageFormSidebar
-	$core->callBehavior('adminPageFormSidebar',isset($post) ? $post : null);
-	
-	echo '</div>';		// End #entry-sidebar
-	
-	echo '<div id="entry-content"><fieldset class="constrained">';
-	
-	echo
-	'<p class="col"><label class="required" title="'.__('Required field').'">'.__('Title:').
-	dcPage::help('post','p_title').
-	form::field('post_title',20,255,html::escapeHTML($post_title),'maximal',2).
-	'</label></p>'.
-	
-	'<p class="area" id="excerpt-area"><label for="post_excerpt">'.__('Summary:').
-	dcPage::help('post','p_excerpt').'</label> '.
-	form::textarea('post_excerpt',50,5,html::escapeHTML($post_excerpt),'',2).
-	'</p>';
-	
-	if (!$page_isfile)
-	{
-		echo
-		'<p class="area"><label class="required" title="'.__('Required field').'" '.
-		'for="post_content">'.__('Content:').
-		dcPage::help('post','p_content').'</label> '.
-		form::textarea('post_content',50,$core->auth->getOption('edit_size'),html::escapeHTML($post_content),'',2).
-		'</p>';
+		"post_excerpt" =>
+        '<p class="area" id="excerpt-area"><label for="post_excerpt" class="bold">'.__('Excerpt:').' <span class="form-note">'.
+        __('Introduction to the post.').'</span></label> '.
+        form::textarea('post_excerpt',50,5,html::escapeHTML($post_excerpt)).
+        '</p>'
+    ));
+
+    if (!$page_isfile) {
+        $main_items['post_content'] = '<p class="area" id="content-area"><label class="required bold" '.
+			'for="post_content"><abbr title="'.__('Required field').'">*</abbr> '.__('Content:').'</label> '.
+			form::textarea('post_content',50,$core->auth->getOption('edit_size'),html::escapeHTML($post_content)).
+			'</p>';
+	} else {
+        $main_items['is_file'] = '<p class="col"><label class="required" title="'.__('Required field').'" '.
+            'for="page_relatedfile">'.__('Included file:').
+            dcPage::help('post','page_relatedfile').'</label></p>'.
+            '<div class="fieldset">'.
+            '<p><label>'.__('Pick up a local file in your related pages repository').' '.
+            form::combo('repository_file',$related_pages_files,$page_relatedfile).
+            '</label></p>'.
+            form::hidden(array('MAX_FILE_SIZE'),DC_MAX_UPLOAD_SIZE).
+            '<p><label>'.__('or upload a new file').' '.
+            '<input type="file" id="up_file" name="up_file" size="20" />'.
+            '</label></p>'.
+            '</div>'.
+            form::hidden('st','file');
 	}
-	else
-	{
-		echo
-		'<p class="col"><label class="required" title="'.__('Required field').'" '.
-		'for="page_relatedfile">'.__('Included file:').
-		dcPage::help('post','page_relatedfile').'</label></p> ';
-		
-		echo
-		'<fieldset>'.
-		'<p><label>'.__('Pick up a local file in your related pages repository').' '.
-		form::combo('repository_file',$related_pages_files,$page_relatedfile).
-		'</label></p>'.
-		form::hidden(array('MAX_FILE_SIZE'),DC_MAX_UPLOAD_SIZE).
-		'<p><label>'.__('or upload a new file').' '.
-		'<input type="file" id="up_file" name="up_file" size="20" />'.
-		'</label></p>'.
-		'</fieldset>';
-		
-		echo
-		form::hidden('st','file');
+
+    $main_items["post_notes"] = '<p class="area" id="notes-area">'.
+        '<label for="post_notes" class="bold">'.__('Personal notes:').' <span class="form-note">'.
+        __('Unpublished notes.').'</span></label>'.
+        form::textarea('post_notes',50,5,html::escapeHTML($post_notes)).
+        '</p>';
+
+	# --BEHAVIOR-- adminPostFormItems
+	$core->callBehavior('adminPostFormItems',$main_items,$sidebar_items, isset($post) ? $post : null);
+
+    echo '<div class="multi-part" title="'.($post_id ? __('Edit page') : __('New page')).'" id="edit-entry">';
+	echo '<form action="'.$core->adminurl->get('admin.post').'" method="post" id="entry-form">';
+	echo '<div id="entry-wrapper">';
+	echo '<div id="entry-content"><div class="constrained">';
+
+	echo '<h3 class="out-of-screen-if-js">'.__('Edit post').'</h3>';
+
+	foreach ($main_items as $id => $item) {
+		echo $item;
 	}
-	
-	echo
-	'<p class="area" id="notes-area"><label>'.__('Notes:').
-	dcPage::help('post','p_notes').'</label>'.
-	form::textarea('post_notes',50,5,html::escapeHTML($post_notes),'',2).
-	'</p>';
-	
-	# --BEHAVIOR-- adminPageForm
-	$core->callBehavior('adminPageForm',isset($post) ? $post : null);
-	
-	echo
-	'<p>'.
-	$core->formNonce().
+
+    # --BEHAVIOR-- adminPostForm (may be deprecated)
+	$core->callBehavior('adminPostForm',isset($post) ? $post : null);
+
+    	echo
+	'<p class="border-top">'.
 	($post_id ? form::hidden('id',$post_id) : '').
-	'<input type="submit" value="'.__('save').' (s)" tabindex="4" '.
-	'accesskey="s" name="save" /> '.
-	($can_delete ? '<input type="submit" value="'.__('delete').'" name="delete" />' : '').
+	'<input type="submit" value="'.__('Save').' (s)" '.
+	'accesskey="s" name="save" /> ';
+	if ($post_id) {
+		$preview_url =
+		$core->blog->url.$core->url->getURLFor('preview',$core->auth->userID().'/'.
+		http::browserUID(DC_MASTER_KEY.$core->auth->userID().$core->auth->getInfo('user_pwd')).
+		'/'.$post->post_url);
+		echo '<a id="post-preview" href="'.$preview_url.'" class="button modal" accesskey="p">'.__('Preview').' (p)'.'</a> ';
+	} else {
+		echo
+		'<a id="post-cancel" href="'.$core->adminurl->get("admin.home").'" class="button" accesskey="c">'.__('Cancel').' (c)</a>';
+	}
+
+	echo
+	($can_delete ? '<input type="submit" class="delete" value="'.__('Delete').'" name="delete" />' : '').
+	$core->formNonce().
 	'</p>';
-	
-	echo '</fieldset></div>';		// End #entry-content
+
+	echo '</div></div>';		// End #entry-content
+	echo '</div>';		// End #entry-wrapper
+
+	echo '<div id="entry-sidebar" role="complementary">';
+
+	foreach ($sidebar_items as $id => $c) {
+		echo '<div id="'.$id.'" class="sb-box">';
+        if (!empty($c['title'])) {
+            echo '<h4>'.$c['title'].'</h4>';
+        }
+		foreach ($c['items'] as $e_name => $e_content) {
+			echo $e_content;
+		}
+		echo '</div>';
+	}
+
+
+	# --BEHAVIOR-- adminPostFormSidebar (may be deprecated)
+	$core->callBehavior('adminPostFormSidebar',isset($post) ? $post : null);
+	echo '</div>';		// End #entry-sidebar
+
 	echo '</form>';
+
+	# --BEHAVIOR-- adminPostForm
+	$core->callBehavior('adminPostAfterForm',isset($post) ? $post : null);
+
 	echo '</div>';
 }
 ?>

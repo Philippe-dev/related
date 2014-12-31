@@ -2,6 +2,9 @@
 # -- BEGIN LICENSE BLOCK ----------------------------------
 #
 # This file is part of Related, a plugin for DotClear2.
+#
+# Copyright(c) 2014 Nicolas Roudaire <nikrou77@gmail.com> http://www.nikrou.net
+#
 # Copyright (c) 2006-2010 Pep and contributors.
 # Licensed under the GPL version 2.0 license.
 # See LICENSE file or
@@ -17,4 +20,3 @@ if ($what == 'page') {
 else {
 	require_once dirname(__FILE__).'/inc/panel.php';
 }
-?>

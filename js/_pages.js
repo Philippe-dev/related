@@ -14,18 +14,18 @@ dotclear.sortable = {
 		while (handle.firstChild) {
 			handle.removeChild(handle.firstChild);
 		}
-		
+
 		item.toolManDragGroup.setHandle(handle);
 		$(handle).addClass('handler');
 	},
-	
+
 	saveOrder: function(item) {
 		var group = item.toolManDragGroup;
 		var order = $('#public_order').get(0);
 		group.register('dragend', function() {
 			order.value = '';
 			items = item.parentNode.getElementsByTagName('tr');
-			
+
 			for (var i=0; i<items.length; i++) {
 				order.value += items[i].id.substr(2)+',';
 			}

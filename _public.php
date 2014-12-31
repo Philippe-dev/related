@@ -2,6 +2,9 @@
 # -- BEGIN LICENSE BLOCK ----------------------------------
 #
 # This file is part of Related, a plugin for DotClear2.
+#
+# Copyright(c) 2014 Nicolas Roudaire <nikrou77@gmail.com> http://www.nikrou.net
+#
 # Copyright (c) 2006-2010 Pep and contributors.
 # Licensed under the GPL version 2.0 license.
 # See LICENSE file or
@@ -12,12 +15,12 @@ if (!defined('DC_RC_PATH')) return;
 
 // Public behaviors definition and binding
 /**
- * 
+ *
  */
 class relatedPublicBehaviors
 {
 	/**
-	 * 
+	 *
 	 */
 	public static function addTplPath($core)
 	{
@@ -25,13 +28,13 @@ class relatedPublicBehaviors
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public static function templateBeforeBlock()
 	{
 		$args = func_get_args();
 		array_shift($args);
-		
+
 		if ($args[0] == 'Entries') {
 			if (!empty($args[1])) {
 				$attrs = $args[1];
@@ -47,7 +50,7 @@ class relatedPublicBehaviors
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public static function coreBlogGetPosts($rs)
 	{
@@ -55,19 +58,19 @@ class relatedPublicBehaviors
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public static function sitemapsURLsCollect($sitemaps)
 	{
 		global $core;
-		
+
 		if ($core->blog->settings->sitemaps->sitemaps_related_url) {
 			$freq = $sitemaps->getFrequency($core->blog->settings->sitemaps->sitemaps_related_fq);
 			$prio = $sitemaps->getPriority($core->blog->settings->sitemaps->sitemaps_related_pr);
 
 			$rs = $core->blog->getPosts(array('post_type' => 'related','post_status' => 1,'no_content' => true));
 			$rs->extend('rsRelated');
-				
+
 			while ($rs->fetch()) {
 				if ($rs->post_password != '') continue;
 				$sitemaps->addEntry($rs->getURL(),$prio,$freq,$rs->getISO8601Date());
@@ -85,12 +88,12 @@ $core->addBehavior('initWidgets',array('widgetsRelated','init'));
 
 // Templates tags definition and binding
 /**
- * 
+ *
  */
 class relatedTemplates
 {
 	/**
-	 * 
+	 *
 	 */
 	public static function PageContent($attr)
 	{
@@ -117,10 +120,9 @@ class relatedTemplates
 		"} else { \n".
 			'echo '.sprintf($f,'$_ctx->posts->getContent('.$urls.')').';'."\n".
 		"} ?>\n";
-		
+
 		return $p;
 	}
 }
 
 $core->tpl->addValue('EntryContent', array('relatedTemplates', 'PageContent'));
-?>
