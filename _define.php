@@ -17,6 +17,6 @@ $this->registerModule(
 	/* Name */		"Related Pages",
 	/* Description*/	"Serve pages & scripts",
 	/* Author */		"Pep, contributors, Nicolas Roudaire",
-	/* Version */		'1.1',
+	/* Version */		'1.1.1',
 	/* Permissions */	'contentadmin,pages'
 );

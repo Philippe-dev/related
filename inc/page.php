@@ -508,10 +508,10 @@ if ($can_edit_post) {
         '</p>';
 
 	# --BEHAVIOR-- adminPostFormItems
-	$core->callBehavior('adminPostFormItems',$main_items,$sidebar_items, isset($post) ? $post : null);
+	$core->callBehavior('adminPostFormItems', $main_items, $sidebar_items, isset($post) ? $post : null);
 
     echo '<div class="multi-part" title="'.($post_id ? __('Edit page') : __('New page')).'" id="edit-entry">';
-	echo '<form action="'.$core->adminurl->get('admin.post').'" method="post" id="entry-form">';
+    echo '<form action="plugin.php?p=related&amp;do=edit" method="post" id="entry-form" enctype="multipart/form-data">';
 	echo '<div id="entry-wrapper">';
 	echo '<div id="entry-content"><div class="constrained">';
 
