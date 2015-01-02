@@ -1,3 +1,9 @@
+related 1.4.0 - 2015-01-02
+==========================
+* Code for transition from old keys settings to new ones
+* Add new params to widgets settings
+* Move classes in their own files
+
 related 1.3.0 - 2015-01-02
 ==========================
 * manage dashboard favorites, thanks to  Miroviben.

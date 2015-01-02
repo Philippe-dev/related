@@ -66,7 +66,9 @@ if (!empty($_POST['saveconfig'])) {
     } catch(Exception $e) {
         $core->error->add($e->getMessage());
     }
-} else {
+}
+
+if ($related_was_actived) {
     $page = !empty($_GET['page']) ? $_GET['page'] : 1;
     $nb_per_page =  30;
     if (!empty($_GET['nb']) && (integer) $_GET['nb'] > 0) {

@@ -28,6 +28,9 @@ msgstr "Pages connexes"
 msgid "manage related pages"
 msgstr "Gérer les pages connexes"
 
+msgid "%d related pages"
+msgstr "%d pages connexes"
+
 #: _install.php:32
 msgid "The required plugin \"metadata\" is missing."
 msgstr "L'extension \"metadata\" est nécessaire mais manquante."

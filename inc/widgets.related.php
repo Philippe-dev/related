@@ -12,45 +12,26 @@
 #
 # -- END LICENSE BLOCK ------------------------------------
 
-if (!defined('DC_RC_PATH')) return;
-
-class relatedHelpers
-{
-	public static function getPublicList($rs)
-	{
-		if (!$rs || $rs->isEmpty()) return;
-
-		$res = array();
-		while ($rs->fetch()) {
-			if ($rs->post_status != 1) continue;
-			if (($pos = $rs->getPosition()) === null) continue;
-			if ($pos <= 0) $pos = 10000;
-			$res[] = array(
-				'id' => $rs->post_id,
-				'title' => $rs->post_title,
-				'url'   => $rs->getURL(),
-				'active' => $rs->post_selected,
-				'order'  => $pos
-				);
-		}
-		usort($res,array('relatedHelpers','orderCallBack'));
-		return $res;
-	}
-
-	protected static function orderCallBack($a,$b)
-	{
-		if ($a['order'] == $b['order']) return 0;
-		return $a['order'] > $b['order'] ? 1 : -1;
-	}
-}
-
 class widgetsRelated
 {
-	public static function pagesList($w)
-	{
+    public static function initDefaultWidgets($w, $d) {
+        $d['extra']->append($w->related);
+    }
+
+	public static function init($w) {
+	    $w->create('related', __('Related pages'), array('widgetsRelated', 'pagesList'));
+	    $w->related->setting('title', __('Title:'), '');
+		$w->related->setting('homeonly', __('Display on:'), 0, 'combo',
+                             array(__('All pages') => 0, __('Home page only') => 1, __('Except on home page') => 2));
+        $w->related->setting('content_only', __('Content only'), 0, 'check');
+        $w->related->setting('class', __('CSS class:'), '');
+	}
+
+	public static function pagesList($w) {
 		global $core;
 
-		if ($w->homeonly && $core->url->type != 'default') {
+        if (($w->homeonly == 1 && $core->url->type != 'default') ||
+			($w->homeonly == 2 && $core->url->type == 'default')) {
 			return;
 		}
 
@@ -79,12 +60,12 @@ class widgetsRelated
 
 		$res .= '</ul></div>';
 		return $res;
-	}
 
-	public static function init($w)
-	{
-	    $w->create('related',__('Related pages'),array('widgetsRelated','pagesList'));
-	    $w->related->setting('title',__('Title:'),'');
-	    $w->related->setting('homeonly',__('Home page only'),1,'check');
+        if (version_compare($core->getVersion(), '2.6', '>=')) {
+            return '<div class="related-pages">'.$res.'</div>';
+        } else {
+            return $w->renderDiv($w->content_only, 'related-pages-widget '.$w->class, '', $res);
+        }
+
 	}
 }

@@ -14,7 +14,7 @@
 
 if (!defined('DC_CONTEXT_ADMIN')) return;
 
-$this_version = $core->plugins->moduleInfo('related','version');
+$this_version = $core->plugins->moduleInfo('related', 'version');
 $installed_version = $core->getVersion('related');
 if (version_compare($installed_version,$this_version,'>=')) {
 	return;
@@ -22,8 +22,22 @@ if (version_compare($installed_version,$this_version,'>=')) {
 
 $core->blog->settings->addNamespace('related');
 $core->blog->settings->related->put('active', false, 'boolean', 'Related plugin activated?', false);
+$related_files_path = $related_url_prefix = null;
 
-if (!$core->blog->settings->related->files_path) {
+if ($core->blog->settings->related->active) {
+    if ($core->blog->settings->related->related_files_path) {
+        $related_files_path = $core->blog->settings->related->related_files_path;
+        $core->blog->settings->related->put('files_path', $related_files_path, 'string', 'Related files repository', false);
+        $core->blog->settings->related->drop('related_files_path');
+    }
+    if ($core->blog->settings->related->related_url_prefix) {
+        $related_url_prefix = $core->blog->settings->related->related_url_prefix;
+        $core->blog->settings->related->put('url_prefix', $related_url_prefix, 'string', 'Prefix used by the URLHandler', false);
+        $core->blog->settings->related->drop('related_url_prefix');
+    }
+}
+
+if (!$core->blog->settings->related->files_path && !$related_files_path) {
 	$public_path = $core->blog->public_path;
 	$related_files_path = $public_path.'/related';
 
@@ -45,9 +59,10 @@ if (!$core->blog->settings->related->files_path) {
 		} catch (Exception $e) {}
 	}
 
-	$core->blog->settings->related->put('url_prefix','static', 'string', 'Prefix used by the URLHandler',true);
-	$core->blog->settings->related->put('files_path',$related_files_path, 'string', 'Related files repository',true);
+	$core->blog->settings->related->put('files_path', $related_files_path, 'string', 'Related files repository', false);
 }
-
-$core->setVersion('related',$this_version);
+if (!$core->blog->settings->related->url_prefix && !$related_url_prefix) {
+	$core->blog->settings->related->put('url_prefix', 'static', 'string', 'Prefix used by the URLHandler', false);
+}
+$core->setVersion('related', $this_version);
 return true;
