@@ -114,11 +114,11 @@ msgid "Missing file."
 msgstr ""
 
 #: page.php:364
-msgid "Page has been successfully updated."
+msgid "Page has been updated."
 msgstr ""
 
 #: page.php:367
-msgid "Page has been successfully created."
+msgid "Page has been created."
 msgstr ""
 
 #: page.php:374 page.php:376
@@ -218,11 +218,11 @@ msgid "change author"
 msgstr ""
 
 #: panel.php:108
-msgid "Pages list has been successfully sorted."
+msgid "Pages list has been sorted."
 msgstr ""
 
 #: panel.php:137
-msgid "Configuration successfully updated."
+msgid "Configuration updated."
 msgstr ""
 
 #: panel.php:164

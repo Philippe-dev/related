@@ -2,12 +2,16 @@
 # -- BEGIN LICENSE BLOCK ----------------------------------
 #
 # This file is part of Related, a plugin for DotClear2.
+#
+# Copyright(c) 2014-2015 Nicolas Roudaire <nikrou77@gmail.com> http://www.nikrou.net
+#
 # Copyright (c) 2006-2010 Pep and contributors.
 # Licensed under the GPL version 2.0 license.
 # See LICENSE file or
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 #
 # -- END LICENSE BLOCK ------------------------------------
+
 if (!defined('DC_CONTEXT_ADMIN')) return;
 
 dcPage::check('pages,contentadmin');
@@ -396,10 +400,10 @@ echo dcPage::jsDatePicker().
 <body>
 <?php
 if (!empty($_GET['upd'])) {
-		echo '<p class="message">'.__('Page has been successfully updated.').'</p>';
+		echo '<p class="message">'.__('Page has been updated.').'</p>';
 }
 elseif (!empty($_GET['crea'])) {
-		echo '<p class="message">'.__('Page has been successfully created.').'</p>';
+		echo '<p class="message">'.__('Page has been created.').'</p>';
 }
 
 echo '<h2>'.html::escapeHTML($core->blog->name).' &rsaquo; <a href="'.$p_url.'">'.__('Related pages').'</a> &rsaquo; '.$page_title;
@@ -507,9 +511,6 @@ if ($can_edit_post) {
         form::textarea('post_notes',50,5,html::escapeHTML($post_notes)).
         '</p>';
 
-	# --BEHAVIOR-- adminPostFormItems
-	$core->callBehavior('adminPostFormItems', $main_items, $sidebar_items, isset($post) ? $post : null);
-
     echo '<div class="multi-part" title="'.($post_id ? __('Edit page') : __('New page')).'" id="edit-entry">';
     echo '<form action="plugin.php?p=related&amp;do=edit" method="post" id="entry-form" enctype="multipart/form-data">';
 	echo '<div id="entry-wrapper">';
@@ -573,6 +574,7 @@ if ($can_edit_post) {
 
 	echo '</div>';
 }
+dcPage::helpBlock('related_pages');
 ?>
 	</body>
 </html>

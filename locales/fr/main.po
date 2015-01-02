@@ -123,12 +123,12 @@ msgid "Missing file."
 msgstr "Fichier manquant."
 
 #: page.php:364
-msgid "Page has been successfully updated."
-msgstr "La page a été mise à jour avec succès."
+msgid "Page has been updated."
+msgstr "La page a été mise à jour."
 
 #: page.php:367
-msgid "Page has been successfully created."
-msgstr "La page a été créée avec succès."
+msgid "Page has been created."
+msgstr "La page a été créée."
 
 #: page.php:374
 #: page.php:376
@@ -232,12 +232,12 @@ msgid "change author"
 msgstr "changer l'auteur"
 
 #: panel.php:108
-msgid "Pages list has been successfully sorted."
-msgstr "La liste des pages connexes a été réordonnancée avec succès."
+msgid "Pages list has been sorted."
+msgstr "La liste des pages connexes a été réordonnée."
 
 #: panel.php:137
-msgid "Configuration successfully updated."
-msgstr "Configuration mise à jour avec succès."
+msgid "Configuration updated."
+msgstr "Configuration mise à jour."
 
 #: panel.php:164
 msgid "Manage pages"
@@ -261,7 +261,7 @@ msgstr "ok"
 
 #: panel.php:189
 msgid "Arrange public list"
-msgstr "Ordonnancer la liste publique"
+msgstr "Ordonner la liste publique"
 
 #: panel.php:199
 msgid "Order"
@@ -303,6 +303,9 @@ msgstr "Préfixe d'URL :"
 msgid "Save configuration"
 msgstr "Enregistrer la configuration"
 
+msgid "Enable Related plugin"
+msgstr "Activer le plugin pages connexes"
+
 #~ msgid "Are you sure you want to delete selected pages?"
 #~ msgstr "Êtes-vous certain de vouloir supprimer les pages sélectionnées ?"
 #~ msgid "This user does not exists"
@@ -313,4 +316,3 @@ msgstr "Enregistrer la configuration"
 #~ msgstr "ID de l'auteur"
 #~ msgid "back"
 #~ msgstr "retour"
-
