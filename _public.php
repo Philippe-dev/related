@@ -23,16 +23,14 @@ class relatedPublicBehaviors
 	/**
 	 *
 	 */
-	public static function addTplPath($core)
-	{
+	public static function addTplPath($core) {
 		$core->tpl->setPath($core->tpl->getPath(), dirname(__FILE__).'/default-templates');
 	}
 
 	/**
 	 *
 	 */
-	public static function templateBeforeBlock()
-	{
+	public static function templateBeforeBlock() {
 		$args = func_get_args();
 		array_shift($args);
 
@@ -53,16 +51,14 @@ class relatedPublicBehaviors
 	/**
 	 *
 	 */
-	public static function coreBlogGetPosts($rs)
-	{
+	public static function coreBlogGetPosts($rs) {
 		$rs->extend("rsRelatedBase");
 	}
 
 	/**
 	 *
 	 */
-	public static function sitemapsURLsCollect($sitemaps)
-	{
+	public static function sitemapsURLsCollect($sitemaps) {
 		global $core;
 
 		if ($core->blog->settings->sitemaps->sitemaps_related_url) {
@@ -80,11 +76,11 @@ class relatedPublicBehaviors
 	}
 }
 
-$core->addBehavior('coreBlogGetPosts',    array('relatedPublicBehaviors','coreBlogGetPosts'));
-$core->addBehavior('publicBeforeDocument',array('relatedPublicBehaviors','addTplPath'));
-$core->addBehavior('templateBeforeBlock', array('relatedPublicBehaviors','templateBeforeBlock'));
-$core->addBehavior('sitemapsURLsCollect', array('relatedPublicBehaviors','sitemapsURLsCollect'));
-$core->addBehavior('initWidgets',array('widgetsRelated','init'));
+$core->addBehavior('coreBlogGetPosts', array('relatedPublicBehaviors', 'coreBlogGetPosts'));
+$core->addBehavior('publicBeforeDocument', array('relatedPublicBehaviors', 'addTplPath'));
+$core->addBehavior('templateBeforeBlock', array('relatedPublicBehaviors', 'templateBeforeBlock'));
+$core->addBehavior('sitemapsURLsCollect', array('relatedPublicBehaviors', 'sitemapsURLsCollect'));
+$core->addBehavior('initWidgets', array('widgetsRelated', 'init'));
 
 
 // Templates tags definition and binding
@@ -96,8 +92,7 @@ class relatedTemplates
 	/**
 	 *
 	 */
-	public static function PageContent($attr)
-	{
+	public static function PageContent($attr) {
 		global $core, $_ctx;
 
 		$urls = '0';
@@ -112,7 +107,7 @@ class relatedTemplates
 				'include $related_file;'."\n".
 			"} else { \n".
 				'$previous_tpl_path = $core->tpl->getPath();'."\n".
-				'$core->tpl->setPath($core->blog->settings->related->related_files_path);'."\n".
+				'$core->tpl->setPath($core->blog->settings->related->files_path);'."\n".
 				'echo $core->tpl->getData(basename($related_file));'."\n".
 				'$core->tpl->setPath($previous_tpl_path);'."\n".
 				'unset($previous_tpl_path);'."\n".

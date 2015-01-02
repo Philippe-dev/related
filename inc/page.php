@@ -123,7 +123,7 @@ if (!empty($_REQUEST['id']))
 
 		try {
 			$core->meta = new dcMeta($core);
-			$post_metas = $core->meta->getMetaRecordset($post->post_meta,'related_file');
+			$post_metas = $core->meta->getMetaRecordset($post->post_meta, 'related_file');
 			if (!$post_metas->isEmpty()) {
 				$page_relatedfile = $post_metas->meta_id;
 				$page_isfile = true;
@@ -138,7 +138,7 @@ if ($page_isfile) {
 	$post_content_xhtml = '/** external content **/';
 
 	$related_pages_files = array('-' => '');
-	$dir = @dir($core->blog->settings->related->related_files_path);
+	$dir = @dir($core->blog->settings->related->files_path);
 	$allowed_exts = array('php','html','xml','txt');
 
 	if ($dir)
@@ -207,7 +207,7 @@ if (!empty($_POST) && $can_edit_post)
 				if ($related_upl) {
 					files::uploadStatus($_FILES['up_file']);
 					$src_file = $_FILES['up_file']['tmp_name'];
-					$trg_file = $core->blog->settings->related->related_files_path.'/'.$_FILES['up_file']['name'];
+					$trg_file = $core->blog->settings->related->files_path.'/'.$_FILES['up_file']['name'];
 					if (move_uploaded_file($src_file,$trg_file)) {
 						$page_relatedfile = $_FILES['up_file']['name'];
 					}
@@ -287,8 +287,8 @@ if (!empty($_POST) && !empty($_POST['save']) && $can_edit_post)
 					if ($core->meta === null) {
 						$core->meta = new dcMeta($core);
 					}
-					$core->meta->delPostMeta($post_id,'related_file');
-					$core->meta->setPostMeta($post_id,'related_file',$page_relatedfile);
+					$core->meta->delPostMeta($post_id, 'related_file');
+					$core->meta->setPostMeta($post_id, 'related_file', $page_relatedfile);
 				}
 				catch (Exception $e) {
 					$core->con->rollback();
@@ -334,7 +334,7 @@ if (!empty($_POST) && !empty($_POST['save']) && $can_edit_post)
 					if ($core->meta === null) {
 						$core->meta = new dcMeta($core);
 					}
-					$core->meta->setPostMeta($return_id,'related_file',$page_relatedfile);
+					$core->meta->setPostMeta($return_id, 'related_file', $page_relatedfile);
 				}
 				catch (Exception $e) {
 					$core->con->rollback();

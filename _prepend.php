@@ -14,15 +14,13 @@
 
 if (!defined('DC_RC_PATH')) return;
 
-global $__autoload, $core;
-
 $__autoload['dcRelated']		= dirname(__FILE__).'/inc/widgets.php';
 $__autoload['rsRelated']		= dirname(__FILE__).'/inc/lib.related.php';
 $__autoload['adminPageList']	= dirname(__FILE__).'/inc/lib.related.php';
 $__autoload['widgetsRelated'] = dirname(__FILE__).'/inc/widgets.php';
 
 // Setting custom URL handlers
-$url_prefix = $core->blog->settings->related->related_url_prefix;
+$url_prefix = $core->blog->settings->related->url_prefix;
 $url_prefix = (empty($url_prefix))?'static':$url_prefix;
 $url_pattern = $url_prefix.'/(.+)$';
 $core->url->register('related',$url_prefix,$url_pattern,array('relatedUrlHandlers','related'));
@@ -77,11 +75,10 @@ class relatedUrlHandlers extends dcUrlHandlers
 
 			# Check for match
 			if ((!empty($_POST['password']) && $_POST['password'] == $post_password)
-			|| (isset($pwd_cookie[$post_id]) && $pwd_cookie[$post_id] == $post_password)) {
+                || (isset($pwd_cookie[$post_id]) && $pwd_cookie[$post_id] == $post_password)) {
 				$pwd_cookie[$post_id] = $post_password;
 				setcookie('dc_passwd',serialize($pwd_cookie),0,'/');
-			}
-			else {
+			} else {
 				self::serveDocument('password-form.html','text/html',false);
 				exit;
 			}
@@ -105,16 +102,14 @@ class relatedUrlHandlers extends dcUrlHandlers
 		if (!preg_match('#^(.+?)/([0-9a-z]{40})/(.+?)$#',$args,$m)) {
 			# The specified Preview URL is malformed.
 			self::p404();
-		}
-		else {
+		} else {
 			$user_id = $m[1];
 			$user_key = $m[2];
 			$post_url = $m[3];
 			if (!$core->auth->checkUser($user_id,null,$user_key)) {
 				# The user has no access to the entry.
 				self::p404();
-			}
-			else {
+			} else {
 				$_ctx->preview = true;
 				self::related($post_url);
 			}
@@ -127,19 +122,17 @@ class relatedUrlHandlers extends dcUrlHandlers
  */
 class rsRelatedBase
 {
-	public static function getRelatedFilename($rs)
-	{
-		if ($rs->core->blog->settings->related->related_files_path === null) return false;
+	public static function getRelatedFilename($rs) {
+		if ($rs->core->blog->settings->related->files_path === null) return false;
 
 		$meta = new dcMeta($rs->core);
 		$meta_rs = $meta->getMetaRecordset($rs->post_meta,'related_file');
 
 		if (!$meta_rs->isEmpty()) {
-			$filename = $rs->core->blog->settings->related->related_files_path.'/'.$meta_rs->meta_id;
+			$filename = $rs->core->blog->settings->related->files_path.'/'.$meta_rs->meta_id;
 			if (file_exists($filename) && is_readable($filename)) {
 				return $filename;
-			}
-			else {
+			} else {
 				return false;
 			}
 		}
@@ -147,9 +140,8 @@ class rsRelatedBase
 		return false;
 	}
 
-	public static function getPosition($rs)
-	{
-		if ($rs->core->blog->settings->related->related_files_path === null) return false;
+	public static function getPosition($rs) {
+		if ($rs->core->blog->settings->related->files_path === null) return false;
 
 		$meta = new dcMeta($rs->core);
 		$meta_rs = $meta->getMetaRecordset($rs->post_meta,'related_position');

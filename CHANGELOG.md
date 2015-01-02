@@ -1,3 +1,8 @@
+related 1.3.0 - 2015-01-02
+==========================
+* manage dashboard favorites, thanks to  Miroviben.
+* add beatutiful icons, thanks to amalgame.
+
 related 1.2.0 - 2015-01-02
 ==========================
 * Introduce related documentation
