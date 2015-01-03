@@ -590,7 +590,8 @@ if ($can_edit_post) {
 
 	echo '</div>';
 }
-dcPage::helpBlock('related_pages');
+dcPage::helpBlock('related_pages_edit','core_wiki');
+
 ?>
 	</body>
 </html>
