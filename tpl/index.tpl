@@ -6,7 +6,11 @@
     <?php echo dcPage::jsLoad('index.php?pf=related/js/_pages.js');?>
   </head>
   <body>
-    <h2><?php echo html::escapeHTML($core->blog->name); ?> &rsaquo; <?php echo __('Related pages'); ?></h2>
+    <?php echo dcPage::breadcrumb(
+		array(
+			html::escapeHTML($core->blog->name) => '',
+			__('Related pages') => ''
+		)); ?>
     <?php if (!empty($message)):?>
     <p class="message"><?php echo $message;?></p>
     <?php endif;?>
