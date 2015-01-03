@@ -6,7 +6,11 @@
     <?php echo dcPage::jsLoad('index.php?pf=related/js/_pages.js');?>
   </head>
   <body>
-    <h2><?php echo html::escapeHTML($core->blog->name); ?> &rsaquo; <?php echo __('Related pages'); ?></h2>
+    <?php echo dcPage::breadcrumb(
+		array(
+			html::escapeHTML($core->blog->name) => '',
+			__('Related pages') => ''
+		)); ?>
     <?php if (!empty($message)):?>
     <p class="message"><?php echo $message;?></p>
     <?php endif;?>
@@ -46,9 +50,9 @@
     </div>
     <?php if ($related_active):?>
     <div class="multi-part" id="pages_compose" title="<?php echo __('Manage pages');?>">
-      <p>
-	<a class="button" href="plugin.php?p=related&amp;do=edit&amp;st=post"><?php echo __('New post as page');?></a>&nbsp;-&nbsp;
-        <a class="button" href="plugin.php?p=related&amp;do=edit&amp;st=file"><?php echo __('New included page');?></a>
+      <p class="top-add">	
+		<a class="button add" href="plugin.php?p=related&amp;do=edit&amp;st=post"><?php echo __('New post as page');?></a>&nbsp;-&nbsp;
+        <a class="button add" href="plugin.php?p=related&amp;do=edit&amp;st=file"><?php echo __('New included page');?></a>
       </p>
       <?php
 	 $page_list->display($page,$nb_per_page,

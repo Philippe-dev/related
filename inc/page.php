@@ -380,6 +380,29 @@ if ($post_editor && !empty($post_editor[$post_format])) {
     );
 }
 
+if ($post_id) {
+	switch ($post_status) {
+		case 1:
+			$img_status = sprintf($img_status_pattern,__('Published'),'check-on.png');
+			break;
+		case 0:
+			$img_status = sprintf($img_status_pattern,__('Unpublished'),'check-off.png');
+			break;
+		case -1:
+			$img_status = sprintf($img_status_pattern,__('Scheduled'),'scheduled.png');
+			break;
+		case -2:
+			$img_status = sprintf($img_status_pattern,__('Pending'),'check-wrn.png');
+			break;
+		default:
+			$img_status = '';
+	}
+	$edit_entry_str = __('&ldquo;%s&rdquo;');
+	$page_title_edit = sprintf($edit_entry_str, html::escapeHTML($post_title)).' '.$img_status;
+} else {
+	$img_status = '';
+}
+
 ?>
 <html>
 <head>
@@ -406,19 +429,12 @@ elseif (!empty($_GET['crea'])) {
 		echo '<p class="message">'.__('Page has been created.').'</p>';
 }
 
-echo '<h2>'.html::escapeHTML($core->blog->name).' &rsaquo; <a href="'.$p_url.'">'.__('Related pages').'</a> &rsaquo; '.$page_title;
-
-if ($post_id && $post->post_status == 1) {
-	echo ' - <a id="post-preview" href="'.$post->getURL().'" class="button">'.__('View page').'</a>';
-} elseif ($post_id) {
-	$preview_url =
-	$core->blog->url.$core->url->getBase('relatedpreview').'/'.
-	$core->auth->userID().'/'.
-	http::browserUID(DC_MASTER_KEY.$core->auth->userID().$core->auth->getInfo('user_pwd')).
-	'/'.$post->post_url;
-	echo ' - <a id="post-preview" href="'.$preview_url.'" class="button">'.__('Preview page').'</a>';
-}
-echo '</h2>';
+echo dcPage::breadcrumb(
+		array(
+			html::escapeHTML($core->blog->name) => '',
+			__('Related pages') => $p_url,
+			($post_id ? $page_title_edit : $page_title) => ''
+		));
 
 # Exit if we cannot view page
 if (!$can_view_page) {
