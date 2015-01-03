@@ -50,9 +50,9 @@
     </div>
     <?php if ($related_active):?>
     <div class="multi-part" id="pages_compose" title="<?php echo __('Manage pages');?>">
-      <p>
-	<a class="button" href="plugin.php?p=related&amp;do=edit&amp;st=post"><?php echo __('New post as page');?></a>&nbsp;-&nbsp;
-        <a class="button" href="plugin.php?p=related&amp;do=edit&amp;st=file"><?php echo __('New included page');?></a>
+      <p class="top-add">	
+		<a class="button add" href="plugin.php?p=related&amp;do=edit&amp;st=post"><?php echo __('New post as page');?></a>&nbsp;-&nbsp;
+        <a class="button add" href="plugin.php?p=related&amp;do=edit&amp;st=file"><?php echo __('New included page');?></a>
       </p>
       <?php
 	 $page_list->display($page,$nb_per_page,
