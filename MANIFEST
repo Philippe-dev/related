@@ -1,7 +1,9 @@
 related/locales/_pot/main.pot
 related/locales/en/resources.php
+related/locales/en/related_pages_edit.html
 related/locales/en/related_pages.html
 related/locales/fr/resources.php
+related/locales/fr/related_pages_edit.html
 related/locales/fr/main.po
 related/locales/fr/related_pages.html
 related/BUGS
@@ -13,6 +15,8 @@ related/CHANGELOG.md
 related/COPYING
 related/_widgets.php
 related/inc/related.helpers.php
+related/inc/related.public.behaviors.php
+related/inc/related.templates.php
 related/inc/page.php
 related/inc/lib.related.php
 related/inc/widgets.related.php

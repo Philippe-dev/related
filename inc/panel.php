@@ -20,8 +20,22 @@ $core->blog->settings->addNameSpace('related');
 $related_active = $core->blog->settings->related->active;
 $related_was_actived = $related_active;
 
-$related_url_prefix = $core->blog->settings->related->url_prefix;
-$related_repository = $core->blog->settings->related->files_path;
+if ($core->blog->settings->related->related_files_path) {
+    $related_files_path = $core->blog->settings->related->related_files_path;
+    $core->blog->settings->related->put('files_path', $related_files_path, 'string', 'Related files repository', false);
+    $core->blog->settings->related->drop('related_files_path');
+} else {
+    $related_files_path = $core->blog->settings->related->files_path;
+}
+if ($core->blog->settings->related->related_url_prefix) {
+    $related_url_prefix = $core->blog->settings->related->related_url_prefix;
+    $core->blog->settings->related->put('url_prefix', $related_url_prefix, 'string', 'Prefix used by the URLHandler', false);
+    $core->blog->settings->related->drop('related_url_prefix');
+} else {
+    $related_url_prefix = $core->blog->settings->related->url_prefix;
+}
+
+
 
 $default_tab = 'pages_compose';
 
@@ -35,7 +49,7 @@ if (!empty($_POST['saveconfig'])) {
         $default_tab = 'settings';
 
         $related_active = (empty($_POST['related_active']))?false:true;
-        $core->blog->settings->related->put('active', $related_active, 'boolean');
+        $core->blog->settings->related->put('active', $related_active, 'boolean', 'Related plugin activated?');
 
         // change other settings only if they were in html page
         if ($related_was_actived) {
@@ -68,7 +82,7 @@ if (!empty($_POST['saveconfig'])) {
     }
 }
 
-if ($related_was_actived) {
+if ($related_active) {
     $page = !empty($_GET['page']) ? $_GET['page'] : 1;
     $nb_per_page =  30;
     if (!empty($_GET['nb']) && (integer) $_GET['nb'] > 0) {

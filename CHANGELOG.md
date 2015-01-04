@@ -1,3 +1,9 @@
+related 1.5.0 - 2015-01-04
+==========================
+* Manage upgrade from 1.1-RC1 and make plugin active for active blog.
+* Add links for new page on top.
+* Decorate textarea with editor when wanted format is wiki.
+
 related 1.4.0 - 2015-01-02
 ==========================
 * Code for transition from old keys settings to new ones

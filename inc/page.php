@@ -82,8 +82,7 @@ $page_isfile = (!empty($_REQUEST['st']) && $_REQUEST['st'] == 'file')?true:false
 $page_relatedfile = '';
 
 # Get entry informations
-if (!empty($_REQUEST['id']))
-{
+if (!empty($_REQUEST['id'])) {
 	$params = array();
 	$params['post_id'] = $_REQUEST['id'];
 	$params['post_type'] = 'related';
@@ -91,13 +90,10 @@ if (!empty($_REQUEST['id']))
 	$post = $core->blog->getPosts($params, false);
 	$post->extend("rsRelated");
 
-	if ($post->isEmpty())
-	{
+	if ($post->isEmpty()) {
 		$core->error->add(__('This page does not exist.'));
 		$can_view_page = false;
-	}
-	else
-	{
+	} else {
 		$post_id = $post->post_id;
 		$cat_id = $post->cat_id;
 		$post_dt = date('Y-m-d H:i',strtotime($post->post_dt));
@@ -141,8 +137,7 @@ if ($page_isfile) {
 	$dir = @dir($core->blog->settings->related->files_path);
 	$allowed_exts = array('php','html','xml','txt');
 
-	if ($dir)
-	{
+	if ($dir) {
 		while (($entry = $dir->read()) !== false) {
 			$entry_path = $dir->path.'/'.$entry;
 			if (in_array(files::getExtension($entry),$allowed_exts)) {
@@ -155,8 +150,7 @@ if ($page_isfile) {
 }
 
 # Format excerpt and content
-if (!empty($_POST) && $can_edit_post)
-{
+if (!empty($_POST) && $can_edit_post) {
 	$post_format = $_POST['post_format'];
 	$post_excerpt = $_POST['post_excerpt'];
 	if (!$page_isfile) {
@@ -202,8 +196,7 @@ if (!empty($_POST) && $can_edit_post)
 		}
 
 		if ($related_upl !== null) {
-			try
-			{
+			try {
 				if ($related_upl) {
 					files::uploadStatus($_FILES['up_file']);
 					$src_file = $_FILES['up_file']['tmp_name'];
@@ -214,9 +207,7 @@ if (!empty($_POST) && $can_edit_post)
 				} else {
 					$page_relatedfile = $_POST['repository_file'];
 				}
-			}
-			catch (Exception $e)
-			{
+			} catch (Exception $e) {
 				$core->error->add($e->getMessage());
 			}
 		}
@@ -224,8 +215,7 @@ if (!empty($_POST) && $can_edit_post)
 }
 
 # Create or update post
-if (!empty($_POST) && !empty($_POST['save']) && $can_edit_post)
-{
+if (!empty($_POST) && !empty($_POST['save']) && $can_edit_post) {
 	$cur = $core->con->openCursor($core->prefix.'post');
 
 	$cur->post_title = $post_title;
@@ -269,8 +259,7 @@ if (!empty($_POST) && !empty($_POST['save']) && $can_edit_post)
 			$img_status = '';
         }
 
-		try
-		{
+		try {
 			if ($page_isfile && empty($page_relatedfile)) {
 				throw new Exception(__('Missing file.'));
 			}
@@ -303,21 +292,16 @@ if (!empty($_POST) && !empty($_POST['save']) && $can_edit_post)
 			$core->callBehavior('adminAfterPageUpdate',$cur,$post_id);
 
 			http::redirect('plugin.php?p=related&do=edit&id='.$post_id.'&upd=1');
-		}
-		catch (Exception $e)
-		{
+		} catch (Exception $e) {
 			$core->error->add($e->getMessage());
 		}
-	}
-	else
-	{
+	} else {
 		$cur->user_id = $core->auth->userID();
 		if (!isset($_POST['post_url'])) {
 			$cur->post_url = text::str2URL($post_title);
 		}
 
-		try
-		{
+		try {
 			if ($page_isfile && empty($page_relatedfile)) {
 				throw new Exception(__('Missing file.'));
 			}
@@ -349,16 +333,13 @@ if (!empty($_POST) && !empty($_POST['save']) && $can_edit_post)
 			$core->callBehavior('adminAfterPageCreate',$cur,$return_id);
 
 			http::redirect('plugin.php?p=related&do=edit&id='.$return_id.'&crea=1');
-		}
-		catch (Exception $e)
-		{
+		} catch (Exception $e) {
 			$core->error->add($e->getMessage());
 		}
 	}
 }
 
-if (!empty($_POST['delete']) && $can_delete)
-{
+if (!empty($_POST['delete']) && $can_delete) {
 	try {
 		$core->blog->delPost($post_id);
 		http::redirect($p_url);
@@ -375,8 +356,9 @@ if (!$can_edit_post || !empty($_POST['preview'])) {
 }
 $admin_post_behavior = '';
 if ($post_editor && !empty($post_editor[$post_format])) {
-	$admin_post_behavior = $core->callBehavior('adminPostEditor', $post_editor[$post_format],
-                                               'related', array('#post_content', '#post_excerpt')
+	$admin_post_behavior = $core->callBehavior(
+        'adminPostEditor', $post_editor[$post_format],
+        'related', array('#post_content', '#post_excerpt')
     );
 }
 
@@ -402,11 +384,10 @@ if ($post_id) {
 } else {
 	$img_status = '';
 }
-
 ?>
 <html>
 <head>
-	<title><?php echo __('Related pages'); ?></title>
+	<title><?php echo __('Related pages');?></title>
 <?php
 echo dcPage::jsDatePicker().
 	dcPage::jsToolBar().
@@ -419,13 +400,11 @@ echo dcPage::jsDatePicker().
 	dcPage::jsPageTabs($default_tab);
 ?>
 </head>
-
 <body>
 <?php
 if (!empty($_GET['upd'])) {
 		echo '<p class="message">'.__('Page has been updated.').'</p>';
-}
-elseif (!empty($_GET['crea'])) {
+} elseif (!empty($_GET['crea'])) {
 		echo '<p class="message">'.__('Page has been created.').'</p>';
 }
 
@@ -506,6 +485,9 @@ if ($can_edit_post) {
 			form::textarea('post_content',50,$core->auth->getOption('edit_size'),html::escapeHTML($post_content)).
 			'</p>';
 	} else {
+        $main_items['post_content'] = '<div style="display:none">'.
+			form::textarea('post_content',0,0,html::escapeHTML($post_content)).
+			'</div>';
         $main_items['is_file'] = '<p class="col"><label class="required" title="'.__('Required field').'" '.
             'for="page_relatedfile">'.__('Included file:').
             dcPage::help('post','page_relatedfile').'</label></p>'.
@@ -526,6 +508,10 @@ if ($can_edit_post) {
         __('Unpublished notes.').'</span></label>'.
         form::textarea('post_notes',50,5,html::escapeHTML($post_notes)).
         '</p>';
+
+    if ($post_id && $post->post_status == 1) {
+        echo '<p><a class="onblog_link outgoing" href="'.$post->getURL().'" title="'.$post_title.'">'.__('Go to this entry on the site').' <img src="images/outgoing-blue.png" alt="" /></a></p>';
+    }
 
     echo '<div class="multi-part" title="'.($post_id ? __('Edit page') : __('New page')).'" id="edit-entry">';
     echo '<form action="plugin.php?p=related&amp;do=edit" method="post" id="entry-form" enctype="multipart/form-data">';
@@ -558,9 +544,9 @@ if ($can_edit_post) {
 	}
 
 	echo
-	($can_delete ? '<input type="submit" class="delete" value="'.__('Delete').'" name="delete" />' : '').
-	$core->formNonce().
-	'</p>';
+        ($can_delete ? '<input type="submit" class="delete" value="'.__('Delete').'" name="delete" />' : '').
+        $core->formNonce().
+        '</p>';
 
 	echo '</div></div>';		// End #entry-content
 	echo '</div>';		// End #entry-wrapper
@@ -591,7 +577,6 @@ if ($can_edit_post) {
 	echo '</div>';
 }
 dcPage::helpBlock('related_pages_edit','core_wiki');
-
 ?>
 	</body>
 </html>

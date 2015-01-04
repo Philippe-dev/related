@@ -21,20 +21,24 @@ if (version_compare($installed_version,$this_version,'>=')) {
 }
 
 $core->blog->settings->addNamespace('related');
-$core->blog->settings->related->put('active', false, 'boolean', 'Related plugin activated?', false);
+if (!$core->blog->settings->related->active) {
+    if ($installed_version == '1.1-RC2') {
+        $core->blog->settings->related->put('active', true, 'boolean', 'Related plugin activated?', true);
+    } else {
+        $core->blog->settings->related->put('active', false, 'boolean', 'Related plugin activated?', true);
+    }
+}
 $related_files_path = $related_url_prefix = null;
 
-if ($core->blog->settings->related->active) {
-    if ($core->blog->settings->related->related_files_path) {
-        $related_files_path = $core->blog->settings->related->related_files_path;
-        $core->blog->settings->related->put('files_path', $related_files_path, 'string', 'Related files repository', false);
-        $core->blog->settings->related->drop('related_files_path');
-    }
-    if ($core->blog->settings->related->related_url_prefix) {
-        $related_url_prefix = $core->blog->settings->related->related_url_prefix;
-        $core->blog->settings->related->put('url_prefix', $related_url_prefix, 'string', 'Prefix used by the URLHandler', false);
-        $core->blog->settings->related->drop('related_url_prefix');
-    }
+if ($core->blog->settings->related->related_files_path) {
+    $related_files_path = $core->blog->settings->related->related_files_path;
+    $core->blog->settings->related->put('files_path', $related_files_path, 'string', 'Related files repository', false);
+    $core->blog->settings->related->drop('related_files_path');
+}
+if ($core->blog->settings->related->related_url_prefix) {
+    $related_url_prefix = $core->blog->settings->related->related_url_prefix;
+    $core->blog->settings->related->put('url_prefix', $related_url_prefix, 'string', 'Prefix used by the URLHandler', false);
+    $core->blog->settings->related->drop('related_url_prefix');
 }
 
 if (!$core->blog->settings->related->files_path && !$related_files_path) {
@@ -61,6 +65,7 @@ if (!$core->blog->settings->related->files_path && !$related_files_path) {
 
 	$core->blog->settings->related->put('files_path', $related_files_path, 'string', 'Related files repository', false);
 }
+
 if (!$core->blog->settings->related->url_prefix && !$related_url_prefix) {
 	$core->blog->settings->related->put('url_prefix', 'static', 'string', 'Prefix used by the URLHandler', false);
 }

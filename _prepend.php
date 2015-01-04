@@ -19,16 +19,21 @@ $__autoload['rsRelated'] = dirname(__FILE__).'/inc/lib.related.php';
 $__autoload['adminPageList'] = dirname(__FILE__).'/inc/lib.related.php';
 $__autoload['widgetsRelated'] = dirname(__FILE__).'/inc/widgets.related.php';
 $__autoload['relatedAdminBehaviors'] = dirname(__FILE__).'/inc/related.admin.behaviors.php';
+$__autoload['relatedPublicBehaviors'] = dirname(__FILE__).'/inc/related.public.behaviors.php';
 $__autoload['relatedUrlHandlers'] = dirname(__FILE__).'/inc/related.url.handlers.php';
 $__autoload['rsRelatedBase'] = dirname(__FILE__).'/inc/rs.related.base.php';
+$__autoload['relatedTemplates'] = dirname(__FILE__).'/inc/related.templates.php';
 
-// Setting custom URL handlers
-$url_prefix = $core->blog->settings->related->url_prefix;
-$url_prefix = (empty($url_prefix))?'static':$url_prefix;
-$url_pattern = $url_prefix.'/(.+)$';
-$core->url->register('related',$url_prefix,$url_pattern,array('relatedUrlHandlers','related'));
-$core->url->register('relatedpreview','relatedpreview','^relatedpreview/(.+)$',array('relatedUrlHandlers','relatedpreview'));
-unset($url_prefix,$url_pattern);
+$self_ns = $core->blog->settings->addNamespace('related');
+if ($self_ns->active) {
+    // Setting custom URL handlers
+    $url_prefix = $core->blog->settings->related->url_prefix;
+    $url_prefix = (empty($url_prefix))?'static':$url_prefix;
+    $url_pattern = $url_prefix.'/(.+)$';
+    $core->url->register('related',$url_prefix,$url_pattern,array('relatedUrlHandlers','related'));
+    $core->url->register('relatedpreview','relatedpreview','^relatedpreview/(.+)$',array('relatedUrlHandlers','relatedpreview'));
+    unset($url_prefix, $url_pattern);
 
-// Registering new post_type
-$core->setPostType('related','plugin.php?p=related&do=edit&id=%d',$core->url->getBase('related').'/%s');
+    // Registering new post_type
+    $core->setPostType('related','plugin.php?p=related&do=edit&id=%d',$core->url->getBase('related').'/%s');
+}

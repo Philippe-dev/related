@@ -30,7 +30,7 @@
           <h3><?php echo  __('General options');?></h3>
           <p>
 	    <label class=" classic"><?php echo __('Repository path :').' ';?>
-              <?php echo form::field('repository', 60, 255, $related_repository);?>
+              <?php echo form::field('repository', 60, 255, $related_files_path);?>
             </label>
 	  </p>
 	</div>
@@ -50,8 +50,9 @@
     </div>
     <?php if ($related_active):?>
     <div class="multi-part" id="pages_compose" title="<?php echo __('Manage pages');?>">
-      <p class="top-add">	
-		<a class="button add" href="plugin.php?p=related&amp;do=edit&amp;st=post"><?php echo __('New post as page');?></a>&nbsp;-&nbsp;
+      <p class="top-add">
+	<a class="button add" href="plugin.php?p=related&amp;do=edit&amp;st=post"><?php echo __('New post as page');?></a>
+	&nbsp;-&nbsp;
         <a class="button add" href="plugin.php?p=related&amp;do=edit&amp;st=file"><?php echo __('New included page');?></a>
       </p>
       <?php
