@@ -309,13 +309,35 @@ msgstr "Enregistrer la configuration"
 msgid "Enable Related plugin"
 msgstr "Activer le plugin pages connexes"
 
-#~ msgid "Are you sure you want to delete selected pages?"
-#~ msgstr "Êtes-vous certain de vouloir supprimer les pages sélectionnées ?"
-#~ msgid "This user does not exists"
-#~ msgstr "Cet utilisateur n'existe pas"
-#~ msgid "Pages"
-#~ msgstr "Pages"
-#~ msgid "Author ID:"
-#~ msgstr "ID de l'auteur"
-#~ msgid "back"
-#~ msgstr "retour"
+msgid "Pages limit:"
+msgstr "Limite du nombre de pages :"
+
+msgid "Add to widget"
+msgstr "Ajouter au widget"
+
+msgid "Remove from widget"
+msgstr "Enlever du widget"
+
+msgid "Are you sure you want to delete selected pages?"
+msgstr "Êtes-vous certain de vouloir supprimer les pages sélectionnées ?"
+
+msgid "Visible pages in widget:"
+msgstr "Pages visibles dans le widget : "
+
+msgid "Visible pages in widget"
+msgstr "Pages visible dans le widget"
+
+msgid "Visible page in widget"
+msgstr "Page visible dans le widget"
+
+msgid "No"
+msgstr "Non"
+
+msgid "Visible in widget"
+msgstr "Visible dans le widget"
+
+msgid "Go to this related page on the site"
+msgstr "Voir cette page connexe sur le site"
+
+msgid "pages per page"
+msgstr "pages par page"

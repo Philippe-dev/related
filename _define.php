@@ -18,10 +18,10 @@ $this->registerModule(
 	/* Name */		"Related Pages",
 	/* Description*/	"Serve pages & scripts",
 	/* Author */		"Pep, contributors, Nicolas Roudaire",
-	/* Version */		'1.5.0',
-	/* Permissions */	'contentadmin,pages',
-    /* Properties */	array('type' => 'plugin',
-							  'dc_min' => '2.6',
+	/* Version */		'1.6.0-RC6',
+    /* Properties */	array('contentadmin,pages',
+                              'type' => 'plugin',
+							  'dc_min' => '2.7',
 							  'support' => 'http://forum.dotclear.net/viewtopic.php?id=330952',
 							  'details' => 'http://plugins.dotaddict.org/dc2/details/related'
     )

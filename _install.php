@@ -22,7 +22,7 @@ if (version_compare($installed_version,$this_version,'>=')) {
 
 $core->blog->settings->addNamespace('related');
 if (!$core->blog->settings->related->active) {
-    if ($installed_version == '1.1-RC2') {
+    if (version_compare($installed_version,'1.1','<')) {
         $core->blog->settings->related->put('active', true, 'boolean', 'Related plugin activated?', true);
     } else {
         $core->blog->settings->related->put('active', false, 'boolean', 'Related plugin activated?', true);

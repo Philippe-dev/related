@@ -20,15 +20,21 @@ class widgetsRelated
 
 	public static function init($w) {
 	    $w->create('related', __('Related pages'), array('widgetsRelated', 'pagesList'));
-	    $w->related->setting('title', __('Title:'), '');
+        $w->related->setting('title',__('Title (optional)').' :',__('Related pages'));
+        $w->related->setting('limit',__('Pages limit:'),10);
 		$w->related->setting('homeonly', __('Display on:'), 0, 'combo',
                              array(__('All pages') => 0, __('Home page only') => 1, __('Except on home page') => 2));
         $w->related->setting('content_only', __('Content only'), 0, 'check');
         $w->related->setting('class', __('CSS class:'), '');
+        $w->related->setting('offline',__('Offline'),0,'check');
 	}
 
 	public static function pagesList($w) {
 		global $core;
+
+        if ($w->offline) {
+			return;
+        }
 
         if (($w->homeonly == 1 && $core->url->type != 'default') ||
 			($w->homeonly == 2 && $core->url->type == 'default')) {
@@ -38,6 +44,7 @@ class widgetsRelated
 		$params['post_type'] = 'related';
 		$params['no_content'] = true;
 		$params['post_selected'] = true;
+        $params['limit'] = abs((integer) $w->limit);
 		$rs = $core->blog->getPosts($params);
 		$rs->extend('rsRelatedBase');
 
@@ -45,27 +52,16 @@ class widgetsRelated
 			return;
 		}
 
-		$title = $w->title ? html::escapeHTML($w->title) : __('Related pages');
-
-		$res =
-		'<div id="related">'.
-		'<h2>'.$title.'</h2>'.
-		'<ul>';
+        $res = ($w->title ? $w->renderTitle(html::escapeHTML($w->title)) : '');
+		$res .= '<ul>';
 
 		$pages_list = relatedHelpers::getPublicList($rs);
 		foreach ($pages_list as $page) {
-			$res .= '<li><a href="'.$page['url'].'">'.
-			html::escapeHTML($page['title']).'</a></li>';
+			$res .= '<li><a href="'.$page['url'].'">'.html::escapeHTML($page['title']).'</a></li>';
 		}
 
-		$res .= '</ul></div>';
-		return $res;
+		$res .= '</ul>';
 
-        if (version_compare($core->getVersion(), '2.6', '>=')) {
-            return '<div class="related-pages">'.$res.'</div>';
-        } else {
-            return $w->renderDiv($w->content_only, 'related-pages-widget '.$w->class, '', $res);
-        }
-
+        return $w->renderDiv($w->content_only, 'related-pages-widget '.$w->class, '', $res);
 	}
 }

@@ -1,3 +1,8 @@
+related 1.6.0 - 2015-01-04
+==========================
+* Manage upgrade from release before 1.1.0 and make plugin active for active blog.
+
+
 related 1.5.0 - 2015-01-04
 ==========================
 * Manage upgrade from 1.1-RC1 and make plugin active for active blog.

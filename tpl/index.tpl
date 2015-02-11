@@ -3,16 +3,23 @@
     <title><?php echo __('Related pages'); ?></title>
     <?php echo dcPage::jsToolMan();?>
     <?php echo dcPage::jsPageTabs($default_tab);?>
+    <?php echo dcPage::jsLoad('js/jquery/jquery-ui.custom.js');?>
+    <?php echo dcPage::jsLoad('js/jquery/jquery.ui.touch-punch.js');?>
     <?php echo dcPage::jsLoad('index.php?pf=related/js/_pages.js');?>
+    <?php echo dcPage::jsLoad('index.php?pf=related/js/filter-controls.js');?>
+    <script type="text/javascript">
+      //<![CDATA[
+      <?php echo dcPage::jsVar('dotclear.msg.confirm_delete_posts',__("Are you sure you want to delete selected pages?"));?>
+      <?php echo dcPage::jsVar('dotclear.msg.show_filters', $show_filters ? 'true':'false');?>
+      <?php echo dcPage::jsVar('dotclear.msg.filter_posts_list',$form_filter_title);?>
+      <?php echo dcPage::jsVar('dotclear.msg.cancel_the_filter',__('Cancel filters and display options'));?>
+      //]]>
+    </script>
   </head>
   <body>
-    <?php echo dcPage::breadcrumb(
-		array(
-			html::escapeHTML($core->blog->name) => '',
-			__('Related pages') => ''
-		)); ?>
+    <?php echo dcPage::breadcrumb(array(html::escapeHTML($core->blog->name) => '', __('Related pages') => '')); ?>
     <?php if (!empty($message)):?>
-    <p class="message"><?php echo $message;?></p>
+    <?php echo $message;?>
     <?php endif;?>
 
     <div class="multi-part" id="related_settings" title="<?php echo __('Settings');?>">
@@ -29,7 +36,7 @@
         <div class="fieldset">
           <h3><?php echo  __('General options');?></h3>
           <p>
-	    <label class=" classic"><?php echo __('Repository path :').' ';?>
+	    <label for="repository" class="classic"><?php echo __('Repository path :').' ';?>
               <?php echo form::field('repository', 60, 255, $related_files_path);?>
             </label>
 	  </p>
@@ -37,13 +44,13 @@
         <div class="fieldset">
           <h3><?php echo __('Advanced options');?></h3>
           <p>
-	    <label class=" classic"><?php echo  __('URL prefix :').' ';?>
+	    <label for="url_prefix" class="classic"><?php echo  __('URL prefix :').' ';?>
 	      <?php echo form::field('url_prefix', 60, 255, $related_url_prefix);?>
             </label>
 	  </p>
 	</div>
 	<?php endif;?>
-	<?php echo form::hidden('p','related');?>
+	<?php echo form::hidden(array('p'),'related');?>
 	<?php echo $core->formNonce();?>
 	<input type="submit" name="saveconfig" value="<?php echo __('Save configuration');?>"/>
       </form>
@@ -55,9 +62,67 @@
 	&nbsp;-&nbsp;
         <a class="button add" href="plugin.php?p=related&amp;do=edit&amp;st=file"><?php echo __('New included page');?></a>
       </p>
+
+      <p><a id="filter-control" class="form-control" href="<?php echo $p_url;?>#pages_compose"></a></p>
+      <form action="<?php echo $core->adminurl->get('admin.plugin');?>" method="get" id="filters-form">
+	<h3 class="out-of-screen-if-js"><?php echo $form_filter_title;?></h3>
+	<div class="table">
+	  <div class="cell">
+	    <h4><?php echo __('Filters');?></h4>
+	    <p>
+	      <label for="user_id" class="ib"><?php echo __('Author:');?></label>
+	      <?php echo form::combo('user_id',$users_combo,$user_id);?>
+	    </p>
+	    <p>
+	      <label for="status" class="ib"><?php echo __('Status:');?></label>
+	      <?php echo form::combo('status',$status_combo,$status);?>
+	    </p>
+	  </div>
+
+	  <div class="cell filters-sibling-cell">
+	    <p>
+	      <label for="in_widget" class="ib"><?php echo __('Visible pages in widget:');?></label>
+	      <?php echo form::combo('in_widget', $in_widget_combo, $in_widget);?>
+	    </p>
+	    <p>
+	      <label for="month" class="ib"><?php echo __('Month:');?></label>
+	      <?php echo form::combo('month',$dt_m_combo,$month);?>
+	    </p>
+	    <p>
+	      <label for="lang" class="ib"><?php echo __('Lang:');?></label>
+	      <?php echo form::combo('lang',$lang_combo,$lang);?>
+	    </p>
+	  </div>
+
+	  <div class="cell filters-options">
+	    <h4><?php echo __('Display options');?></h4>
+	    <p>
+	      <label for="sortby" class="ib"><?php echo __('Order by:');?></label>
+	      <?php echo form::combo('sortby',$sortby_combo,$sortby);?>
+	    </p>
+	    <p>
+	      <label for="order" class="ib"><?php echo __('Sort:');?></label>
+	      <?php echo form::combo('order',$order_combo,$order);?>
+	    </p>
+	    <p>
+	      <span class="label ib"><?php echo __('Show');?></span>
+	      <label for="nb" class="classic">
+		<?php echo form::field('nb',3,3,$nb_per_page).' '.__('pages per page');?>
+	      </label>
+	    </p>
+	  </div>
+	</div>
+
+	<p>
+	  <input type="submit" value="<?php echo __('Apply filters and display options');?>" />
+	  <?php echo form::hidden(array('p'),'related');?>
+	  <br class="clear" />
+	</p>
+      </form>
+
       <?php
-	 $page_list->display($page,$nb_per_page,
-      '<form action="posts_actions.php" method="post" id="form-pages">'.
+	 $page_list->display($page, $nb_per_page,
+      '<form action="'.$core->adminurl->get('admin.plugin').'" method="post" id="form-pages">'.
         '%s'.
         '<div class="two-cols">'.
           '<p class="col checkboxes-helpers"></p>'.
@@ -65,7 +130,7 @@
             form::combo('action',$combo_action).
             '<input type="submit" value="'.__('ok').'" /></p>'.
           form::hidden(array('post_type'),'related').
-          form::hidden(array('redir'),html::escapeHTML($_SERVER['REQUEST_URI'])).
+          form::hidden(array('p'),'related').
           $core->formNonce().
           '</div>'.
         '</form>'
@@ -73,14 +138,14 @@
       ?>
     </div>
     <div class="multi-part" id="pages_order" title="<?php echo __('Arrange public list');?>">
-      <?php $public_pages = relatedHelpers::getPublicList($pages);?>
+      <?php $public_pages = relatedHelpers::getPublicList($all_pages);?>
       <?php if (!empty($public_pages)):?>
       <form action="plugin.php?p=related" method="post" id="form-public-pages">
         <table class="dragable ">
           <thead>
 	    <tr>
               <th><?php echo __('Order');?></th>
-              <th><?php echo __('Visible');?></th>
+              <th class="nowrap"><?php echo __('Visible page in widget');?></th>
 	      <th class="nowrap maximal"><?php echo __('Page title');?></th>
             </tr>
 	  </thead>
@@ -101,9 +166,10 @@
           </tbody>
 	</table>
         <p>
-	  <?php echo form::hidden('public_order','').$core->formNonce();?>
+	  <?php echo form::hidden(array('public_order'),'').$core->formNonce();?>
           <input type="submit" name="pages_upd" value="<?php echo __('Save');?>" />
 	</p>
+	<p class="col checkboxes-helpers"></p>
       </form>
       <?php else:?>
       <p><strong><?php echo __('No page');?></strong></p>

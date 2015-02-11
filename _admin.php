@@ -17,7 +17,7 @@ if (!defined('DC_CONTEXT_ADMIN')) return;
 $_menu['Blog']->addItem(
 	__('Related pages'),
 	'plugin.php?p=related',
-	'index.php?pf=related/imgs/icon.png',
+	'index.php?pf=related/icon.png',
 	preg_match('/plugin.php\?p=related(&.*)?$/',$_SERVER['REQUEST_URI']),
 	$core->auth->check('contentadmin,pages',$core->blog->id)
 );
@@ -27,6 +27,5 @@ $core->auth->setPermissionType('pages',__('manage related pages'));
 $core->addBehavior('adminDashboardFavs', array('relatedAdminBehaviors', 'dashboardFavs'));
 $core->addBehavior('adminDashboardFavsIcon', array('relatedAdminBehaviors', 'dashboardFavsIcon'));
 $core->addBehavior('sitemapsDefineParts',array('relatedAdminBehaviors','sitemapsDefineParts'));
-
 
 require dirname(__FILE__).'/_widgets.php';

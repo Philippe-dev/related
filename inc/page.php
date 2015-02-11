@@ -402,18 +402,18 @@ echo dcPage::jsDatePicker().
 </head>
 <body>
 <?php
-if (!empty($_GET['upd'])) {
-		echo '<p class="message">'.__('Page has been updated.').'</p>';
-} elseif (!empty($_GET['crea'])) {
-		echo '<p class="message">'.__('Page has been created.').'</p>';
-}
-
 echo dcPage::breadcrumb(
 		array(
 			html::escapeHTML($core->blog->name) => '',
 			__('Related pages') => $p_url,
 			($post_id ? $page_title_edit : $page_title) => ''
 		));
+
+if (!empty($_GET['upd'])) {
+    dcPage::addSuccessNotice(__('Page has been updated.'));
+} elseif (!empty($_GET['crea'])) {
+    dcPage::addSuccessNotice(__('Page has been created.'));
+}
 
 # Exit if we cannot view page
 if (!$can_view_page) {
@@ -486,10 +486,10 @@ if ($can_edit_post) {
 			'</p>';
 	} else {
         $main_items['post_content'] = '<div style="display:none">'.
-			form::textarea('post_content',0,0,html::escapeHTML($post_content)).
+			form::textarea('post_content',1,1,html::escapeHTML($post_content)).
 			'</div>';
         $main_items['is_file'] = '<p class="col"><label class="required" title="'.__('Required field').'" '.
-            'for="page_relatedfile">'.__('Included file:').
+            'for="repository_file">'.__('Included file:').
             dcPage::help('post','page_relatedfile').'</label></p>'.
             '<div class="fieldset">'.
             '<p><label>'.__('Pick up a local file in your related pages repository').' '.
@@ -497,7 +497,7 @@ if ($can_edit_post) {
             '</label></p>'.
             form::hidden(array('MAX_FILE_SIZE'),DC_MAX_UPLOAD_SIZE).
             '<p><label>'.__('or upload a new file').' '.
-            '<input type="file" id="up_file" name="up_file" size="20" />'.
+            '<input type="file" id="up_file" name="up_file" />'.
             '</label></p>'.
             '</div>'.
             form::hidden('st','file');
@@ -510,7 +510,7 @@ if ($can_edit_post) {
         '</p>';
 
     if ($post_id && $post->post_status == 1) {
-        echo '<p><a class="onblog_link outgoing" href="'.$post->getURL().'" title="'.$post_title.'">'.__('Go to this entry on the site').' <img src="images/outgoing-blue.png" alt="" /></a></p>';
+        echo '<p><a class="onblog_link outgoing" href="'.$post->getURL().'" title="'.$post_title.'">'.__('Go to this related page on the site').' <img src="images/outgoing-blue.png" alt="" /></a></p>';
     }
 
     echo '<div class="multi-part" title="'.($post_id ? __('Edit page') : __('New page')).'" id="edit-entry">';
