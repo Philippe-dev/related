@@ -398,6 +398,14 @@ echo dcPage::jsDatePicker().
 	# --BEHAVIOR-- adminRelatedHeaders
 	$core->callBehavior('adminRelatedHeaders').
 	dcPage::jsPageTabs($default_tab);
+
+    if (!empty($_GET['xconv'])) {
+        $post_excerpt = $post_excerpt_xhtml;
+        $post_content = $post_content_xhtml;
+        $post_format = 'xhtml';
+
+        dcPage::addSuccessNotice(__('Don\'t forget to validate your XHTML conversion by saving your post.'));
+    }
 ?>
 </head>
 <body>
@@ -504,14 +512,6 @@ if ($can_edit_post) {
         __('Unpublished notes.').'</span></label>'.
         form::textarea('post_notes',50,5,html::escapeHTML($post_notes)).
         '</p>';
-
-    if (!empty($_GET['xconv'])) {
-        $post_excerpt = $post_excerpt_xhtml;
-        $post_content = $post_content_xhtml;
-        $post_format = 'xhtml';
-
-        dcPage::message(__('Don\'t forget to validate your XHTML conversion by saving your post.'));
-    }
 
     if ($post_id && $post->post_status == 1) {
         echo '<p><a class="onblog_link outgoing" href="'.$post->getURL().'" title="'.$post_title.'">'.__('Go to this related page on the site').' <img src="images/outgoing-blue.png" alt="" /></a></p>';

@@ -1,3 +1,8 @@
+related 1.6.1 - 2015-02-14
+==========================
+* Icons were modified when removing crlf in all files.
+* Change message type when converting to xhmlt.
+
 related 1.6.0 - 2015-02-14
 ==========================
 * Add pagination and filter for list of related pages.
