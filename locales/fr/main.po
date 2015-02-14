@@ -37,8 +37,8 @@ msgstr "L'extension \"metadata\" est nécessaire mais manquante."
 
 #: _install.php:41
 #: panel.php:139
-msgid "Directory for related files repository needs to allow read and write access."
-msgstr "Le répertoire pour le dépôt des fichiers liés nécessite un accès en lecture et écriture."
+msgid "Directory "%s" for related files repository needs to allow read and write access."
+msgstr "Le répertoire "%s" pour le dépôt des fichiers liés nécessite un accès en lecture et écriture."
 
 #: _widgets.php:64
 #: page.php:454
@@ -239,8 +239,8 @@ msgid "Pages list has been sorted."
 msgstr "La liste des pages connexes a été réordonnée."
 
 #: panel.php:137
-msgid "Configuration updated."
-msgstr "Configuration mise à jour."
+msgid "Configuration has been updated."
+msgstr "La configuration a été mise à jour."
 
 #: panel.php:164
 msgid "Manage pages"
@@ -321,8 +321,8 @@ msgstr "Enlever du widget"
 msgid "Are you sure you want to delete selected pages?"
 msgstr "Êtes-vous certain de vouloir supprimer les pages sélectionnées ?"
 
-msgid "Visible pages in widget:"
-msgstr "Pages visibles dans le widget : "
+msgid "In widget:"
+msgstr "Dans le widget&nbsp;: "
 
 msgid "Visible pages in widget"
 msgstr "Pages visible dans le widget"

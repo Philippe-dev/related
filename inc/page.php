@@ -57,7 +57,7 @@ $img_status_pattern = '<img class="img_select_option" alt="%1$s" title="%1$s" sr
 $img_status = '';
 
 # Languages combo
-$rs = $core->blog->getLangs(array('order'=>'asc'));
+$rs = $core->blog->getLangs(array('order' => 'asc'));
 $lang_combo = dcAdminCombos::getLangsCombo($rs,true);
 
 # Formaters combo
@@ -88,10 +88,10 @@ if (!empty($_REQUEST['id'])) {
 	$params['post_type'] = 'related';
 
 	$post = $core->blog->getPosts($params, false);
-	$post->extend("rsRelated");
+	$post->extend('rsRelated');
 
 	if ($post->isEmpty()) {
-		$core->error->add(__('This page does not exist.'));
+        dcPage::addErrorNotice(__('This page does not exist.'));
 		$can_view_page = false;
 	} else {
 		$post_id = $post->post_id;
@@ -179,15 +179,13 @@ if (!empty($_POST) && $can_edit_post) {
 		$post_url = $_POST['post_url'];
 	}
 
-	$core->blog->setPostContent(
-		$post_id,$post_format,$post_lang,
-		$post_excerpt,$post_excerpt_xhtml,$post_content,$post_content_xhtml
+	$core->blog->setPostContent($post_id, $post_format, $post_lang, $post_excerpt,
+                                $post_excerpt_xhtml, $post_content, $post_content_xhtml
 	);
 
 	$preview = !empty($_POST['preview']);
 
-	if ($page_isfile)
-	{
+	if ($page_isfile) {
 		$related_upl = null;
 		if (!empty($_FILES['up_file']['name'])) {
 			$related_upl = true;
@@ -208,7 +206,7 @@ if (!empty($_POST) && $can_edit_post) {
 					$page_relatedfile = $_POST['repository_file'];
 				}
 			} catch (Exception $e) {
-				$core->error->add($e->getMessage());
+                dcPage::addErrorNotice($e->getMessage());
 			}
 		}
 	}
@@ -244,16 +242,16 @@ if (!empty($_POST) && !empty($_POST['save']) && $can_edit_post) {
 	if ($post_id) {
         switch ($post_status) {
 		case 1:
-			$img_status = sprintf($img_status_pattern,__('Published'),'check-on.png');
+			$img_status = sprintf($img_status_pattern, __('Published'), 'check-on.png');
 			break;
 		case 0:
-			$img_status = sprintf($img_status_pattern,__('Unpublished'),'check-off.png');
+			$img_status = sprintf($img_status_pattern, __('Unpublished'), 'check-off.png');
 			break;
 		case -1:
-			$img_status = sprintf($img_status_pattern,__('Scheduled'),'scheduled.png');
+			$img_status = sprintf($img_status_pattern, __('Scheduled'), 'scheduled.png');
 			break;
 		case -2:
-			$img_status = sprintf($img_status_pattern,__('Pending'),'check-wrn.png');
+			$img_status = sprintf($img_status_pattern, __('Pending'), 'check-wrn.png');
 			break;
 		default:
 			$img_status = '';
@@ -265,15 +263,15 @@ if (!empty($_POST) && !empty($_POST['save']) && $can_edit_post) {
 			}
 
 			# --BEHAVIOR-- adminBeforePostUpdate
-			$core->callBehavior('adminBeforePostUpdate',$cur,$post_id);
+			$core->callBehavior('adminBeforePostUpdate', $cur, $post_id);
 			# --BEHAVIOR-- adminBeforePageUpdate
-			$core->callBehavior('adminBeforePageUpdate',$cur,$post_id);
+			$core->callBehavior('adminBeforePageUpdate', $cur, $post_id);
 
 			$core->con->begin();
-			$core->blog->updPost($post_id,$cur);
+			$core->blog->updPost($post_id, $cur);
 			if ($page_isfile) {
 				try {
-					if ($core->meta === null) {
+					if ($core->meta===null) {
 						$core->meta = new dcMeta($core);
 					}
 					$core->meta->delPostMeta($post_id, 'related_file');
@@ -287,13 +285,14 @@ if (!empty($_POST) && !empty($_POST['save']) && $can_edit_post) {
 			$core->con->commit();
 
 			# --BEHAVIOR-- adminAfterPostUpdate
-			$core->callBehavior('adminAfterPostUpdate',$cur,$post_id);
+			$core->callBehavior('adminAfterPostUpdate', $cur, $post_id);
 			# --BEHAVIOR-- adminAfterPageUpdate
-			$core->callBehavior('adminAfterPageUpdate',$cur,$post_id);
+			$core->callBehavior('adminAfterPageUpdate', $cur, $post_id);
 
-			http::redirect('plugin.php?p=related&do=edit&id='.$post_id.'&upd=1');
+            dcPage::addSuccessNotice(__('Page has been updated.'));
+			http::redirect('plugin.php?p=related&do=edit&id='.$post_id);
 		} catch (Exception $e) {
-			$core->error->add($e->getMessage());
+            dcPage::addErrorNotice($e->getMessage());
 		}
 	} else {
 		$cur->user_id = $core->auth->userID();
@@ -307,9 +306,9 @@ if (!empty($_POST) && !empty($_POST['save']) && $can_edit_post) {
 			}
 
 			# --BEHAVIOR-- adminBeforePostCreate
-			$core->callBehavior('adminBeforePostCreate',$cur);
+			$core->callBehavior('adminBeforePostCreate', $cur);
 			# --BEHAVIOR-- adminBeforePageCreate
-			$core->callBehavior('adminBeforePageCreate',$cur);
+			$core->callBehavior('adminBeforePageCreate', $cur);
 
 			$core->con->begin();
 			$return_id = $core->blog->addPost($cur);
@@ -328,13 +327,14 @@ if (!empty($_POST) && !empty($_POST['save']) && $can_edit_post) {
 			$core->con->commit();
 
 			# --BEHAVIOR-- adminAfterPostCreate
-			$core->callBehavior('adminAfterPostCreate',$cur,$return_id);
+			$core->callBehavior('adminAfterPostCreate', $cur, $return_id);
 			# --BEHAVIOR-- adminAfterPageCreate
-			$core->callBehavior('adminAfterPageCreate',$cur,$return_id);
+			$core->callBehavior('adminAfterPageCreate', $cur, $return_id);
 
-			http::redirect('plugin.php?p=related&do=edit&id='.$return_id.'&crea=1');
+            dcPage::addSuccessNotice(__('Page has been created.'));
+			http::redirect('plugin.php?p=related&do=edit&id='.$return_id);
 		} catch (Exception $e) {
-			$core->error->add($e->getMessage());
+            dcPage::addErrorNotice($e->getMessage());
 		}
 	}
 }
@@ -344,7 +344,7 @@ if (!empty($_POST['delete']) && $can_delete) {
 		$core->blog->delPost($post_id);
 		http::redirect($p_url);
 	} catch (Exception $e) {
-		$core->error->add($e->getMessage());
+        dcPage::addErrorNotice($e->getMessage());
 	}
 }
 
@@ -365,16 +365,16 @@ if ($post_editor && !empty($post_editor[$post_format])) {
 if ($post_id) {
 	switch ($post_status) {
 		case 1:
-			$img_status = sprintf($img_status_pattern,__('Published'),'check-on.png');
+			$img_status = sprintf($img_status_pattern,__('Published'), 'check-on.png');
 			break;
 		case 0:
-			$img_status = sprintf($img_status_pattern,__('Unpublished'),'check-off.png');
+			$img_status = sprintf($img_status_pattern, __('Unpublished'), 'check-off.png');
 			break;
 		case -1:
-			$img_status = sprintf($img_status_pattern,__('Scheduled'),'scheduled.png');
+			$img_status = sprintf($img_status_pattern, __('Scheduled'), 'scheduled.png');
 			break;
 		case -2:
-			$img_status = sprintf($img_status_pattern,__('Pending'),'check-wrn.png');
+			$img_status = sprintf($img_status_pattern, __('Pending'), 'check-wrn.png');
 			break;
 		default:
 			$img_status = '';
@@ -409,11 +409,7 @@ echo dcPage::breadcrumb(
 			($post_id ? $page_title_edit : $page_title) => ''
 		));
 
-if (!empty($_GET['upd'])) {
-    dcPage::addSuccessNotice(__('Page has been updated.'));
-} elseif (!empty($_GET['crea'])) {
-    dcPage::addSuccessNotice(__('Page has been created.'));
-}
+echo dcPage::notices();
 
 # Exit if we cannot view page
 if (!$can_view_page) {
@@ -428,42 +424,42 @@ if ($can_edit_post) {
 			'title' => __('Status'),
 			'items' => array(
 				'post_status' =>
-					'<p class="entry-status"><label for="post_status">'.__('Page status').' '.$img_status.'</label>'.
-					form::combo('post_status',$status_combo,$post_status,'maximal','',!$can_publish).
-					'</p>',
+                '<p class="entry-status"><label for="post_status">'.__('Page status').' '.$img_status.'</label>'.
+                form::combo('post_status',$status_combo,$post_status,'maximal','',!$can_publish).
+                '</p>',
 				'post_dt' =>
-					'<p><label for="post_dt">'.__('Publication date and hour').'</label>'.
-					form::field('post_dt',16,16,$post_dt,($bad_dt ? 'invalid' : '')).
-					'</p>',
+                '<p><label for="post_dt">'.__('Publication date and hour').'</label>'.
+                form::field('post_dt',16,16,$post_dt,($bad_dt ? 'invalid' : '')).
+                '</p>',
 				'post_lang' =>
-					'<p><label for="post_lang">'.__('Entry language').'</label>'.
-					form::combo('post_lang',$lang_combo,$post_lang).
-					'</p>',
+                '<p><label for="post_lang">'.__('Entry language').'</label>'.
+                form::combo('post_lang',$lang_combo,$post_lang).
+                '</p>',
 				'post_format' =>
-					'<div>'.
-					'<h5 id="label_format"><label for="post_format" class="classic">'.__('Text formatting').'</label></h5>'.
-					'<p>'.form::combo('post_format',$available_formats,$post_format,'maximal').'</p>'.
-					'<p class="format_control control_no_xhtml">'.
-					'<a id="convert-xhtml" class="button'.($post_id && $post_format != 'wiki' ? ' hide' : '').'" href="'.
-					$core->adminurl->get('admin.post',array('id'=> $post_id,'xconv'=> '1')).
-					'">'.
-					__('Convert to XHTML').'</a></p></div>')),
+                '<div>'.
+                '<h5 id="label_format"><label for="post_format" class="classic">'.__('Text formatting').'</label></h5>'.
+                '<p>'.form::combo('post_format',$available_formats,$post_format,'maximal').'</p>'.
+                '<p class="format_control control_no_xhtml">'.
+                '<a id="convert-xhtml" class="button'.($post_id && $post_format != 'wiki' ? ' hide' : '').'" href="'.
+                $core->adminurl->get('admin.plugin.related', array('do' => 'edit', 'id' => $post_id,'xconv' => '1')).
+                '">'.
+                __('Convert to XHTML').'</a></p></div>')),
 		'options-box' => array(
 			'title' => __('Options'),
 			'items' => array(
 				'post_password' =>
-					'<p><label for="post_password">'.__('Password').'</label>'.
-					form::field('post_password',10,32,html::escapeHTML($post_password),'maximal').
-					'</p>',
+                '<p><label for="post_password">'.__('Password').'</label>'.
+                form::field('post_password',10,32,html::escapeHTML($post_password),'maximal').
+                '</p>',
 				'post_url' =>
-					'<div class="lockable">'.
-					'<p><label for="post_url">'.__('Edit basename').'</label>'.
-					form::field('post_url',10,255,html::escapeHTML($post_url),'maximal').
-					'</p>'.
-					'<p class="form-note warn">'.
-					__('Warning: If you set the URL manually, it may conflict with another entry.').
-					'</p></div>'
-	))));
+                '<div class="lockable">'.
+                '<p><label for="post_url">'.__('Edit basename').'</label>'.
+                form::field('post_url',10,255,html::escapeHTML($post_url),'maximal').
+                '</p>'.
+                '<p class="form-note warn">'.
+                __('Warning: If you set the URL manually, it may conflict with another entry.').
+                '</p></div>'
+            ))));
 
 	$main_items = new ArrayObject(array(
 		"post_title" =>
@@ -508,6 +504,14 @@ if ($can_edit_post) {
         __('Unpublished notes.').'</span></label>'.
         form::textarea('post_notes',50,5,html::escapeHTML($post_notes)).
         '</p>';
+
+    if (!empty($_GET['xconv'])) {
+        $post_excerpt = $post_excerpt_xhtml;
+        $post_content = $post_content_xhtml;
+        $post_format = 'xhtml';
+
+        dcPage::message(__('Don\'t forget to validate your XHTML conversion by saving your post.'));
+    }
 
     if ($post_id && $post->post_status == 1) {
         echo '<p><a class="onblog_link outgoing" href="'.$post->getURL().'" title="'.$post_title.'">'.__('Go to this related page on the site').' <img src="images/outgoing-blue.png" alt="" /></a></p>';

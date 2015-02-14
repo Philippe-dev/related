@@ -17,10 +17,8 @@
     </script>
   </head>
   <body>
-    <?php echo dcPage::breadcrumb(array(html::escapeHTML($core->blog->name) => '', __('Related pages') => '')); ?>
-    <?php if (!empty($message)):?>
-    <?php echo $message;?>
-    <?php endif;?>
+    <?php echo dcPage::breadcrumb(array(html::escapeHTML($core->blog->name) => '', __('Related pages') => ''));?>
+    <?php echo dcPage::notices();?>
 
     <div class="multi-part" id="related_settings" title="<?php echo __('Settings');?>">
       <form action="<?php echo $p_url;?>" method="post" enctype="multipart/form-data">
@@ -37,7 +35,7 @@
           <h3><?php echo  __('General options');?></h3>
           <p>
 	    <label for="repository" class="classic"><?php echo __('Repository path :').' ';?>
-              <?php echo form::field('repository', 60, 255, $related_files_path);?>
+              <?php echo form::field('repository', 80, 255, $related_files_path);?>
             </label>
 	  </p>
 	</div>
@@ -45,7 +43,7 @@
           <h3><?php echo __('Advanced options');?></h3>
           <p>
 	    <label for="url_prefix" class="classic"><?php echo  __('URL prefix :').' ';?>
-	      <?php echo form::field('url_prefix', 60, 255, $related_url_prefix);?>
+	      <?php echo form::field('url_prefix', 80, 255, $related_url_prefix);?>
             </label>
 	  </p>
 	</div>
@@ -81,7 +79,7 @@
 
 	  <div class="cell filters-sibling-cell">
 	    <p>
-	      <label for="in_widget" class="ib"><?php echo __('Visible pages in widget:');?></label>
+	      <label for="in_widget" class="ib"><?php echo __('In widget:');?></label>
 	      <?php echo form::combo('in_widget', $in_widget_combo, $in_widget);?>
 	    </p>
 	    <p>

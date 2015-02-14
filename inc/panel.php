@@ -70,15 +70,17 @@ if (!empty($_POST['saveconfig'])) {
             if (is_dir($tmp_repository) && is_writable($tmp_repository)) {
                 $core->blog->settings->related->put('files_path', $tmp_repository);
                 $repository = $tmp_repository;
-                $message = dcPage::addSuccessNotice(__('Configuration updated.'));
+
+                dcPage::addSuccessNotice(__('Configuration has been updated.'));
             } else {
-                $core->error->add(__('Directory for related files repository needs to allow read and write access.'));
+                throw new Exception(sprintf(
+                    __('Directory "%s" for related files repository needs to allow read and write access.'),
+                    $tmp_repository
+                ));
             }
         }
-
-        $message = dcPage::addSuccessNotice(__('The configuration has been updated.'));
     } catch(Exception $e) {
-        $core->error->add($e->getMessage());
+        dcPage::addErrorNotice($e->getMessage());
     }
 }
 
@@ -101,7 +103,7 @@ if ($related_active) {
         try {
             $users = $core->blog->getPostsUsers();
         } catch (Exception $e) {
-            $core->error->add($e->getMessage());
+            dcPage::addErrorNotice($e->getMessage());
         }
 
         # Filter form we'll put in html_block
@@ -114,7 +116,7 @@ if ($related_active) {
         try {
             $langs = $core->blog->getLangs();
         } catch (Exception $e) {
-            $core->error->add($e->getMessage());
+            dcPage::addErrorNotice($e->getMessage());
         }
         $lang_combo = array_merge(
             array('-' => ''),
@@ -136,7 +138,7 @@ if ($related_active) {
         try {
             $dates = $core->blog->getDates(array('type'=>'month'));
         } catch (Exception $e) {
-            $core->error->add($e->getMessage());
+            dcPage::addErrorNotice($e->getMessage());
         }
 
         # Months array
@@ -173,10 +175,10 @@ if ($related_active) {
     try {
         $pages = $core->blog->getPosts($params);
         $pages->extend("rsRelated");
-        $counter = $core->blog->getPosts($params,true);
+        $counter = $core->blog->getPosts($params, true);
         $page_list = new adminPageList($core,$pages,$counter->f(0));
     } catch (Exception $e) {
-        $core->error->add($e->getMessage());
+        dcPage::addErrorNotice($e->getMessage());
     }
 
         # apply filters
@@ -205,16 +207,16 @@ if ($related_active) {
     }
 
     # - Month filter
-    if ($month !== '' && in_array($month,$dt_m_combo)) {
-        $params['post_month'] = substr($month,4,2);
-        $params['post_year'] = substr($month,0,4);
+    if ($month !== '' && in_array($month, $dt_m_combo)) {
+        $params['post_month'] = substr($month, 4, 2);
+        $params['post_year'] = substr($month, 0, 4);
         $show_filters = true;
     } else {
         $month='';
     }
 
     # - Lang filter
-    if ($lang !== '' && in_array($lang,$lang_combo)) {
+    if ($lang !== '' && in_array($lang, $lang_combo)) {
         $params['post_lang'] = $lang;
         $show_filters = true;
     } else {
@@ -222,8 +224,8 @@ if ($related_active) {
     }
 
     # - Sortby and order filter
-    if ($sortby !== '' && in_array($sortby,$sortby_combo)) {
-        if ($order !== '' && in_array($order,$order_combo)) {
+    if ($sortby !== '' && in_array($sortby, $sortby_combo)) {
+        if ($order !== '' && in_array($order, $order_combo)) {
             $params['order'] = $sortby.' '.$order;
         } else {
             $order='desc';
@@ -244,20 +246,20 @@ if ($related_active) {
         $counter = $core->blog->getPosts($params, true);
         $page_list = new adminPageList($core, $pages, $counter->f(0));
     } catch (Exception $e) {
-        $core->error->add($e->getMessage());
+        dcPage::addErrorNotice($e->getMessage());
     }
 
     # Actions combo box
     $combo_action = array();
-    if ($core->auth->check('publish,contentadmin',$core->blog->id)) {
+    if ($core->auth->check('publish,contentadmin', $core->blog->id)) {
         $combo_action[__('publish')] = 'publish';
         $combo_action[__('unpublish')] = 'unpublish';
         $combo_action[__('mark as pending')] = 'pending';
     }
-    if ($core->auth->check('admin',$core->blog->id)) {
+    if ($core->auth->check('admin', $core->blog->id)) {
         $combo_action[__('change author')] = 'author';
     }
-    if ($core->auth->check('delete,contentadmin',$core->blog->id)) {
+    if ($core->auth->check('delete,contentadmin', $core->blog->id)) {
         $combo_action[__('delete')] = 'delete';
     }
     $combo_action[__('Widget')] = array(
@@ -266,7 +268,7 @@ if ($related_active) {
     );
 
     # --BEHAVIOR-- adminPagesActionsCombo
-    $core->callBehavior('adminPagesActionsCombo',array(&$combo_action));
+    $core->callBehavior('adminPagesActionsCombo', array(&$combo_action));
 
     $pages_actions_page = new relatedPagesActionsPage($core, 'plugin.php', array('p' => 'related'));
     if (!$pages_actions_page->process()) {
@@ -294,25 +296,25 @@ if ($related_active) {
             foreach ($public_pages as $c_page) {
                 $cur = $core->con->openCursor($core->prefix.'post');
                 $cur->post_upddt = date('Y-m-d H:i:s');
-                $cur->post_selected = (integer)in_array($c_page['id'],$visible);
+                $cur->post_selected = (integer)in_array($c_page['id'], $visible);
                 $cur->update('WHERE post_id = '.$c_page['id']);
 
                 if (!empty($order)) {
-                    $pos = array_search($c_page['id'],$order);
+                    $pos = array_search($c_page['id'], $order);
                     $pos = (integer)$pos + 1;
-                    $meta->delPostMeta($c_page['id'],'related_position');
-                    $meta->setPostMeta($c_page['id'],'related_position',$pos);
+                    $meta->delPostMeta($c_page['id'], 'related_position');
+                    $meta->setPostMeta($c_page['id'], 'related_position', $pos);
                 }
             }
             $core->blog->triggerBlog();
             http::redirect($p_url.'&reord=1');
         } catch (Exception $e) {
-            $core->error->add($e->getMessage());
+            dcPage::addErrorNotice($e->getMessage());
         }
     }
 
     if (!empty($_GET['reord'])) {
-        $message = dcPage::addSuccessNotice(__('Pages list has been sorted.'));
+        dcPage::addSuccessNotice(__('Pages list has been sorted.'));
         $default_tab = 'pages_order';
     }
 }

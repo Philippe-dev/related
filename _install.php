@@ -47,7 +47,10 @@ if (!$core->blog->settings->related->files_path && !$related_files_path) {
 
 	if (is_dir($related_files_path)) {
 		if (!is_readable($related_files_path) || !is_writable($related_files_path)) {
-			throw new Exception(__('Directory for related files repository needs to allow read and write access.'));
+			throw new Exception(sprintf(
+                __('Directory "%s" for related files repository needs to allow read and write access.'),
+                $related_files_path
+            ));
 		}
 	} else {
 		try {
