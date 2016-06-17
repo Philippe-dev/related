@@ -3,7 +3,7 @@
 #
 # This file is part of Related, a plugin for DotClear2.
 #
-# Copyright(c) 2014-2015 Nicolas Roudaire <nikrou77@gmail.com> http://www.nikrou.net
+# Copyright(c) 2014-2016 Nicolas Roudaire <nikrou77@gmail.com> http://www.nikrou.net
 #
 # Copyright (c) 2006-2010 Pep and contributors.
 # Licensed under the GPL version 2.0 license.
@@ -28,8 +28,14 @@ class relatedTemplates
 		if (!empty($attr['absolute_urls'])) {
 			$urls = '1';
 		}
-
 		$f = $core->tpl->getFilters($attr);
+
+        if (!empty($attr['full'])) {
+            $content = 'echo '.sprintf($f, '$_ctx->posts->getExcerpt('.$urls.')." ".$_ctx->posts->getContent('.$urls.')').';';
+        } else {
+            $content = 'echo '.sprintf($f,'$_ctx->posts->getContent('.$urls.')').';';
+        }
+
 		$p =
 		"<?php if ((\$related_file = \$_ctx->posts->getRelatedFilename()) !== false) { \n".
 			"if (files::getExtension(\$related_file) == 'php') { \n".
@@ -43,7 +49,7 @@ class relatedTemplates
 			"}\n".
 			'unset($related_file);'."\n".
 		"} else { \n".
-			'echo '.sprintf($f,'$_ctx->posts->getContent('.$urls.')').';'."\n".
+            $content.
 		"} ?>\n";
 
 		return $p;

@@ -1,7 +1,11 @@
+related 1.6.2 - 2016-06-17
+==========================
+* Fix issue with blogDescription (http://dev.dotclear.org/2.0/ticket/2188)
+
 related 1.6.1 - 2015-02-14
 ==========================
 * Icons were modified when removing crlf in all files.
-* Change message type when converting to xhmlt.
+* Change message type when converting to xhtml.
 
 related 1.6.0 - 2015-02-14
 ==========================
