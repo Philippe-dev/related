@@ -1,3 +1,7 @@
+related 1.6.3 - 2016-11-18
+==========================
+* Fix issue when sorting public page. No more toolMan
+
 related 1.6.2 - 2016-06-17
 ==========================
 * Fix issue with blogDescription (http://dev.dotclear.org/2.0/ticket/2188)

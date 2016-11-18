@@ -181,7 +181,7 @@ if ($related_active) {
         dcPage::addErrorNotice($e->getMessage());
     }
 
-        # apply filters
+    # apply filters
     # - User filter
     if ($user_id !== '' && in_array($user_id,$users_combo)) {
         $params['user_id'] = $user_id;
@@ -288,7 +288,7 @@ if ($related_active) {
 
         $public_pages = relatedHelpers::getPublicList($pages);
         $visible = (!empty($_POST['p_visibles']) && is_array($_POST['p_visibles']))?$_POST['p_visibles']:array();
-        $order = (!empty($_POST['public_order']))?explode(',',$_POST['public_order']):array();
+        $order = (!empty($_POST['p_order']))?explode(',',$_POST['p_order']):array();
 
         try {
             $i = 1;

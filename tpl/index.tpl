@@ -1,7 +1,6 @@
 <html>
   <head>
     <title><?php echo __('Related pages'); ?></title>
-    <?php echo dcPage::jsToolMan();?>
     <?php echo dcPage::jsPageTabs($default_tab);?>
     <?php echo dcPage::jsLoad('js/jquery/jquery-ui.custom.js');?>
     <?php echo dcPage::jsLoad('js/jquery/jquery.ui.touch-punch.js');?>
@@ -151,7 +150,7 @@
             <?php $i = 1;foreach ($public_pages as $page):?>
             <tr class="line<?php ($page['active']? '' : ' offline');?>" id="p_<?php echo $page['id'];?>">
               <td class="handle">
-		<?php echo form::field(array('p_order['.$page['id'].']'),2,5,(string) $i);?>
+		<?php echo form::field(array('p_order['.$page['id'].']'),2,5,(string) $i, 'position');?>
 	      </td>
               <td class="nowrap">
 		<?php echo form::checkbox(array('p_visibles[]'),$page['id'],$page['active']);?>
