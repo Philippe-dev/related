@@ -12,7 +12,9 @@
 #
 # -- END LICENSE BLOCK ------------------------------------
 
-if (!defined('DC_RC_PATH')) return;
+if (!defined('DC_RC_PATH')) {
+    return;
+}
 
 $self_ns = $core->blog->settings->addNamespace('related');
 if ($self_ns->active) {
@@ -23,4 +25,17 @@ if ($self_ns->active) {
     $core->addBehavior('initWidgets', array('widgetsRelated', 'init'));
 
     $core->tpl->addValue('EntryContent', array('relatedTemplates', 'PageContent'));
+}
+
+$core->addBehavior('publicBreadcrumb', ['relatedBehavior', 'publicBreadcrumb']);
+
+class relatedBehavior
+{
+    public static function publicBreadcrumb($context, $separator)
+    {
+        if ($context == 'related') {
+            global $_ctx;
+            return  $_ctx->posts->post_title;
+        }
+    }
 }
