@@ -1,3 +1,7 @@
+related 1.7.0 - 2021-07-01
+==========================
+* Fix issue Add {{tpl:Breadcrumb}} support to related pages. Thanks to Philippe (philippe@dissitou.org)
+
 related 1.6.3 - 2016-11-18
 ==========================
 * Fix issue when sorting public page. No more toolMan
