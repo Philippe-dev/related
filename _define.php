@@ -3,7 +3,7 @@
 #
 # This file is part of Related, a plugin for DotClear2.
 #
-# Copyright(c) 2014-2016 Nicolas Roudaire <nikrou77@gmail.com> http://www.nikrou.net
+# Copyright(c) 2014-2021 Nicolas Roudaire <nikrou77@gmail.com> https://www.nikrou.net
 #
 # Copyright (c) 2006-2010 Pep and contributors.
 # Licensed under the GPL version 2.0 license.
@@ -18,7 +18,7 @@ $this->registerModule(
 	/* Name */		"Related Pages",
 	/* Description*/	"Serve pages & scripts",
 	/* Author */		"Pep, contributors, Nicolas Roudaire",
-	/* Version */		'1.7.0',
+	/* Version */		'1.7.1',
     /* Properties */	array('contentadmin,pages',
                               'type' => 'plugin',
 							  'dc_min' => '2.7',

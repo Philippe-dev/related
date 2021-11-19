@@ -3,7 +3,7 @@
 #
 # This file is part of Related, a plugin for DotClear2.
 #
-# Copyright(c) 2014-2016 Nicolas Roudaire <nikrou77@gmail.com> http://www.nikrou.net
+# Copyright(c) 2014-2021 Nicolas Roudaire <nikrou77@gmail.com> https://www.nikrou.net
 #
 # Copyright (c) 2006-2010 Pep and contributors.
 # Licensed under the GPL version 2.0 license.
@@ -288,7 +288,7 @@ if ($related_active) {
 
         $public_pages = relatedHelpers::getPublicList($pages);
         $visible = (!empty($_POST['p_visibles']) && is_array($_POST['p_visibles']))?$_POST['p_visibles']:array();
-        $order = (!empty($_POST['p_order']))?explode(',',$_POST['p_order']):array();
+        $order = (!empty($_POST['p_order']))?$_POST['p_order']:array();
 
         try {
             $i = 1;
@@ -299,7 +299,7 @@ if ($related_active) {
                 $cur->post_selected = (integer)in_array($c_page['id'], $visible);
                 $cur->update('WHERE post_id = '.$c_page['id']);
 
-                if (!empty($order)) {
+                if (count($order) > 0) {
                     $pos = array_search($c_page['id'], $order);
                     $pos = (integer)$pos + 1;
                     $meta->delPostMeta($c_page['id'], 'related_position');
