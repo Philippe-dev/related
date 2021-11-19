@@ -1,3 +1,7 @@
+# related 1.7.2 - 2021-11-19
+
+- Fix #5. PHP8 warning was fixed but order was not saved.
+
 # related 1.7.1 - 2021-11-19
 
 - Fix #5 that prevent sorting related pages using php8. Thanks to Philippe (philippe@dissitou.org)

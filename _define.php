@@ -18,7 +18,7 @@ $this->registerModule(
 	/* Name */		"Related Pages",
 	/* Description*/	"Serve pages & scripts",
 	/* Author */		"Pep, contributors, Nicolas Roudaire",
-	/* Version */		'1.7.1',
+	/* Version */		'1.7.2',
     /* Properties */	array('contentadmin,pages',
                               'type' => 'plugin',
 							  'dc_min' => '2.7',

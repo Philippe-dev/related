@@ -299,8 +299,9 @@ if ($related_active) {
                 $cur->post_selected = (integer)in_array($c_page['id'], $visible);
                 $cur->update('WHERE post_id = '.$c_page['id']);
 
+
                 if (count($order) > 0) {
-                    $pos = array_search($c_page['id'], $order);
+                    $pos = !empty($order[$c_page['id']]) ? $order[$c_page['id']] + 1 : 1;
                     $pos = (integer)$pos + 1;
                     $meta->delPostMeta($c_page['id'], 'related_position');
                     $meta->setPostMeta($c_page['id'], 'related_position', $pos);
