@@ -26,8 +26,8 @@ class relatedAdminBehaviors
 			'related',
 			__('Related pages'),
 			'plugin.php?p=related',
-			'index.php?pf=related/icon.png',
-			'index.php?pf=related/icon-big.png',
+			'index.php?pf=related/icon.svg',
+			'index.php?pf=related/icon.svg',
 			'usage,contentadmin',
 			null,
 			null));

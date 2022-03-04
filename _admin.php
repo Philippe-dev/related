@@ -17,7 +17,7 @@ if (!defined('DC_CONTEXT_ADMIN')) return;
 $_menu['Blog']->addItem(
 	__('Related pages'),
 	'plugin.php?p=related',
-	'index.php?pf=related/icon.png',
+	'index.php?pf=related/icon.svg',
 	preg_match('/plugin.php\?p=related(&.*)?$/',$_SERVER['REQUEST_URI']),
 	$core->auth->check('contentadmin,pages',$core->blog->id)
 );
