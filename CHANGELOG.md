@@ -1,3 +1,7 @@
+# related 1.7.3 - 2022-03-04
+
+- Add svg icon. Thanks to [Philippe](https://github.com/Philippe-dev)
+
 # related 1.7.2 - 2021-11-19
 
 - Fix #5. PHP8 warning was fixed but order was not saved.
