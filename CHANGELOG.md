@@ -1,3 +1,7 @@
+# related 1.7.4 - 2022-04-03
+
+- Add dark svg icon. Thanks to [Philippe](https://github.com/Philippe-dev)
+
 # related 1.7.3 - 2022-03-04
 
 - Add svg icon. Thanks to [Philippe](https://github.com/Philippe-dev)

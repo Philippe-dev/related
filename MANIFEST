@@ -2,6 +2,7 @@ related/_install.php
 related/icon.png
 related/_admin.php
 related/_prepend.php
+related/icon-dark.svg
 related/_define.php
 related/CHANGELOG.md
 related/index.php
@@ -17,6 +18,7 @@ related/COPYING
 related/default-templates/currywurst/external.html
 related/default-templates/mustek/external.html
 related/default-templates/dotty/external.html
+related/icon.svg
 related/locales/en/related_pages_edit.html
 related/locales/en/resources.php
 related/locales/en/related_pages.html

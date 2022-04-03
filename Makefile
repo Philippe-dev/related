@@ -9,7 +9,7 @@ config: clean manifest
 	mkdir -p $(DIST)/$(PLUGIN_NAME)
 	cp -pr _*.php BUGS CHANGELOG.md COPYING MANIFEST TODO.md README.md \
 	default-templates inc js locales tpl \
-	icon-big.png icon.png index.php $(DIST)/$(PLUGIN_NAME)/
+	icon-big.png icon.png icon.svg icon-dark.svg index.php $(DIST)/$(PLUGIN_NAME)/
 	find $(DIST) -name '*~' -exec rm \{\} \;
 
 dist: config
