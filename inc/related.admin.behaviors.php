@@ -23,8 +23,8 @@ class relatedAdminBehaviors
 			'related',
 			__('Related pages'),
 			'plugin.php?p=related',
-			'index.php?pf=related/icon.svg',
-			'index.php?pf=related/icon.svg',
+			[dcPage::getPF('related/icon.svg'), dcPage::getPF('related/icon-dark.svg')],
+            [dcPage::getPF('related/icon.svg'), dcPage::getPF('related/icon-dark.svg')],
 			'usage,contentadmin',
 			null,
 			null));
