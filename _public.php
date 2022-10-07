@@ -1,4 +1,5 @@
 <?php
+
 # -- BEGIN LICENSE BLOCK ----------------------------------
 #
 # This file is part of Related, a plugin for DotClear2.
@@ -13,26 +14,25 @@ if (!defined('DC_RC_PATH')) {
     return;
 }
 
-$self_ns = $core->blog->settings->addNamespace('related');
+$self_ns = dcCore::app()->blog->settings->addNamespace('related');
 if ($self_ns->active) {
-    $core->addBehavior('coreBlogGetPosts', array('relatedPublicBehaviors', 'coreBlogGetPosts'));
-    $core->addBehavior('publicBeforeDocument', array('relatedPublicBehaviors', 'addTplPath'));
-    $core->addBehavior('templateBeforeBlock', array('relatedPublicBehaviors', 'templateBeforeBlock'));
-    $core->addBehavior('sitemapsURLsCollect', array('relatedPublicBehaviors', 'sitemapsURLsCollect'));
-    $core->addBehavior('initWidgets', array('widgetsRelated', 'init'));
+    dcCore::app()->addBehavior('coreBlogGetPosts', array('relatedPublicBehaviors', 'coreBlogGetPosts'));
+    dcCore::app()->addBehavior('publicBeforeDocument', array('relatedPublicBehaviors', 'addTplPath'));
+    dcCore::app()->addBehavior('templateBeforeBlock', array('relatedPublicBehaviors', 'templateBeforeBlock'));
+    dcCore::app()->addBehavior('sitemapsURLsCollect', array('relatedPublicBehaviors', 'sitemapsURLsCollect'));
+    dcCore::app()->addBehavior('initWidgets', array('widgetsRelated', 'init'));
 
-    $core->tpl->addValue('EntryContent', array('relatedTemplates', 'PageContent'));
+    dcCore::app()->tpl->addValue('EntryContent', array('relatedTemplates', 'PageContent'));
 }
 
-$core->addBehavior('publicBreadcrumb', ['relatedBehavior', 'publicBreadcrumb']);
+dcCore::app()->addBehavior('publicBreadcrumb', ['relatedBehavior', 'publicBreadcrumb']);
 
 class relatedBehavior
 {
     public static function publicBreadcrumb($context, $separator)
     {
         if ($context == 'related') {
-            global $_ctx;
-            return  $_ctx->posts->post_title;
+            return  dcCore::app()->ctx->posts->post_title;
         }
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 # -- BEGIN LICENSE BLOCK ----------------------------------
 #
 # This file is part of Related, a plugin for DotClear2.
@@ -9,27 +10,29 @@
 #
 # -- END LICENSE BLOCK ------------------------------------
 
-if (!defined('DC_CONTEXT_ADMIN')) return;
+if (!defined('DC_CONTEXT_ADMIN')) {
+    return;
+}
 
 dcPage::check('pages,contentadmin');
 
-$core->blog->settings->addNameSpace('related');
-$related_active = $core->blog->settings->related->active;
+dcCore::app()->blog->settings->addNameSpace('related');
+$related_active = dcCore::app()->blog->settings->related->active;
 $related_was_actived = $related_active;
 
-if ($core->blog->settings->related->related_files_path) {
-    $related_files_path = $core->blog->settings->related->related_files_path;
-    $core->blog->settings->related->put('files_path', $related_files_path, 'string', 'Related files repository', false);
-    $core->blog->settings->related->drop('related_files_path');
+if (dcCore::app()->blog->settings->related->related_files_path) {
+    $related_files_path = dcCore::app()->blog->settings->related->related_files_path;
+    dcCore::app()->blog->settings->related->put('files_path', $related_files_path, 'string', 'Related files repository', false);
+    dcCore::app()->blog->settings->related->drop('related_files_path');
 } else {
-    $related_files_path = $core->blog->settings->related->files_path;
+    $related_files_path = dcCore::app()->blog->settings->related->files_path;
 }
-if ($core->blog->settings->related->related_url_prefix) {
-    $related_url_prefix = $core->blog->settings->related->related_url_prefix;
-    $core->blog->settings->related->put('url_prefix', $related_url_prefix, 'string', 'Prefix used by the URLHandler', false);
-    $core->blog->settings->related->drop('related_url_prefix');
+if (dcCore::app()->blog->settings->related->related_url_prefix) {
+    $related_url_prefix = dcCore::app()->blog->settings->related->related_url_prefix;
+    dcCore::app()->blog->settings->related->put('url_prefix', $related_url_prefix, 'string', 'Prefix used by the URLHandler', false);
+    dcCore::app()->blog->settings->related->drop('related_url_prefix');
 } else {
-    $related_url_prefix = $core->blog->settings->related->url_prefix;
+    $related_url_prefix = dcCore::app()->blog->settings->related->url_prefix;
 }
 
 
@@ -45,13 +48,13 @@ if (!empty($_POST['saveconfig'])) {
     try {
         $default_tab = 'settings';
 
-        $related_active = (empty($_POST['related_active']))?false:true;
-        $core->blog->settings->related->put('active', $related_active, 'boolean', 'Related plugin activated?');
+        $related_active = (empty($_POST['related_active'])) ? false : true;
+        dcCore::app()->blog->settings->related->put('active', $related_active, 'boolean', 'Related plugin activated?');
 
         // change other settings only if they were in html page
         if ($related_was_actived) {
             if (empty($_POST['repository']) || trim($_POST['repository']) == '') {
-                $tmp_repository = $core->blog->public_path.'/related';
+                $tmp_repository = dcCore::app()->blog->public_path.'/related';
             } else {
                 $tmp_repository = trim($_POST['repository']);
             }
@@ -62,10 +65,10 @@ if (!empty($_POST['saveconfig'])) {
                 $related_url_prefix = text::str2URL(trim($_POST['url_prefix']));
             }
 
-            $core->blog->settings->related->put('url_prefix', $related_url_prefix);
+            dcCore::app()->blog->settings->related->put('url_prefix', $related_url_prefix);
 
             if (is_dir($tmp_repository) && is_writable($tmp_repository)) {
-                $core->blog->settings->related->put('files_path', $tmp_repository);
+                dcCore::app()->blog->settings->related->put('files_path', $tmp_repository);
                 $repository = $tmp_repository;
 
                 dcPage::addSuccessNotice(__('Configuration has been updated.'));
@@ -87,18 +90,18 @@ if ($related_active) {
     $status = isset($_GET['status']) ? $_GET['status'] : '';
     $in_widget = isset($_GET['in_widget']) ? $_GET['in_widget'] : '';
     $month = !empty($_GET['month']) ? $_GET['month'] : '';
-    $lang = !empty($_GET['lang']) ?	$_GET['lang'] : '';
-    $sortby = !empty($_GET['sortby']) ?	$_GET['sortby'] : 'post_dt';
+    $lang = !empty($_GET['lang']) ? $_GET['lang'] : '';
+    $sortby = !empty($_GET['sortby']) ? $_GET['sortby'] : 'post_dt';
     $order = !empty($_GET['order']) ? $_GET['order'] : 'desc';
 
     $show_filters = false;
     $form_filter_title = __('Show filters and display options');
 
-        # Creating filter combo boxes
-    if (!$core->error->flag()) {
+    # Creating filter combo boxes
+    if (!dcCore::app()->error->flag()) {
         # Getting authors
         try {
-            $users = $core->blog->getPostsUsers();
+            $users = dcCore::app()->blog->getPostsUsers();
         } catch (Exception $e) {
             dcPage::addErrorNotice($e->getMessage());
         }
@@ -111,13 +114,13 @@ if ($related_active) {
 
         # Getting langs
         try {
-            $langs = $core->blog->getLangs();
+            $langs = dcCore::app()->blog->getLangs();
         } catch (Exception $e) {
             dcPage::addErrorNotice($e->getMessage());
         }
         $lang_combo = array_merge(
             array('-' => ''),
-            dcAdminCombos::getLangsCombo($langs,false)
+            dcAdminCombos::getLangsCombo($langs, false)
         );
 
         $status_combo = array_merge(
@@ -133,7 +136,7 @@ if ($related_active) {
 
         # Getting dates
         try {
-            $dates = $core->blog->getDates(array('type'=>'month'));
+            $dates = dcCore::app()->blog->getDates(array('type'=>'month'));
         } catch (Exception $e) {
             dcPage::addErrorNotice($e->getMessage());
         }
@@ -160,8 +163,8 @@ if ($related_active) {
 
     $page = !empty($_GET['page']) ? $_GET['page'] : 1;
     $nb_per_page =  30;
-    if (!empty($_GET['nb']) && (integer) $_GET['nb'] > 0) {
-        $nb_per_page = (integer) $_GET['nb'];
+    if (!empty($_GET['nb']) && (int) $_GET['nb'] > 0) {
+        $nb_per_page = (int) $_GET['nb'];
     }
 
     $params['limit'] = array((($page-1)*$nb_per_page),$nb_per_page);
@@ -170,17 +173,17 @@ if ($related_active) {
 
     # Get pages
     try {
-        $pages = $core->blog->getPosts($params);
+        $pages = dcCore::app()->blog->getPosts($params);
         $pages->extend("rsRelated");
-        $counter = $core->blog->getPosts($params, true);
-        $page_list = new adminPageList($core,$pages,$counter->f(0));
+        $counter = dcCore::app()->blog->getPosts($params, true);
+        $page_list = new adminPageList(dcCore::app(), $pages, $counter->f(0));
     } catch (Exception $e) {
         dcPage::addErrorNotice($e->getMessage());
     }
 
     # apply filters
     # - User filter
-    if ($user_id !== '' && in_array($user_id,$users_combo)) {
+    if ($user_id !== '' && in_array($user_id, $users_combo)) {
         $params['user_id'] = $user_id;
         $show_filters = true;
     } else {
@@ -238,25 +241,25 @@ if ($related_active) {
 
     # Get pages
     try {
-        $pages = $core->blog->getPosts($params);
+        $pages = dcCore::app()->blog->getPosts($params);
         $pages->extend('rsRelated');
-        $counter = $core->blog->getPosts($params, true);
-        $page_list = new adminPageList($core, $pages, $counter->f(0));
+        $counter = dcCore::app()->blog->getPosts($params, true);
+        $page_list = new adminPageList(dcCore::app(), $pages, $counter->f(0));
     } catch (Exception $e) {
         dcPage::addErrorNotice($e->getMessage());
     }
 
     # Actions combo box
     $combo_action = array();
-    if ($core->auth->check('publish,contentadmin', $core->blog->id)) {
+    if (dcCore::app()->auth->check('publish,contentadmin', dcCore::app()->blog->id)) {
         $combo_action[__('publish')] = 'publish';
         $combo_action[__('unpublish')] = 'unpublish';
         $combo_action[__('mark as pending')] = 'pending';
     }
-    if ($core->auth->check('admin', $core->blog->id)) {
+    if (dcCore::app()->auth->check('admin', dcCore::app()->blog->id)) {
         $combo_action[__('change author')] = 'author';
     }
-    if ($core->auth->check('delete,contentadmin', $core->blog->id)) {
+    if (dcCore::app()->auth->check('delete,contentadmin', dcCore::app()->blog->id)) {
         $combo_action[__('delete')] = 'delete';
     }
     $combo_action[__('Widget')] = array(
@@ -265,9 +268,9 @@ if ($related_active) {
     );
 
     # --BEHAVIOR-- adminPagesActionsCombo
-    $core->callBehavior('adminPagesActionsCombo', array(&$combo_action));
+    dcCore::app()->callBehavior('adminPagesActionsCombo', array(&$combo_action));
 
-    $pages_actions_page = new relatedPagesActionsPage($core, 'plugin.php', array('p' => 'related'));
+    $pages_actions_page = new relatedPagesActionsPage(dcCore::app(), 'plugin.php', array('p' => 'related'));
     if (!$pages_actions_page->process()) {
         $process_successfull = false;
     } else {
@@ -277,35 +280,35 @@ if ($related_active) {
     /**
      * Manage public list if requested
      */
-    $all_pages = $core->blog->getPosts(array('post_type' => 'related'));
+    $all_pages = dcCore::app()->blog->getPosts(array('post_type' => 'related'));
     $all_pages->extend('rsRelated');
 
     if (isset($_POST['pages_upd'])) {
         $default_tab = 'pages_order';
 
         $public_pages = relatedHelpers::getPublicList($pages);
-        $visible = (!empty($_POST['p_visibles']) && is_array($_POST['p_visibles']))?$_POST['p_visibles']:array();
-        $order = (!empty($_POST['p_order']))?$_POST['p_order']:array();
+        $visible = (!empty($_POST['p_visibles']) && is_array($_POST['p_visibles'])) ? $_POST['p_visibles'] : array();
+        $order = (!empty($_POST['p_order'])) ? $_POST['p_order'] : array();
 
         try {
             $i = 1;
-            $meta = new dcMeta($core);
+            $meta = new dcMeta();
             foreach ($public_pages as $c_page) {
-                $cur = $core->con->openCursor($core->prefix.'post');
+                $cur = dcCore::app()->con->openCursor(dcCore::app()->prefix.'post');
                 $cur->post_upddt = date('Y-m-d H:i:s');
-                $cur->post_selected = (integer)in_array($c_page['id'], $visible);
+                $cur->post_selected = (int)in_array($c_page['id'], $visible);
                 $cur->update('WHERE post_id = '.$c_page['id']);
 
 
                 if (count($order) > 0) {
                     $pos = !empty($order[$c_page['id']]) ? $order[$c_page['id']] + 1 : 1;
-                    $pos = (integer)$pos + 1;
+                    $pos = (int)$pos + 1;
                     $meta->delPostMeta($c_page['id'], 'related_position');
                     $meta->setPostMeta($c_page['id'], 'related_position', $pos);
                 }
             }
-            $core->blog->triggerBlog();
-            http::redirect($p_url.'&reord=1');
+            dcCore::app()->blog->triggerBlog();
+            http::redirect(dcCore::app()->admin->getPageURL().'&reord=1');
         } catch (Exception $e) {
             dcPage::addErrorNotice($e->getMessage());
         }

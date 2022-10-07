@@ -1,4 +1,5 @@
 <?php
+
 # -- BEGIN LICENSE BLOCK ----------------------------------
 #
 # This file is part of Related, a plugin for DotClear2.
@@ -9,7 +10,9 @@
 #
 # -- END LICENSE BLOCK ------------------------------------
 
-if (!defined('DC_RC_PATH')) { return; }
+if (!defined('DC_RC_PATH')) {
+    return;
+}
 
-$core->addBehavior('initWidgets', array('widgetsRelated', 'init'));
-$core->addBehavior('initDefaultWidgets', array('widgetsRelated', 'initDefaultWidgets'));
+dcCore::app()->addBehavior('initWidgets', ['widgetsRelated', 'init']);
+dcCore::app()->addBehavior('initDefaultWidgets', ['widgetsRelated', 'initDefaultWidgets']);

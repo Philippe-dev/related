@@ -1,4 +1,5 @@
 <?php
+
 # -- BEGIN LICENSE BLOCK ----------------------------------
 #
 # This file is part of Related, a plugin for DotClear2.
@@ -9,17 +10,24 @@
 #
 # -- END LICENSE BLOCK ------------------------------------
 
-if (!defined('DC_RC_PATH')) return;
+if (!defined('DC_RC_PATH')) {
+    return;
+}
 
 $this->registerModule(
-	/* Name */		"Related Pages",
-	/* Description*/	"Serve pages & scripts",
-	/* Author */		"Pep, contributors, Nicolas Roudaire",
-	/* Version */		'1.7.4',
-    /* Properties */	array('contentadmin,pages',
+    /* Name */		
+    "Related Pages",
+    /* Description*/	
+    "Serve pages & scripts",
+    /* Author */		
+    "Pep, contributors, Nicolas Roudaire",
+    /* Version */		
+    '1.7.4',
+    /* Properties */	
+    array('contentadmin,pages',
                               'type' => 'plugin',
-							  'dc_min' => '2.7',
-							  'support' => 'http://forum.dotclear.net/viewtopic.php?id=48205',
-							  'details' => 'http://plugins.dotaddict.org/dc2/details/related'
+                              'dc_min' => '2.24',
+                              'support' => 'http://forum.dotclear.net/viewtopic.php?id=48205',
+                              'details' => 'http://plugins.dotaddict.org/dc2/details/related'
     )
 );

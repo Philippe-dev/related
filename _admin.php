@@ -1,4 +1,5 @@
 <?php
+
 # -- BEGIN LICENSE BLOCK ----------------------------------
 #
 # This file is part of Related, a plugin for DotClear2.
@@ -15,16 +16,16 @@ if (!defined('DC_CONTEXT_ADMIN')) {
 
 $_menu['Blog']->addItem(
     __('Related pages'),
-    $core->adminurl->get('admin.plugin.related'),
+    dcCore::app()->adminurl->get('admin.plugin.related'),
     [dcPage::getPF('related/icon.svg'), dcPage::getPF('related/icon-dark.svg')],
-    preg_match('/' . preg_quote($core->adminurl->get('admin.plugin.related')) . '(&.*)?$/', $_SERVER['REQUEST_URI']),
-    $core->auth->check('contentadmin,pages', $core->blog->id)
+    preg_match('/' . preg_quote(dcCore::app()->adminurl->get('admin.plugin.related')) . '(&.*)?$/', $_SERVER['REQUEST_URI']),
+    dcCore::app()->auth->check('contentadmin,pages', dcCore::app()->blog->id)
 );
 
-$core->auth->setPermissionType('pages', __('manage related pages'));
+dcCore::app()->auth->setPermissionType('pages', __('manage related pages'));
 
-$core->addBehavior('adminDashboardFavs', ['relatedAdminBehaviors', 'dashboardFavs']);
-$core->addBehavior('adminDashboardFavsIcon', ['relatedAdminBehaviors', 'dashboardFavsIcon']);
-$core->addBehavior('sitemapsDefineParts', ['relatedAdminBehaviors', 'sitemapsDefineParts']);
+dcCore::app()->addBehavior('adminDashboardFavs', ['relatedAdminBehaviors', 'dashboardFavs']);
+dcCore::app()->addBehavior('adminDashboardFavsIcon', ['relatedAdminBehaviors', 'dashboardFavsIcon']);
+dcCore::app()->addBehavior('sitemapsDefineParts', ['relatedAdminBehaviors', 'sitemapsDefineParts']);
 
 require dirname(__FILE__) . '/_widgets.php';

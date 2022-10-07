@@ -1,4 +1,5 @@
 <?php
+
 # -- BEGIN LICENSE BLOCK ----------------------------------
 #
 # This file is part of Related, a plugin for DotClear2.
@@ -14,38 +15,40 @@
  */
 class rsRelatedBase
 {
-	public static function getRelatedFilename($rs) {
-		if ($rs->core->blog->settings->related->files_path === null) {
+    public static function getRelatedFilename($rs)
+    {
+        if (dcCore::app()->blog->settings->related->files_path === null) {
             return false;
         }
 
-		$meta = new dcMeta($rs->core);
-		$meta_rs = $meta->getMetaRecordset($rs->post_meta,'related_file');
+        $meta = new dcMeta(dcCore::app());
+        $meta_rs = $meta->getMetaRecordset($rs->post_meta, 'related_file');
 
-		if (!$meta_rs->isEmpty()) {
-			$filename = $rs->core->blog->settings->related->files_path.'/'.$meta_rs->meta_id;
-			if (is_readable($filename)) {
-				return $filename;
-			} else {
-				return false;
-			}
-		}
+        if (!$meta_rs->isEmpty()) {
+            $filename = dcCore::app()->blog->settings->related->files_path.'/'.$meta_rs->meta_id;
+            if (is_readable($filename)) {
+                return $filename;
+            } else {
+                return false;
+            }
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	public static function getPosition($rs) {
-		if ($rs->core->blog->settings->related->files_path === null) {
+    public static function getPosition($rs)
+    {
+        if (dcCore::app()->blog->settings->related->files_path === null) {
             return false;
         }
 
-		$meta = new dcMeta($rs->core);
-		$meta_rs = $meta->getMetaRecordset($rs->post_meta,'related_position');
+        $meta = new dcMeta(dcCore::app());
+        $meta_rs = $meta->getMetaRecordset($rs->post_meta, 'related_position');
 
-		if (!$meta_rs->isEmpty()) {
-			return (integer)$meta_rs->meta_id;
-		}
+        if (!$meta_rs->isEmpty()) {
+            return (int)$meta_rs->meta_id;
+        }
 
-		return -1;
-	}
+        return -1;
+    }
 }

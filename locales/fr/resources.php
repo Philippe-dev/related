@@ -9,5 +9,5 @@
 #
 # -- END LICENSE BLOCK ------------------------------------
 
-$__resources['help']['related_pages'] = dirname(__FILE__).'/related_pages.html';
-$__resources['help']['related_pages_edit'] = dirname(__FILE__).'/related_pages_edit.html';
+dcCore::app()->resources['help']['related_pages'] = dirname(__FILE__).'/related_pages.html';
+dcCore::app()->resources['help']['related_pages_edit'] = dirname(__FILE__).'/related_pages_edit.html';
