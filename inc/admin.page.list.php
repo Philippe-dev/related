@@ -47,6 +47,15 @@ class adminPageList extends adminGenericList
                 $count++;
             }
             echo $blocks[1];
+
+            $fmt = fn ($title, $image) => sprintf('<img alt="%1$s" title="%1$s" src="images/%2$s" /> %1$s', $title, $image);
+            echo '<p class="info">' . __('Legend: ') .
+                $fmt(__('Published'), 'check-on.png') . ' - ' .
+                $fmt(__('Unpublished'), 'check-off.png') . ' - ' .
+                $fmt(__('Scheduled'), 'scheduled.png') . ' - ' .
+                $fmt(__('Pending'), 'check-wrn.png') .
+                '</p>';
+
             echo $pager->getLinks();
         }
     }

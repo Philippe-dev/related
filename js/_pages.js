@@ -1,10 +1,10 @@
-$(function () {
+$(() => {
     $('.checkboxes-helpers').each(function () {
         dotclear.checkboxesHelpers(this);
     });
     $("#pages-list").sortable({
         cursor: 'move',
-        stop: function (event, ui) {
+        stop(event, ui) {
             $("#pages-list tr td input.position").each(function (i) {
                 $(this).val(i + 1);
             });
