@@ -16,7 +16,7 @@
     </script>
   </head>
   <body>
-    <?php echo dcPage::breadcrumb(array(html::escapeHTML($core->blog->name) => '', __('Related pages') => ''));?>
+    <?php echo dcPage::breadcrumb(array(html::escapeHTML(dcCore::app()->blog->name) => '', __('Related pages') => ''));?>
     <?php echo dcPage::notices();?>
 
     <div class="multi-part" id="related_settings" title="<?php echo __('Settings');?>">
@@ -48,7 +48,7 @@
 	</div>
 	<?php endif;?>
 	<?php echo form::hidden(array('p'),'related');?>
-	<?php echo $core->formNonce();?>
+	<?php echo dcCore::app()->formNonce();?>
 	<input type="submit" name="saveconfig" value="<?php echo __('Save configuration');?>"/>
       </form>
     </div>
@@ -61,7 +61,7 @@
       </p>
 
       <p><a id="filter-control" class="form-control" href="<?php echo $p_url;?>#pages_compose"></a></p>
-      <form action="<?php echo $core->adminurl->get('admin.plugin');?>" method="get" id="filters-form">
+      <form action="<?php echo dcCore::app()->adminurl->get('admin.plugin');?>" method="get" id="filters-form">
 	<h3 class="out-of-screen-if-js"><?php echo $form_filter_title;?></h3>
 	<div class="table">
 	  <div class="cell">
@@ -119,7 +119,7 @@
 
       <?php
 	 $page_list->display($page, $nb_per_page,
-      '<form action="'.$core->adminurl->get('admin.plugin').'" method="post" id="form-pages">'.
+      '<form action="'.dcCore::app()->adminurl->get('admin.plugin').'" method="post" id="form-pages">'.
         '%s'.
         '<div class="two-cols">'.
           '<p class="col checkboxes-helpers"></p>'.
@@ -128,7 +128,7 @@
             '<input type="submit" value="'.__('ok').'" /></p>'.
           form::hidden(array('post_type'),'related').
           form::hidden(array('p'),'related').
-          $core->formNonce().
+          dcCore::app()->formNonce().
           '</div>'.
         '</form>'
       );
@@ -163,7 +163,7 @@
           </tbody>
 	</table>
         <p>
-	  <?php echo form::hidden(array('public_order'),'').$core->formNonce();?>
+	  <?php echo form::hidden(array('public_order'),'').dcCore::app()->formNonce();?>
           <input type="submit" name="pages_upd" value="<?php echo __('Save');?>" />
 	</p>
 	<p class="col checkboxes-helpers"></p>

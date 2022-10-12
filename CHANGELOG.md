@@ -1,3 +1,7 @@
+# related 1.8.0 - 2022-10-12
+
+- Update code for dotclear 2.24. Thanks to [Philippe](https://github.com/Philippe-dev)
+
 # related 1.7.4 - 2022-04-03
 
 - Add dark svg icon. Thanks to [Philippe](https://github.com/Philippe-dev)

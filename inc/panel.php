@@ -1,35 +1,35 @@
 <?php
-# -- BEGIN LICENSE BLOCK ----------------------------------
-#
-# This file is part of Related, a plugin for DotClear2.
-#
-# Licensed under the GPL version 2.0 license.
-# See LICENSE file or
-# http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
-#
-# -- END LICENSE BLOCK ------------------------------------
+/*
+ *  -- BEGIN LICENSE BLOCK ----------------------------------
+ *
+ *  This file is part of Related, a plugin for DotClear2.
+ *
+ *  Licensed under the GPL version 2.0 license.
+ *  See LICENSE file or
+ *  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ *
+ *  -- END LICENSE BLOCK ------------------------------------
+ */
 
-if (!defined('DC_CONTEXT_ADMIN')) return;
+dcPage::check(dcCore::app()->auth->makePermissions([dcPages::PERMISSION_PAGES, dcAuth::PERMISSION_CONTENT_ADMIN]));
 
-dcPage::check('pages,contentadmin');
-
-$core->blog->settings->addNameSpace('related');
-$related_active = $core->blog->settings->related->active;
+dcCore::app()->blog->settings->addNameSpace('related');
+$related_active = dcCore::app()->blog->settings->related->active;
 $related_was_actived = $related_active;
 
-if ($core->blog->settings->related->related_files_path) {
-    $related_files_path = $core->blog->settings->related->related_files_path;
-    $core->blog->settings->related->put('files_path', $related_files_path, 'string', 'Related files repository', false);
-    $core->blog->settings->related->drop('related_files_path');
+if (dcCore::app()->blog->settings->related->related_files_path) {
+    $related_files_path = dcCore::app()->blog->settings->related->related_files_path;
+    dcCore::app()->blog->settings->related->put('files_path', $related_files_path, 'string', 'Related files repository', false);
+    dcCore::app()->blog->settings->related->drop('related_files_path');
 } else {
-    $related_files_path = $core->blog->settings->related->files_path;
+    $related_files_path = dcCore::app()->blog->settings->related->files_path;
 }
-if ($core->blog->settings->related->related_url_prefix) {
-    $related_url_prefix = $core->blog->settings->related->related_url_prefix;
-    $core->blog->settings->related->put('url_prefix', $related_url_prefix, 'string', 'Prefix used by the URLHandler', false);
-    $core->blog->settings->related->drop('related_url_prefix');
+if (dcCore::app()->blog->settings->related->related_url_prefix) {
+    $related_url_prefix = dcCore::app()->blog->settings->related->related_url_prefix;
+    dcCore::app()->blog->settings->related->put('url_prefix', $related_url_prefix, 'string', 'Prefix used by the URLHandler', false);
+    dcCore::app()->blog->settings->related->drop('related_url_prefix');
 } else {
-    $related_url_prefix = $core->blog->settings->related->url_prefix;
+    $related_url_prefix = dcCore::app()->blog->settings->related->url_prefix;
 }
 
 
@@ -39,19 +39,19 @@ $default_tab = 'pages_compose';
 /**
  * Build "Manage Pages" tab
  */
-$params = array('post_type' => 'related');
+$params = ['post_type' => 'related'];
 
 if (!empty($_POST['saveconfig'])) {
     try {
         $default_tab = 'settings';
 
-        $related_active = (empty($_POST['related_active']))?false:true;
-        $core->blog->settings->related->put('active', $related_active, 'boolean', 'Related plugin activated?');
+        $related_active = (empty($_POST['related_active'])) ? false : true;
+        dcCore::app()->blog->settings->related->put('active', $related_active, 'boolean', 'Related plugin activated?');
 
         // change other settings only if they were in html page
         if ($related_was_actived) {
             if (empty($_POST['repository']) || trim($_POST['repository']) == '') {
-                $tmp_repository = $core->blog->public_path.'/related';
+                $tmp_repository = dcCore::app()->blog->public_path . '/related';
             } else {
                 $tmp_repository = trim($_POST['repository']);
             }
@@ -62,10 +62,10 @@ if (!empty($_POST['saveconfig'])) {
                 $related_url_prefix = text::str2URL(trim($_POST['url_prefix']));
             }
 
-            $core->blog->settings->related->put('url_prefix', $related_url_prefix);
+            dcCore::app()->blog->settings->related->put('url_prefix', $related_url_prefix);
 
             if (is_dir($tmp_repository) && is_writable($tmp_repository)) {
-                $core->blog->settings->related->put('files_path', $tmp_repository);
+                dcCore::app()->blog->settings->related->put('files_path', $tmp_repository);
                 $repository = $tmp_repository;
 
                 dcPage::addSuccessNotice(__('Configuration has been updated.'));
@@ -82,120 +82,120 @@ if (!empty($_POST['saveconfig'])) {
 }
 
 if ($related_active) {
-    /* filters */
+    // filters
     $user_id = !empty($_GET['user_id']) ? $_GET['user_id'] : '';
     $status = isset($_GET['status']) ? $_GET['status'] : '';
     $in_widget = isset($_GET['in_widget']) ? $_GET['in_widget'] : '';
     $month = !empty($_GET['month']) ? $_GET['month'] : '';
-    $lang = !empty($_GET['lang']) ?	$_GET['lang'] : '';
-    $sortby = !empty($_GET['sortby']) ?	$_GET['sortby'] : 'post_dt';
+    $lang = !empty($_GET['lang']) ? $_GET['lang'] : '';
+    $sortby = !empty($_GET['sortby']) ? $_GET['sortby'] : 'post_dt';
     $order = !empty($_GET['order']) ? $_GET['order'] : 'desc';
 
     $show_filters = false;
     $form_filter_title = __('Show filters and display options');
 
-        # Creating filter combo boxes
-    if (!$core->error->flag()) {
-        # Getting authors
+    // Creating filter combo boxes
+    if (!dcCore::app()->error->flag()) {
+        // Getting authors
         try {
-            $users = $core->blog->getPostsUsers();
+            $users = dcCore::app()->blog->getPostsUsers();
         } catch (Exception $e) {
             dcPage::addErrorNotice($e->getMessage());
         }
 
-        # Filter form we'll put in html_block
+        // Filter form we'll put in html_block
         $users_combo = array_merge(
-            array('-' => ''),
+            ['-' => ''],
             dcAdminCombos::getUsersCombo($users)
         );
 
-        # Getting langs
+        // Getting langs
         try {
-            $langs = $core->blog->getLangs();
+            $langs = dcCore::app()->blog->getLangs();
         } catch (Exception $e) {
             dcPage::addErrorNotice($e->getMessage());
         }
         $lang_combo = array_merge(
-            array('-' => ''),
-            dcAdminCombos::getLangsCombo($langs,false)
+            ['-' => ''],
+            dcAdminCombos::getLangsCombo($langs, false)
         );
 
         $status_combo = array_merge(
-            array('-' => ''),
+            ['-' => ''],
             dcAdminCombos::getPostStatusesCombo()
         );
 
-        $in_widget_combo = array(
+        $in_widget_combo = [
             '-' => '',
             __('yes') => 1,
             __('no') => 0
-        );
+        ];
 
-        # Getting dates
+        // Getting dates
         try {
-            $dates = $core->blog->getDates(array('type'=>'month'));
+            $dates = dcCore::app()->blog->getDates(['type' => 'month']);
         } catch (Exception $e) {
             dcPage::addErrorNotice($e->getMessage());
         }
 
-        # Months array
+        // Months array
         $dt_m_combo = array_merge(
-            array('-' => ''),
+            ['-' => ''],
             dcAdminCombos::getDatesCombo($dates)
         );
 
-        $sortby_combo = array(
+        $sortby_combo = [
             __('Date') => 'post_dt',
             __('Title') => 'post_title',
             __('Author') => 'user_id',
             __('Status') => 'post_status',
             __('Visible pages in widget') => 'post_selected'
-        );
+        ];
 
-        $order_combo = array(
+        $order_combo = [
             __('Descending') => 'desc',
             __('Ascending') => 'asc'
-        );
+        ];
     }
 
     $page = !empty($_GET['page']) ? $_GET['page'] : 1;
-    $nb_per_page =  30;
-    if (!empty($_GET['nb']) && (integer) $_GET['nb'] > 0) {
-        $nb_per_page = (integer) $_GET['nb'];
+    $nb_per_page = 30;
+    if (!empty($_GET['nb']) && (int) $_GET['nb'] > 0) {
+        $nb_per_page = (int) $_GET['nb'];
     }
 
-    $params['limit'] = array((($page-1)*$nb_per_page),$nb_per_page);
+    $params['limit'] = [(($page - 1) * $nb_per_page), $nb_per_page];
     $params['no_content'] = true;
     $params['order'] = 'post_position asc';
 
-    # Get pages
+    // Get pages
     try {
-        $pages = $core->blog->getPosts($params);
+        $pages = dcCore::app()->blog->getPosts($params);
         $pages->extend("rsRelated");
-        $counter = $core->blog->getPosts($params, true);
-        $page_list = new adminPageList($core,$pages,$counter->f(0));
+        $counter = dcCore::app()->blog->getPosts($params, true);
+        $page_list = new adminPageList(dcCore::app(), $pages, $counter->f(0));
     } catch (Exception $e) {
         dcPage::addErrorNotice($e->getMessage());
     }
 
-    # apply filters
-    # - User filter
-    if ($user_id !== '' && in_array($user_id,$users_combo)) {
+    // apply filters
+    // - User filter
+    if ($user_id !== '' && in_array($user_id, $users_combo)) {
         $params['user_id'] = $user_id;
         $show_filters = true;
     } else {
-        $user_id='';
+        $user_id = '';
     }
 
-    # - Status filter
+    // - Status filter
     if ($status !== '' && in_array($status, $status_combo)) {
         $params['post_status'] = $status;
         $show_filters = true;
     } else {
-        $status='';
+        $status = '';
     }
 
-    # - in widget filter
+    // - in widget filter
     if ($in_widget !== '' && in_array($in_widget, $in_widget_combo)) {
         $params['post_selected'] = $in_widget;
         $show_filters = true;
@@ -203,29 +203,29 @@ if ($related_active) {
         $in_widget = '';
     }
 
-    # - Month filter
+    // - Month filter
     if ($month !== '' && in_array($month, $dt_m_combo)) {
         $params['post_month'] = substr($month, 4, 2);
         $params['post_year'] = substr($month, 0, 4);
         $show_filters = true;
     } else {
-        $month='';
+        $month = '';
     }
 
-    # - Lang filter
+    // - Lang filter
     if ($lang !== '' && in_array($lang, $lang_combo)) {
         $params['post_lang'] = $lang;
         $show_filters = true;
     } else {
-        $lang='';
+        $lang = '';
     }
 
-    # - Sortby and order filter
+    // - Sortby and order filter
     if ($sortby !== '' && in_array($sortby, $sortby_combo)) {
         if ($order !== '' && in_array($order, $order_combo)) {
-            $params['order'] = $sortby.' '.$order;
+            $params['order'] = $sortby . ' ' . $order;
         } else {
-            $order='desc';
+            $order = 'desc';
         }
 
         if ($sortby != 'post_dt' || $order != 'desc') {
@@ -236,38 +236,38 @@ if ($related_active) {
         $order = 'desc';
     }
 
-    # Get pages
+    // Get pages
     try {
-        $pages = $core->blog->getPosts($params);
+        $pages = dcCore::app()->blog->getPosts($params);
         $pages->extend('rsRelated');
-        $counter = $core->blog->getPosts($params, true);
-        $page_list = new adminPageList($core, $pages, $counter->f(0));
+        $counter = dcCore::app()->blog->getPosts($params, true);
+        $page_list = new adminPageList(dcCore::app(), $pages, $counter->f(0));
     } catch (Exception $e) {
         dcPage::addErrorNotice($e->getMessage());
     }
 
-    # Actions combo box
-    $combo_action = array();
-    if ($core->auth->check('publish,contentadmin', $core->blog->id)) {
+    // Actions combo box
+    $combo_action = [];
+    if (dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_PUBLISH, dcAuth::PERMISSION_CONTENT_ADMIN]), dcCore::app()->blog->id)) {
         $combo_action[__('publish')] = 'publish';
         $combo_action[__('unpublish')] = 'unpublish';
         $combo_action[__('mark as pending')] = 'pending';
     }
-    if ($core->auth->check('admin', $core->blog->id)) {
+    if (dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_ADMIN]), dcCore::app()->blog->id)) {
         $combo_action[__('change author')] = 'author';
     }
-    if ($core->auth->check('delete,contentadmin', $core->blog->id)) {
+    if (dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_DELETE, dcAuth::PERMISSION_CONTENT_ADMIN]), dcCore::app()->blog->id)) {
         $combo_action[__('delete')] = 'delete';
     }
-    $combo_action[__('Widget')] = array(
+    $combo_action[__('Widget')] = [
         __('Add to widget') => 'selected',
         __('Remove from widget') => 'unselected'
-    );
+    ];
 
-    # --BEHAVIOR-- adminPagesActionsCombo
-    $core->callBehavior('adminPagesActionsCombo', array(&$combo_action));
+    // --BEHAVIOR-- adminPagesActionsCombo
+    dcCore::app()->callBehavior('adminPagesActionsCombo', [&$combo_action]);
 
-    $pages_actions_page = new relatedPagesActionsPage($core, 'plugin.php', array('p' => 'related'));
+    $pages_actions_page = new relatedPagesActionsPage(dcCore::app(), 'plugin.php', ['p' => 'related']);
     if (!$pages_actions_page->process()) {
         $process_successfull = false;
     } else {
@@ -277,35 +277,35 @@ if ($related_active) {
     /**
      * Manage public list if requested
      */
-    $all_pages = $core->blog->getPosts(array('post_type' => 'related'));
+    $all_pages = dcCore::app()->blog->getPosts(['post_type' => 'related']);
     $all_pages->extend('rsRelated');
 
     if (isset($_POST['pages_upd'])) {
         $default_tab = 'pages_order';
 
         $public_pages = relatedHelpers::getPublicList($pages);
-        $visible = (!empty($_POST['p_visibles']) && is_array($_POST['p_visibles']))?$_POST['p_visibles']:array();
-        $order = (!empty($_POST['p_order']))?$_POST['p_order']:array();
+        $visible = (!empty($_POST['p_visibles']) && is_array($_POST['p_visibles'])) ? $_POST['p_visibles'] : [];
+        $order = (!empty($_POST['p_order'])) ? $_POST['p_order'] : [];
 
         try {
             $i = 1;
-            $meta = new dcMeta($core);
+            $meta = new dcMeta(dcCore::app());
             foreach ($public_pages as $c_page) {
-                $cur = $core->con->openCursor($core->prefix.'post');
+                $cur = dcCore::app()->con->openCursor(dcCore::app()->prefix . 'post');
                 $cur->post_upddt = date('Y-m-d H:i:s');
-                $cur->post_selected = (integer)in_array($c_page['id'], $visible);
-                $cur->update('WHERE post_id = '.$c_page['id']);
+                $cur->post_selected = (int)in_array($c_page['id'], $visible);
+                $cur->update('WHERE post_id = ' . $c_page['id']);
 
 
                 if (count($order) > 0) {
                     $pos = !empty($order[$c_page['id']]) ? $order[$c_page['id']] + 1 : 1;
-                    $pos = (integer)$pos + 1;
+                    $pos = (int)$pos + 1;
                     $meta->delPostMeta($c_page['id'], 'related_position');
                     $meta->setPostMeta($c_page['id'], 'related_position', $pos);
                 }
             }
-            $core->blog->triggerBlog();
-            http::redirect($p_url.'&reord=1');
+            dcCore::app()->blog->triggerBlog();
+            http::redirect($p_url . '&reord=1');
         } catch (Exception $e) {
             dcPage::addErrorNotice($e->getMessage());
         }
@@ -318,5 +318,5 @@ if ($related_active) {
 }
 
 if (!$process_successfull) {
-    include_once(dirname(__FILE__).'/../tpl/index.tpl');
+    include_once(__DIR__ . '/../tpl/index.tpl');
 }
