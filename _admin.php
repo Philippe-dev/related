@@ -14,7 +14,7 @@ if (!defined('DC_CONTEXT_ADMIN')) {
     return;
 }
 
-$_menu['Blog']->addItem(
+dcCore::app()->menu[dcAdmin::MENU_BLOG]->addItem(
     __('Related pages'),
     dcCore::app()->adminurl->get('admin.plugin.related'),
     [dcPage::getPF('related/icon.svg'), dcPage::getPF('related/icon-dark.svg')],
