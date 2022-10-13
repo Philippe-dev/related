@@ -15,7 +15,7 @@ class rsRelatedBase
 {
     public static function getRelatedFilename($rs)
     {
-        if (dcCore::app()->blog->settings->related->files_path === null) {
+        if (is_null(dcCore::app()->blog->settings->related->files_path)) {
             return false;
         }
 
@@ -36,7 +36,7 @@ class rsRelatedBase
 
     public static function getPosition($rs)
     {
-        if (dcCore::app()->blog->settings->related->files_path === null) {
+        if (is_null(dcCore::app()->blog->settings->related->files_path)) {
             return false;
         }
 

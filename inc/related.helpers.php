@@ -24,7 +24,7 @@ class relatedHelpers
             if ($rs->post_status != dcBlog::POST_PUBLISHED) {
                 continue;
             }
-            if (($pos = $rs->getPosition()) === null) {
+            if (is_null($pos = $rs->getPosition())) {
                 continue;
             }
             if ($pos <= 0) {

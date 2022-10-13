@@ -196,7 +196,7 @@ if (!empty($_POST) && $can_edit_post) {
             $related_upl = false;
         }
 
-        if ($related_upl !== null) {
+        if (!is_null($related_upl)) {
             try {
                 if ($related_upl) {
                     files::uploadStatus($_FILES['up_file']);
@@ -274,7 +274,7 @@ if (!empty($_POST) && !empty($_POST['save']) && $can_edit_post) {
             dcCore::app()->blog->updPost($post_id, $cur);
             if ($page_isfile) {
                 try {
-                    if (dcCore::app()->meta === null) {
+                    if (is_null(dcCore::app()->meta)) {
                         dcCore::app()->meta = new dcMeta(dcCore::app());
                     }
                     dcCore::app()->meta->delPostMeta($post_id, 'related_file');
@@ -316,7 +316,7 @@ if (!empty($_POST) && !empty($_POST['save']) && $can_edit_post) {
             $return_id = dcCore::app()->blog->addPost($cur);
             if ($page_isfile) {
                 try {
-                    if (dcCore::app()->meta === null) {
+                    if (is_null(dcCore::app()->meta)) {
                         dcCore::app()->meta = new dcMeta(dcCore::app());
                     }
                     dcCore::app()->meta->setPostMeta($return_id, 'related_file', $page_relatedfile);
@@ -507,7 +507,7 @@ if ($can_edit_post) {
         form::textarea('post_notes', 50, 5, html::escapeHTML($post_notes)) .
         '</p>';
 
-    if ($post_id && $post->post_status === dcBlog::POST_PUBLISHED) {
+    if ($post_id && $post->post_status == dcBlog::POST_PUBLISHED) {
         echo '<p><a class="onblog_link outgoing" href="' . $post->getURL() . '" title="' . $post_title . '">' . __('Go to this related page on the site') . ' <img src="images/outgoing-blue.png" alt="" /></a></p>';
     }
 

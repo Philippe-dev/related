@@ -305,7 +305,7 @@ if ($related_active) {
                 }
             }
             dcCore::app()->blog->triggerBlog();
-            http::redirect($p_url . '&reord=1');
+            http::redirect(dcCore::app()->admin->getPageURL() . '&reord=1');
         } catch (Exception $e) {
             dcPage::addErrorNotice($e->getMessage());
         }

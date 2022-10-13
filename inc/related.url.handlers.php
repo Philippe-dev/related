@@ -37,7 +37,7 @@ class relatedUrlHandlers extends dcUrlHandlers
         $post_password = dcCore::app()->ctx->posts->post_password;
 
         // Password protected entry
-        if ($post_password !== '' && !dcCore::app()->ctx->preview) {
+        if ($post_password != '' && !dcCore::app()->ctx->preview) {
             // Get passwords cookie
             if (isset($_COOKIE['dc_passwd'])) {
                 $pwd_cookie = unserialize($_COOKIE['dc_passwd']);

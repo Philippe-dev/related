@@ -32,8 +32,8 @@ if ($self_ns->active) {
     $url_prefix = dcCore::app()->blog->settings->related->url_prefix;
     $url_prefix = (empty($url_prefix))?'static':$url_prefix;
     $url_pattern = $url_prefix . '/(.+)$';
-    dcCore::app()->url->register('related', $url_prefix, $url_pattern, ['relatedUrlHandlers', 'related']);
-    dcCore::app()->url->register('relatedpreview', 'relatedpreview', '^relatedpreview/(.+)$', ['relatedUrlHandlers', 'relatedpreview']);
+    dcCore::app()->url->register('related', $url_prefix, $url_pattern, [relatedUrlHandlers::class, 'related']);
+    dcCore::app()->url->register('relatedpreview', 'relatedpreview', '^relatedpreview/(.+)$', [relatedUrlHandlers::class, 'relatedpreview']);
     unset($url_prefix, $url_pattern);
 
     // Registering new post_type

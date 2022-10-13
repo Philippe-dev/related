@@ -20,7 +20,7 @@
     <?php echo dcPage::notices();?>
 
     <div class="multi-part" id="related_settings" title="<?php echo __('Settings');?>">
-      <form action="<?php echo $p_url;?>" method="post" enctype="multipart/form-data">
+      <form action="<?php echo dcCore::app()->admin->getPageURL();?>" method="post" enctype="multipart/form-data">
 	<div class="fieldset">
 	  <h3><?php echo __('Plugin activation'); ?></h3>
 	  <p>
@@ -60,7 +60,7 @@
         <a class="button add" href="plugin.php?p=related&amp;do=edit&amp;st=file"><?php echo __('New included page');?></a>
       </p>
 
-      <p><a id="filter-control" class="form-control" href="<?php echo $p_url;?>#pages_compose"></a></p>
+      <p><a id="filter-control" class="form-control" href="<?php echo dcCore::app()->admin->getPageURL();?>#pages_compose"></a></p>
       <form action="<?php echo dcCore::app()->adminurl->get('admin.plugin');?>" method="get" id="filters-form">
 	<h3 class="out-of-screen-if-js"><?php echo $form_filter_title;?></h3>
 	<div class="table">

@@ -13,7 +13,7 @@
 
 class adminPageList extends adminGenericList
 {
-    public function display($page, $nb_per_page, $enclose_block = '')
+    public function display(int $page, int $nb_per_page, string $enclose_block = '')
     {
         if ($this->rs->isEmpty()) {
             echo '<p><strong>' . __('No page') . '</strong></p>';
@@ -44,6 +44,14 @@ class adminPageList extends adminGenericList
                 $count++;
             }
             echo $blocks[1];
+            $fmt = fn ($title, $image) => sprintf('<img alt="%1$s" title="%1$s" src="images/%2$s" /> %1$s', $title, $image);
+            echo '<p class="info">' . __('Legend: ') .
+                $fmt(__('Published'), 'check-on.png') . ' - ' .
+                $fmt(__('Unpublished'), 'check-off.png') . ' - ' .
+                $fmt(__('Scheduled'), 'scheduled.png') . ' - ' .
+                $fmt(__('Pending'), 'check-wrn.png') .
+                '</p>';
+
             echo $pager->getLinks();
         }
     }
@@ -57,6 +65,7 @@ class adminPageList extends adminGenericList
             case  dcBlog::POST_UNPUBLISHED : $img_status = sprintf($img, __('unpublished'), 'check-off.png');
                 break;
             case dcBlog::POST_PENDING : $img_status = sprintf($img, __('pending'), 'check-wrn.png');
+            case dcBlog::POST_SCHEDULED : $img_status = sprintf($img, __('scheduled'), 'scheduled.png');
                 break;
         }
 
@@ -66,7 +75,7 @@ class adminPageList extends adminGenericList
         }
 
         $subtype = '(N/A)';
-        $meta = new dcMeta(dcCore::app());
+        $meta = new dcMeta();
         $meta_rs = $meta->getMetaRecordset($this->rs->post_meta, 'related_file');
         $subtype = (!$meta_rs->isEmpty())?__('included page'):__('post as page');
 

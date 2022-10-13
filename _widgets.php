@@ -11,5 +11,5 @@
  *  -- END LICENSE BLOCK ------------------------------------
  */
 
-dcCore::app()->addBehavior('initWidgets', ['widgetsRelated', 'init']);
-dcCore::app()->addBehavior('initDefaultWidgets', ['widgetsRelated', 'initDefaultWidgets']);
+dcCore::app()->addBehavior('initWidgets', [widgetsRelated::class, 'init']);
+dcCore::app()->addBehavior('initDefaultWidgets', [widgetsRelated::class, 'initDefaultWidgets']);

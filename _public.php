@@ -13,16 +13,16 @@
 
 $self_ns = dcCore::app()->blog->settings->addNamespace('related');
 if ($self_ns->active) {
-    dcCore::app()->addBehavior('coreBlogGetPosts', ['relatedPublicBehaviors', 'coreBlogGetPosts']);
-    dcCore::app()->addBehavior('publicBeforeDocument', ['relatedPublicBehaviors', 'addTplPath']);
-    dcCore::app()->addBehavior('templateBeforeBlock', ['relatedPublicBehaviors', 'templateBeforeBlock']);
-    dcCore::app()->addBehavior('sitemapsURLsCollect', ['relatedPublicBehaviors', 'sitemapsURLsCollect']);
-    dcCore::app()->addBehavior('initWidgets', ['widgetsRelated', 'init']);
+    dcCore::app()->addBehavior('coreBlogGetPosts', [relatedPublicBehaviors::class, 'coreBlogGetPosts']);
+    dcCore::app()->addBehavior('publicBeforeDocument', [relatedPublicBehaviors::class, 'addTplPath']);
+    dcCore::app()->addBehavior('templateBeforeBlock', [relatedPublicBehaviors::class, 'templateBeforeBlock']);
+    dcCore::app()->addBehavior('sitemapsURLsCollect', [relatedPublicBehaviors::class, 'sitemapsURLsCollect']);
+    dcCore::app()->addBehavior('initWidgets', [widgetsRelated::class, 'init']);
 
-    dcCore::app()->tpl->addValue('EntryContent', ['relatedTemplates', 'PageContent']);
+    dcCore::app()->tpl->addValue('EntryContent', [relatedTemplates::class, 'PageContent']);
 }
 
-dcCore::app()->addBehavior('publicBreadcrumb', ['relatedBehavior', 'publicBreadcrumb']);
+dcCore::app()->addBehavior('publicBreadcrumb', [relatedBehavior::class, 'publicBreadcrumb']);
 
 class relatedBehavior
 {

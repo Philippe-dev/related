@@ -15,7 +15,7 @@ $this->registerModule(
     "Related Pages", // Name
     "Serve pages & scripts", // Description
     "Pep, contributors, Nicolas Roudaire", // Author
-    '1.8.0', // Version
+    '1.8.1', // Version
     [
         'permissions' => dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_CONTENT_ADMIN, dcPages::PERMISSION_PAGES]),
         'type' => 'plugin',
