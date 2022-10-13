@@ -19,7 +19,7 @@ class rsRelatedBase
             return false;
         }
 
-        $meta = new dcMeta(dcCore::app());
+        $meta = new dcMeta();
         $meta_rs = $meta->getMetaRecordset($rs->post_meta, 'related_file');
 
         if (!$meta_rs->isEmpty()) {
@@ -40,7 +40,7 @@ class rsRelatedBase
             return false;
         }
 
-        $meta = new dcMeta(dcCore::app());
+        $meta = new dcMeta();
         $meta_rs = $meta->getMetaRecordset($rs->post_meta, 'related_position');
 
         if (!$meta_rs->isEmpty()) {

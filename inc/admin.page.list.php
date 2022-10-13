@@ -60,13 +60,19 @@ class adminPageList extends adminGenericList
     {
         $img = '<img alt="%1$s" title="%1$s" src="images/%2$s" />';
         switch ($this->rs->post_status) {
-            case  dcBlog::POST_PUBLISHED : $img_status = sprintf($img, __('published'), 'check-on.png');
+            case dcBlog::POST_PUBLISHED :
+                $img_status = sprintf($img, __('published'), 'check-on.png');
                 break;
-            case  dcBlog::POST_UNPUBLISHED : $img_status = sprintf($img, __('unpublished'), 'check-off.png');
+            case dcBlog::POST_UNPUBLISHED :
+                $img_status = sprintf($img, __('unpublished'), 'check-off.png');
                 break;
-            case dcBlog::POST_PENDING : $img_status = sprintf($img, __('pending'), 'check-wrn.png');
+            case dcBlog::POST_PENDING :
+                $img_status = sprintf($img, __('pending'), 'check-wrn.png');
+                break;
             case dcBlog::POST_SCHEDULED : $img_status = sprintf($img, __('scheduled'), 'scheduled.png');
                 break;
+            default:
+                $img_status = sprintf($img, __('unpublished'), 'check-off.png');
         }
 
         $protected = '';

@@ -35,6 +35,7 @@ if (dcCore::app()->blog->settings->related->related_url_prefix) {
 
 
 $default_tab = 'pages_compose';
+$process_successfull = false;
 
 /**
  * Build "Manage Pages" tab
@@ -95,11 +96,19 @@ if ($related_active) {
     $form_filter_title = __('Show filters and display options');
 
     // Creating filter combo boxes
+    $users_combo = [];
+    $status_combo = [];
+    $in_widget_combo = [];
+    $dt_m_combo = [];
+    $lang_combo = [];
+    $sortby_combo = [];
+    $order_combo = [];
     if (!dcCore::app()->error->flag()) {
         // Getting authors
         try {
             $users = dcCore::app()->blog->getPostsUsers();
         } catch (Exception $e) {
+            $users = null;
             dcPage::addErrorNotice($e->getMessage());
         }
 
@@ -113,6 +122,7 @@ if ($related_active) {
         try {
             $langs = dcCore::app()->blog->getLangs();
         } catch (Exception $e) {
+            $langs = null;
             dcPage::addErrorNotice($e->getMessage());
         }
         $lang_combo = array_merge(
@@ -135,6 +145,7 @@ if ($related_active) {
         try {
             $dates = dcCore::app()->blog->getDates(['type' => 'month']);
         } catch (Exception $e) {
+            $dates = null;
             dcPage::addErrorNotice($e->getMessage());
         }
 
@@ -175,6 +186,7 @@ if ($related_active) {
         $counter = dcCore::app()->blog->getPosts($params, true);
         $page_list = new adminPageList(dcCore::app(), $pages, $counter->f(0));
     } catch (Exception $e) {
+        $pages = null;
         dcPage::addErrorNotice($e->getMessage());
     }
 
@@ -289,7 +301,7 @@ if ($related_active) {
 
         try {
             $i = 1;
-            $meta = new dcMeta(dcCore::app());
+            $meta = new dcMeta();
             foreach ($public_pages as $c_page) {
                 $cur = dcCore::app()->con->openCursor(dcCore::app()->prefix . 'post');
                 $cur->post_upddt = date('Y-m-d H:i:s');

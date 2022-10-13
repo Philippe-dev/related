@@ -47,6 +47,7 @@ if (!$can_publish) {
 }
 
 // Status combo
+$status_combo = [];
 foreach (dcCore::app()->blog->getAllPostStatus() as $k => $v) {
     $status_combo[$v] = (string) $k;
 }
@@ -78,6 +79,7 @@ $bad_dt = false;
 $page_isfile = (!empty($_REQUEST['st']) && $_REQUEST['st'] === 'file') ? true : false;
 $page_relatedfile = '';
 
+$post = null;
 // Get entry informations
 if (!empty($_REQUEST['id'])) {
     $params = [];
@@ -115,7 +117,7 @@ if (!empty($_REQUEST['id'])) {
         $can_delete = $post->isDeletable();
 
         try {
-            dcCore::app()->meta = new dcMeta(dcCore::app());
+            dcCore::app()->meta = new dcMeta();
             $post_metas = dcCore::app()->meta->getMetaRecordset($post->post_meta, 'related_file');
             if (!$post_metas->isEmpty()) {
                 $page_relatedfile = $post_metas->meta_id;
@@ -126,11 +128,11 @@ if (!empty($_REQUEST['id'])) {
     }
 }
 
+$related_pages_files = ['-' => ''];
 if ($page_isfile) {
     $post_content = '/** external content **/';
     $post_content_xhtml = '/** external content **/';
 
-    $related_pages_files = ['-' => ''];
     $dir = @dir(dcCore::app()->blog->settings->related->files_path);
     $allowed_exts = ['php', 'html', 'xml', 'txt'];
 
@@ -275,7 +277,7 @@ if (!empty($_POST) && !empty($_POST['save']) && $can_edit_post) {
             if ($page_isfile) {
                 try {
                     if (is_null(dcCore::app()->meta)) {
-                        dcCore::app()->meta = new dcMeta(dcCore::app());
+                        dcCore::app()->meta = new dcMeta();
                     }
                     dcCore::app()->meta->delPostMeta($post_id, 'related_file');
                     dcCore::app()->meta->setPostMeta($post_id, 'related_file', $page_relatedfile);
@@ -317,7 +319,7 @@ if (!empty($_POST) && !empty($_POST['save']) && $can_edit_post) {
             if ($page_isfile) {
                 try {
                     if (is_null(dcCore::app()->meta)) {
-                        dcCore::app()->meta = new dcMeta(dcCore::app());
+                        dcCore::app()->meta = new dcMeta();
                     }
                     dcCore::app()->meta->setPostMeta($return_id, 'related_file', $page_relatedfile);
                 } catch (Exception $e) {
@@ -365,6 +367,7 @@ if ($post_editor && !empty($post_editor[$post_format])) {
     );
 }
 
+$page_title_edit = '';
 if ($post_id) {
     switch ($post_status) {
         case dcBlog::POST_PUBLISHED:
