@@ -11,7 +11,14 @@
  *  -- END LICENSE BLOCK ------------------------------------
  */
 
-class relatedUrlHandlers extends dcUrlHandlers
+declare(strict_types=1);
+
+namespace Dotclear\Plugin\related;
+
+use dcCore;
+use dcUrlHandlers;
+
+class UrlHandler extends dcUrlHandlers
 {
     public static function related($args)
     {
@@ -24,7 +31,7 @@ class relatedUrlHandlers extends dcUrlHandlers
         $params['post_url'] = $args;
         $params['post_type'] = 'related';
         dcCore::app()->ctx->posts = dcCore::app()->blog->getPosts($params);
-        dcCore::app()->ctx->posts->extend('rsRelatedBase');
+        dcCore::app()->ctx->posts->extend(RsRelated::class);
 
         dcCore::app()->blog->withoutPassword(true);
 

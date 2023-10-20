@@ -1,343 +1,212 @@
+# Language: Français
+# Module: related - 1.8.2
+# Date: 2015-03-24 17:23:51
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
+"Project-Id-Version: related 1.8.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-05-31 17:23+0200\n"
+"POT-Creation-Date: 2023-10-20 18:29+0200\n"
 "PO-Revision-Date: \n"
-"Last-Translator: Pep <pep@dotclear.net>\n"
-"Language-Team: \n"
+"Last-Translator: Nicolas <nikrou77@gmail.com>\n"
+"Language-Team: Nicolas <nikrou77@gmail.com>\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Poedit-Language: French\n"
-"X-Poedit-Country: FRANCE\n"
-"X-Poedit-SourceCharset: iso-8859-1\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: _admin.php:24
-#: _prepend.php:135
-#: _widgets.php:44
-#: _widgets.php:63
-#: page.php:348
-#: page.php:361
-#: panel.php:149
-#: panel.php:158
-msgid "Related pages"
-msgstr "Pages connexes"
-
-#: _admin.php:28
-msgid "manage related pages"
-msgstr "Gérer les pages connexes"
-
-msgid "%d related pages"
-msgstr "%d pages connexes"
-
-#: _install.php:32
-msgid "The required plugin \"metadata\" is missing."
-msgstr "L'extension \"metadata\" est nécessaire mais manquante."
-
-#: _install.php:41
-#: panel.php:139
-msgid "Directory "%s" for related files repository needs to allow read and write access."
-msgstr "Le répertoire "%s" pour le dépôt des fichiers liés nécessite un accès en lecture et écriture."
-
-#: _widgets.php:64
-#: page.php:454
-msgid "Title:"
-msgstr "Titre :"
-
-#: _widgets.php:65
-msgid "Home page only"
-msgstr "Page d'accueil uniquement"
-
-#: class.dc.related.php:99
-#: panel.php:225
-msgid "No page"
-msgstr "Aucune page"
-
-#: class.dc.related.php:107
-msgid "Title"
-msgstr "Titre"
-
-#: class.dc.related.php:108
-msgid "Date"
-msgstr "Date"
-
-#: class.dc.related.php:109
-msgid "Author"
-msgstr "Auteur"
-
-#: class.dc.related.php:110
-msgid "Type"
-msgstr "Type"
-
-#: class.dc.related.php:111
-msgid "Status"
-msgstr "État"
-
-#: class.dc.related.php:118
-#: class.dc.related.php:125
-msgid "Page(s)"
-msgstr "Page(s)"
-
-#: class.dc.related.php:133
-msgid "published"
-msgstr "publié"
-
-#: class.dc.related.php:134
-msgid "unpublished"
-msgstr "hors ligne"
-
-#: class.dc.related.php:135
-msgid "pending"
-msgstr "en attente"
-
-#: class.dc.related.php:140
-msgid "protected"
-msgstr "protégé"
-
-#: class.dc.related.php:146
-msgid "included page"
-msgstr "page incluse"
-
-#: class.dc.related.php:146
-msgid "post as page"
-msgstr "page d'après un billet"
-
-#: class.dc.related.php:156
-msgid "%Y-%m-%d %H:%M"
-msgstr "%Y-%m-%d %H:%M"
-
-#: page.php:43
-msgid "New page"
-msgstr "Nouvelle page"
-
-#: page.php:81
-msgid "This page does not exist."
-msgstr "Cette page n'existe pas."
-
-#: page.php:104
-#: page.php:408
-msgid "Edit page"
-msgstr "Éditer la page"
-
-#: page.php:244
-#: page.php:291
-msgid "Missing file."
-msgstr "Fichier manquant."
-
-#: page.php:364
-msgid "Page has been updated."
-msgstr "La page a été mise à jour."
-
-#: page.php:367
-msgid "Page has been created."
-msgstr "La page a été créée."
-
-#: page.php:374
-#: page.php:376
-msgid "view page"
-msgstr "voir la page"
-
-#: page.php:389
-#: page.php:397
-msgid "Page preview"
-msgstr "Prévisualisation de la page"
-
-#: page.php:413
-msgid "Page status:"
-msgstr "État de la page :"
-
-#: page.php:417
-msgid "Text formating:"
-msgstr "Format du texte :"
-
-#: page.php:422
-msgid "Basename:"
-msgstr "URL spécifique :"
-
-#: page.php:426
-msgid "Warning: If you set the URL manually, it may conflict with another entry."
-msgstr "Attention : si vous indiquez l'URL manuellement, celle-ci peut entrer en conflit avec une autre page."
-
-#: page.php:432
-msgid "More options"
-msgstr "Plus d'options"
-
-#: page.php:433
-msgid "Page lang:"
-msgstr "Langue de la page :"
-
-#: page.php:437
-msgid "Published on:"
-msgstr "Publié le :"
-
-#: page.php:441
-msgid "Page password:"
-msgstr "Mot de passe de la page :"
-
-#: page.php:454
-#: page.php:467
-#: page.php:476
-msgid "Required field"
-msgstr "Champ obligatoire"
-
-#: page.php:459
-msgid "Summary:"
-msgstr "Résumé :"
-
-#: page.php:468
-msgid "Content:"
-msgstr "Contenu :"
-
-#: page.php:477
-msgid "Included file:"
-msgstr "Page incluse :"
-
-#: page.php:482
-msgid "Pick up a local file in your related pages repository"
-msgstr "Choisissez un fichier local dans votre dépôt de pages connexes"
-
-#: page.php:486
-msgid "or upload a new file"
-msgstr "ou téléchargez un nouveau fichier"
-
-#: page.php:496
-msgid "Notes:"
-msgstr "Notes :"
-
-#: page.php:508
-msgid "save"
-msgstr "enregistrer"
-
-#: page.php:510
-msgid "preview"
-msgstr "prévisualiser"
-
-#: page.php:512
-#: panel.php:66
-msgid "delete"
-msgstr "supprimer"
-
-#: panel.php:58
-msgid "publish"
-msgstr "publier"
-
-#: panel.php:59
-msgid "unpublish"
-msgstr "mettre hors ligne"
-
-#: panel.php:60
-msgid "mark as pending"
-msgstr "mettre en attente"
-
-#: panel.php:63
-msgid "change author"
-msgstr "changer l'auteur"
-
-#: panel.php:108
+#: src/ManageRelatedPages.php:93
 msgid "Pages list has been sorted."
 msgstr "La liste des pages connexes a été réordonnée."
 
-#: panel.php:137
-msgid "Configuration has been updated."
-msgstr "La configuration a été mise à jour."
+#: src/ManageRelatedPages.php:116 src/ManageRelatedPages.php:126
+#: src/Widgets.php:32 src/Widgets.php:33 src/AdminBehaviors.php:28
+#: src/AdminBehaviors.php:48 src/ActionsRelatedPages.php:35
+#: src/ActionsRelatedPages.php:67 src/ManagePage.php:358
+msgid "Related pages"
+msgstr "Pages connexes"
 
-#: panel.php:164
+#: src/ManageRelatedPages.php:131
 msgid "Manage pages"
 msgstr "Gérer les pages"
 
-#: panel.php:165
+#: src/ManageRelatedPages.php:135
 msgid "New post as page"
 msgstr "Nouvelle page d'après un billet"
 
-#: panel.php:166
+#: src/ManageRelatedPages.php:136
 msgid "New included page"
 msgstr "Nouvelle page incluse"
 
-#: panel.php:175
+#: src/ManageRelatedPages.php:149
 msgid "Selected entries action:"
 msgstr "Action sur les entrées sélectionnées :"
 
-#: panel.php:177
-msgid "ok"
-msgstr "ok"
-
-#: panel.php:189
+#: src/ManageRelatedPages.php:161
 msgid "Arrange public list"
 msgstr "Ordonner la liste publique"
 
-#: panel.php:199
+#: src/ManageRelatedPages.php:169
 msgid "Order"
 msgstr "Trier"
 
-#: panel.php:200
-msgid "Visible"
-msgstr "Visible"
-
-#: panel.php:201
-msgid "Page title"
-msgstr "Titre de la page"
-
-#: panel.php:220
-msgid "Save"
-msgstr "Enregistrer"
-
-#: panel.php:234
-msgid "Options"
-msgstr "Options"
-
-#: panel.php:237
-msgid "General options"
-msgstr "Options générales"
-
-#: panel.php:238
-msgid "Repository path :"
-msgstr "Chemin du dépôt des pages incluses :"
-
-#: panel.php:243
-msgid "Advanced options"
-msgstr "Options avancées"
-
-#: panel.php:244
-msgid "URL prefix :"
-msgstr "Préfixe d'URL :"
-
-#: panel.php:250
-msgid "Save configuration"
-msgstr "Enregistrer la configuration"
-
-msgid "Enable Related plugin"
-msgstr "Activer le plugin pages connexes"
-
-msgid "Pages limit:"
-msgstr "Limite du nombre de pages :"
-
-msgid "Add to widget"
-msgstr "Ajouter au widget"
-
-msgid "Remove from widget"
-msgstr "Enlever du widget"
-
-msgid "Are you sure you want to delete selected pages?"
-msgstr "Êtes-vous certain de vouloir supprimer les pages sélectionnées ?"
-
-msgid "In widget:"
-msgstr "Dans le widget&nbsp;: "
-
-msgid "Visible pages in widget"
-msgstr "Pages visible dans le widget"
-
+#: src/ManageRelatedPages.php:170
 msgid "Visible page in widget"
 msgstr "Page visible dans le widget"
 
-msgid "No"
-msgstr "Non"
+#: src/ManageRelatedPages.php:171
+msgid "Page title"
+msgstr "Titre de la page"
 
-msgid "Visible in widget"
-msgstr "Visible dans le widget"
+#: src/ManageRelatedPages.php:193 src/ManagePage.php:496
+msgid "Save"
+msgstr "Enregistrer"
 
+#: src/ManageRelatedPages.php:198 src/ListingRelatedPages.php:31
+msgid "No page"
+msgstr "Aucune page"
+
+#: src/Widgets.php:34
+msgid "Pages limit:"
+msgstr "Limite du nombre de pages :"
+
+#: src/AdminBehaviors.php:45
+#, php-format
+msgid "%d related pages"
+msgstr "%d pages connexes"
+
+#: src/AdminBehaviors.php:45
+#, php-format
+msgid "%d related page"
+msgstr "%d pages connexe"
+
+#: src/ListingRelatedPages.php:37
+msgid "Title"
+msgstr "Titre"
+
+#: src/ListingRelatedPages.php:38
+msgid "Date"
+msgstr "Date"
+
+#: src/ListingRelatedPages.php:39
+#, fuzzy
+msgid "Author"
+msgstr "Auteur"
+
+#: src/ListingRelatedPages.php:40
+msgid "Type"
+msgstr "Type"
+
+#: src/ListingRelatedPages.php:104 src/ManagePage.php:410
+msgid "In widget"
+msgstr "Dans le widget"
+
+#: src/ListingRelatedPages.php:110
+msgid "included page"
+msgstr "page incluse"
+
+#: src/ListingRelatedPages.php:110
+msgid "post as page"
+msgstr "page d'après un billet"
+
+#: src/ListingRelatedPages.php:120
+msgid "%Y-%m-%d %H:%M"
+msgstr "%Y-%m-%d %H:%M"
+
+#: src/ActionsRelatedPages.php:54
+msgid "Add to widget"
+msgstr "Ajouter au widget"
+
+#: src/ActionsRelatedPages.php:55
+msgid "Remove from widget"
+msgstr "Enlever du widget"
+
+#: src/ActionsRelatedPages.php:68
+msgid "Back to related page list"
+msgstr "Retour à la liste des pages"
+
+#: src/FilterPages.php:142
+msgid "In widget:"
+msgstr "Dans le widget"
+
+#: src/Config.php:81
+#, php-format
+msgid ""
+"Directory \"%s\" for related files repository needs to allow read and write "
+"access."
+msgstr ""
+"Le répertoire \"%s\" pour le dépôt des fichiers liés nécessite un accès en "
+"lecture et écriture."
+
+#: src/Config.php:87
+msgid "Configuration has been updated."
+msgstr "La configuration a été mise à jour."
+
+#: src/Config.php:111
+msgid "Plugin activation"
+msgstr "Activation du plugin"
+
+#: src/Config.php:114
+msgid "Enable Related plugin"
+msgstr "Activer le plugin pages connexes"
+
+#: src/Config.php:122
+msgid "General options"
+msgstr "Options générales"
+
+#: src/Config.php:124
+msgid "Repository path:"
+msgstr "Chemin du dépôt des pages incluses :"
+
+#: src/Config.php:132
+msgid "Advanced options"
+msgstr "Options avancées"
+
+#: src/Config.php:134
+msgid "URL prefix:"
+msgstr "Préfixe d'URL :"
+
+#: src/ManagePage.php:82 src/ManagePage.php:478
+msgid "New page"
+msgstr "Nouvelle page"
+
+#: src/ManagePage.php:105
+msgid "This page does not exist."
+msgstr "Cette page n'existe pas."
+
+#: src/ManagePage.php:110 src/ManagePage.php:478
+msgid "Edit page"
+msgstr "Éditer la page"
+
+#: src/ManagePage.php:235 src/ManagePage.php:275
+msgid "Missing file."
+msgstr "Fichier manquant."
+
+#: src/ManagePage.php:262
+msgid "Page has been updated."
+msgstr "La page a été mise à jour."
+
+#: src/ManagePage.php:301
+msgid "Page has been created."
+msgstr "La page a été créée."
+
+#: src/ManagePage.php:311
+msgid "Page has been deleted."
+msgstr "La page a été supprimée."
+
+#: src/ManagePage.php:451
+msgid "Included file:"
+msgstr "Page incluse :"
+
+#: src/ManagePage.php:454
+msgid "Pick up a local file in your related pages repository"
+msgstr "Choisissez un fichier local dans votre dépôt de pages connexes"
+
+#: src/ManagePage.php:458
+msgid "or upload a new file"
+msgstr "ou téléchargez un nouveau fichier"
+
+#: src/ManagePage.php:475
 msgid "Go to this related page on the site"
 msgstr "Voir cette page connexe sur le site"
 
-msgid "pages per page"
-msgstr "pages par page"

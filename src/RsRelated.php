@@ -11,8 +11,51 @@
  *  -- END LICENSE BLOCK ------------------------------------
  */
 
-class rsRelatedBase
+namespace Dotclear\Plugin\related;
+
+use dcAuth;
+use dcCore;
+use dcMeta;
+use initPages;
+
+class RsRelated
 {
+    public static function isEditable($rs): bool
+    {
+        if (dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_CONTENT_ADMIN]), dcCore::app()->blog->id)) {
+            return true;
+        }
+
+        if (!$rs->exists('user_id')) {
+            return false;
+        }
+
+        if (dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([initPages::PERMISSION_PAGES]), dcCore::app()->blog->id)
+            && $rs->user_id == dcCore::app()->auth->userID()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public static function isDeletable($rs): bool
+    {
+        if (dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_CONTENT_ADMIN]), dcCore::app()->blog->id)) {
+            return true;
+        }
+
+        if (!$rs->exists('user_id')) {
+            return false;
+        }
+
+        if (dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([initPages::PERMISSION_PAGES]), dcCore::app()->blog->id)
+            && $rs->user_id == dcCore::app()->auth->userID()) {
+            return true;
+        }
+
+        return false;
+    }
+
     public static function getRelatedFilename($rs)
     {
         if (is_null(dcCore::app()->blog->settings->related->files_path)) {

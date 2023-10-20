@@ -1,0 +1,465 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-20 18:29+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: __html_tpl_dummy.php:2 __html_tpl_dummy.php:2
+msgid "Archives"
+msgstr ""
+
+#: __html_tpl_dummy.php:3 __html_tpl_dummy.php:3
+msgid "by"
+msgstr ""
+
+#: __html_tpl_dummy.php:4 __html_tpl_dummy.php:4
+msgid "Categories Page"
+msgstr ""
+
+#: __html_tpl_dummy.php:5 __html_tpl_dummy.php:5
+msgid "Home"
+msgstr ""
+
+#: __html_tpl_dummy.php:6 __html_tpl_dummy.php:6
+msgid "Published on"
+msgstr ""
+
+#: src/ManageRelatedPages.php:93
+msgid "Pages list has been sorted."
+msgstr ""
+
+#: src/ManageRelatedPages.php:116 src/ManageRelatedPages.php:126
+#: src/Widgets.php:32 src/Widgets.php:33 src/AdminBehaviors.php:28
+#: src/AdminBehaviors.php:48 src/ActionsRelatedPages.php:35
+#: src/ActionsRelatedPages.php:67 src/ManagePage.php:358
+msgid "Related pages"
+msgstr ""
+
+#: src/ManageRelatedPages.php:131
+msgid "Manage pages"
+msgstr ""
+
+#: src/ManageRelatedPages.php:135
+msgid "New post as page"
+msgstr ""
+
+#: src/ManageRelatedPages.php:136
+msgid "New included page"
+msgstr ""
+
+#: src/ManageRelatedPages.php:149
+msgid "Selected entries action:"
+msgstr ""
+
+#: src/ManageRelatedPages.php:151
+msgid "ok"
+msgstr ""
+
+#: src/ManageRelatedPages.php:161
+msgid "Arrange public list"
+msgstr ""
+
+#: src/ManageRelatedPages.php:169
+msgid "Order"
+msgstr ""
+
+#: src/ManageRelatedPages.php:170
+msgid "Visible page in widget"
+msgstr ""
+
+#: src/ManageRelatedPages.php:171
+msgid "Page title"
+msgstr ""
+
+#: src/ManageRelatedPages.php:193 src/ManagePage.php:496
+msgid "Save"
+msgstr ""
+
+#: src/ManageRelatedPages.php:198 src/ListingRelatedPages.php:31
+msgid "No page"
+msgstr ""
+
+#: src/Widgets.php:33
+msgid "Title (optional)"
+msgstr ""
+
+#: src/Widgets.php:34
+msgid "Pages limit:"
+msgstr ""
+
+#: src/Widgets.php:37
+msgid "Display on:"
+msgstr ""
+
+#: src/Widgets.php:40
+msgid "All pages"
+msgstr ""
+
+#: src/Widgets.php:40
+msgid "Home page only"
+msgstr ""
+
+#: src/Widgets.php:40
+msgid "Except on home page"
+msgstr ""
+
+#: src/Widgets.php:42
+msgid "Content only"
+msgstr ""
+
+#: src/Widgets.php:43
+msgid "CSS class:"
+msgstr ""
+
+#: src/Widgets.php:44
+msgid "Offline"
+msgstr ""
+
+#: src/AdminBehaviors.php:45
+#, php-format
+msgid "%d related pages"
+msgstr ""
+
+#: src/AdminBehaviors.php:45
+#, php-format
+msgid "%d related page"
+msgstr ""
+
+#: src/ListingRelatedPages.php:37
+msgid "Title"
+msgstr ""
+
+#: src/ListingRelatedPages.php:38
+msgid "Date"
+msgstr ""
+
+#: src/ListingRelatedPages.php:39
+msgid "Author"
+msgstr ""
+
+#: src/ListingRelatedPages.php:40
+msgid "Type"
+msgstr ""
+
+#: src/ListingRelatedPages.php:41 src/ActionsRelatedPages.php:42
+#: src/ManagePage.php:386
+msgid "Status"
+msgstr ""
+
+#: src/ListingRelatedPages.php:64
+msgid "Legend: "
+msgstr ""
+
+#: src/ListingRelatedPages.php:65 src/ManagePage.php:558
+msgid "Published"
+msgstr ""
+
+#: src/ListingRelatedPages.php:66 src/ManagePage.php:561
+msgid "Unpublished"
+msgstr ""
+
+#: src/ListingRelatedPages.php:67 src/ManagePage.php:564
+msgid "Scheduled"
+msgstr ""
+
+#: src/ListingRelatedPages.php:68 src/ManagePage.php:567
+msgid "Pending"
+msgstr ""
+
+#: src/ListingRelatedPages.php:69
+msgid "Protected"
+msgstr ""
+
+#: src/ListingRelatedPages.php:70
+msgid "Selected"
+msgstr ""
+
+#: src/ListingRelatedPages.php:71
+msgid "Attachments"
+msgstr ""
+
+#: src/ListingRelatedPages.php:83
+msgid "published"
+msgstr ""
+
+#: src/ListingRelatedPages.php:86 src/ListingRelatedPages.php:94
+msgid "unpublished"
+msgstr ""
+
+#: src/ListingRelatedPages.php:89
+msgid "pending"
+msgstr ""
+
+#: src/ListingRelatedPages.php:91
+msgid "scheduled"
+msgstr ""
+
+#: src/ListingRelatedPages.php:99
+msgid "protected"
+msgstr ""
+
+#: src/ListingRelatedPages.php:104 src/ManagePage.php:410
+msgid "In widget"
+msgstr ""
+
+#: src/ListingRelatedPages.php:110
+msgid "included page"
+msgstr ""
+
+#: src/ListingRelatedPages.php:110
+msgid "post as page"
+msgstr ""
+
+#: src/ListingRelatedPages.php:120
+msgid "%Y-%m-%d %H:%M"
+msgstr ""
+
+#: src/ActionsRelatedPages.php:43
+msgid "Publish"
+msgstr ""
+
+#: src/ActionsRelatedPages.php:44
+msgid "Unpublish"
+msgstr ""
+
+#: src/ActionsRelatedPages.php:45
+msgid "Schedule"
+msgstr ""
+
+#: src/ActionsRelatedPages.php:46
+msgid "Mark as pending"
+msgstr ""
+
+#: src/ActionsRelatedPages.php:53
+msgid "Widget"
+msgstr ""
+
+#: src/ActionsRelatedPages.php:54
+msgid "Add to widget"
+msgstr ""
+
+#: src/ActionsRelatedPages.php:55
+msgid "Remove from widget"
+msgstr ""
+
+#: src/ActionsRelatedPages.php:68
+msgid "Back to related page list"
+msgstr ""
+
+#: src/FilterPages.php:66
+msgid "Author:"
+msgstr ""
+
+#: src/FilterPages.php:78
+msgid "Status:"
+msgstr ""
+
+#: src/FilterPages.php:107
+msgid "Month:"
+msgstr ""
+
+#: src/FilterPages.php:131
+msgid "Lang:"
+msgstr ""
+
+#: src/FilterPages.php:142
+msgid "In widget:"
+msgstr ""
+
+#: src/FilterPages.php:145
+msgid "yes"
+msgstr ""
+
+#: src/FilterPages.php:146
+msgid "no"
+msgstr ""
+
+#: src/Config.php:81
+#, php-format
+msgid ""
+"Directory \"%s\" for related files repository needs to allow read and write "
+"access."
+msgstr ""
+
+#: src/Config.php:87
+msgid "Configuration has been updated."
+msgstr ""
+
+#: src/Config.php:111
+msgid "Plugin activation"
+msgstr ""
+
+#: src/Config.php:114
+msgid "Enable Related plugin"
+msgstr ""
+
+#: src/Config.php:122
+msgid "General options"
+msgstr ""
+
+#: src/Config.php:124
+msgid "Repository path:"
+msgstr ""
+
+#: src/Config.php:132
+msgid "Advanced options"
+msgstr ""
+
+#: src/Config.php:134
+msgid "URL prefix:"
+msgstr ""
+
+#: src/ManagePage.php:82 src/ManagePage.php:478
+msgid "New page"
+msgstr ""
+
+#: src/ManagePage.php:105
+msgid "This page does not exist."
+msgstr ""
+
+#: src/ManagePage.php:110 src/ManagePage.php:478
+msgid "Edit page"
+msgstr ""
+
+#: src/ManagePage.php:183
+msgid "Invalid publication date"
+msgstr ""
+
+#: src/ManagePage.php:235 src/ManagePage.php:275
+msgid "Missing file."
+msgstr ""
+
+#: src/ManagePage.php:262
+msgid "Page has been updated."
+msgstr ""
+
+#: src/ManagePage.php:301
+msgid "Page has been created."
+msgstr ""
+
+#: src/ManagePage.php:311
+msgid "Page has been deleted."
+msgstr ""
+
+#: src/ManagePage.php:332
+#, php-format
+msgid "&ldquo;%s&rdquo;"
+msgstr ""
+
+#: src/ManagePage.php:368
+msgid "Don't forget to validate your XHTML conversion by saving your post."
+msgstr ""
+
+#: src/ManagePage.php:388
+msgid "Page status"
+msgstr ""
+
+#: src/ManagePage.php:391
+msgid "Publication date and hour"
+msgstr ""
+
+#: src/ManagePage.php:394
+msgid "Entry language"
+msgstr ""
+
+#: src/ManagePage.php:398
+msgid "Text formatting"
+msgstr ""
+
+#: src/ManagePage.php:404
+msgid "Convert to XHTML"
+msgstr ""
+
+#: src/ManagePage.php:406
+msgid "Filing"
+msgstr ""
+
+#: src/ManagePage.php:415
+msgid "Options"
+msgstr ""
+
+#: src/ManagePage.php:417
+msgid "Password"
+msgstr ""
+
+#: src/ManagePage.php:421
+msgid "Edit basename"
+msgstr ""
+
+#: src/ManagePage.php:425
+msgid ""
+"Warning: If you set the URL manually, it may conflict with another entry."
+msgstr ""
+
+#: src/ManagePage.php:431 src/ManagePage.php:443 src/ManagePage.php:450
+msgid "Required field"
+msgstr ""
+
+#: src/ManagePage.php:431
+msgid "Title:"
+msgstr ""
+
+#: src/ManagePage.php:435
+msgid "Excerpt:"
+msgstr ""
+
+#: src/ManagePage.php:436
+msgid "Introduction to the post."
+msgstr ""
+
+#: src/ManagePage.php:443
+msgid "Content:"
+msgstr ""
+
+#: src/ManagePage.php:451
+msgid "Included file:"
+msgstr ""
+
+#: src/ManagePage.php:454
+msgid "Pick up a local file in your related pages repository"
+msgstr ""
+
+#: src/ManagePage.php:458
+msgid "or upload a new file"
+msgstr ""
+
+#: src/ManagePage.php:467
+msgid "Personal notes:"
+msgstr ""
+
+#: src/ManagePage.php:468
+msgid "Unpublished notes."
+msgstr ""
+
+#: src/ManagePage.php:475
+msgid "Go to this related page on the site"
+msgstr ""
+
+#: src/ManagePage.php:483
+msgid "Edit post"
+msgstr ""
+
+#: src/ManagePage.php:503
+msgid "Preview"
+msgstr ""
+
+#: src/ManagePage.php:506
+msgid "Cancel"
+msgstr ""
+
+#: src/ManagePage.php:510
+msgid "Delete"
+msgstr ""

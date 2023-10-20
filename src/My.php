@@ -11,8 +11,12 @@
  *  -- END LICENSE BLOCK ------------------------------------
  */
 
-if (!empty($_REQUEST['do']) && $_REQUEST['do'] === 'edit') {
-    include_once __DIR__ . '/inc/page.php';
-} else {
-    include_once __DIR__ . '/inc/panel.php';
+declare(strict_types=1);
+
+namespace Dotclear\Plugin\related;
+
+use Dotclear\Module\MyPlugin;
+
+class My extends MyPlugin
+{
 }

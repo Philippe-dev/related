@@ -12,15 +12,16 @@
  */
 
 $this->registerModule(
-    "Related Pages", // Name
+    "Related pages", // Name
     "Serve pages & scripts", // Description
     "Pep, contributors, Nicolas Roudaire", // Author
-    '1.8.2', // Version
+    '1.9.0', // Version
     [
-        'permissions' => dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_CONTENT_ADMIN, dcPages::PERMISSION_PAGES]),
+        'permissions' => dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_CONTENT_ADMIN, initPages::PERMISSION_PAGES]),
         'type' => 'plugin',
-        'dc_min' => '2.24',
-        'requires' => [['core', '2.24']],
+        'dc_min' => '2.27',
+        'requires' => [['core', '2.27']],
+        'repository' => 'https://github.com/nikrou/related',
         'support' => 'http://forum.dotclear.net/viewtopic.php?id=48205',
         'details' => 'http://plugins.dotaddict.org/dc2/details/related'
     ]

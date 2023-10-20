@@ -11,11 +11,16 @@
  *  -- END LICENSE BLOCK ------------------------------------
  */
 
-class relatedHelpers
+namespace Dotclear\Plugin\related;
+
+use dcBlog;
+use Dotclear\Database\MetaRecord;
+
+class PagesHelper
 {
-    public static function getPublicList($rs)
+    public static function getPublicList(MetaRecord $rs)
     {
-        if (!$rs || $rs->isEmpty()) {
+        if ($rs->isEmpty()) {
             return;
         }
 
@@ -24,12 +29,15 @@ class relatedHelpers
             if ($rs->post_status != dcBlog::POST_PUBLISHED) {
                 continue;
             }
+
             if (is_null($pos = $rs->getPosition())) {
                 continue;
             }
+
             if ($pos <= 0) {
                 $pos = 10000;
             }
+
             $res[] = [
                 'id' => $rs->post_id,
                 'title' => $rs->post_title,
@@ -38,15 +46,13 @@ class relatedHelpers
                 'order' => $pos
             ];
         }
-        usort($res, ['relatedHelpers', 'orderCallBack']);
+        usort($res, [self::class, 'orderCallBack']);
+
         return $res;
     }
 
-    protected static function orderCallBack($a, $b)
+    protected static function orderCallBack($a, $b): int
     {
-        if ($a['order'] == $b['order']) {
-            return 0;
-        }
-        return $a['order'] > $b['order'] ? 1 : -1;
+        return $a['order'] <=> $b['order'];
     }
 }

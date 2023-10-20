@@ -1,7 +1,4 @@
 $(function () {
-  $('.checkboxes-helpers').each(function () {
-    dotclear.checkboxesHelpers(this);
-  });
   $('#pages-list').sortable({
     cursor: 'move',
     stop: function (event, ui) {
@@ -10,6 +7,7 @@ $(function () {
       });
     },
   });
+
   $('#pages-list tr').hover(
     function () {
       $(this).css({ cursor: 'move' });

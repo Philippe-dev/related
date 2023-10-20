@@ -11,8 +11,13 @@
  *  -- END LICENSE BLOCK ------------------------------------
  */
 
-// Templates tags definition and binding
-class relatedTemplates
+declare(strict_types=1);
+
+namespace Dotclear\Plugin\related;
+
+use dcCore;
+
+class Templates
 {
     public static function PageContent($attr)
     {
@@ -20,6 +25,7 @@ class relatedTemplates
         if (!empty($attr['absolute_urls'])) {
             $urls = '1';
         }
+
         $f = dcCore::app()->tpl->getFilters($attr);
 
         if (!empty($attr['full'])) {
@@ -34,7 +40,7 @@ class relatedTemplates
         		'include $related_file;' . "\n" .
         	"} else { \n" .
         		'$previous_tpl_path = dcCore::app()->tpl->getPath();' . "\n" .
-        		'dcCore::app()->tpl->setPath(dcCore::app()->blog->settings->related->files_path);' . "\n" .
+        		'dcCore::app()->tpl->setPath(My::settings()->files_path);' . "\n" .
         		'echo dcCore::app()->tpl->getData(basename($related_file));' . "\n" .
         		'dcCore::app()->tpl->setPath($previous_tpl_path);' . "\n" .
         		'unset($previous_tpl_path);' . "\n" .

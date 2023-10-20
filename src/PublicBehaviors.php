@@ -11,9 +11,15 @@
  *  -- END LICENSE BLOCK ------------------------------------
  */
 
-class relatedPublicBehaviors
+declare(strict_types=1);
+
+namespace Dotclear\Plugin\related;
+
+use dcCore;
+
+class PublicBehaviors
 {
-    public static function addTplPath()
+    public static function publicBeforeDocument()
     {
         $tplset = dcCore::app()->themes->moduleInfo(dcCore::app()->blog->settings->system->theme, 'tplset');
         if (!empty($tplset) && is_dir(__DIR__ . '/../default-templates/' . $tplset)) {
@@ -44,24 +50,6 @@ class relatedPublicBehaviors
 
     public static function coreBlogGetPosts($rs)
     {
-        $rs->extend("rsRelatedBase");
-    }
-
-    public static function sitemapsURLsCollect($sitemaps)
-    {
-        if (dcCore::app()->blog->settings->sitemaps->sitemaps_related_url) {
-            $freq = $sitemaps->getFrequency(dcCore::app()->blog->settings->sitemaps->sitemaps_related_fq);
-            $prio = $sitemaps->getPriority(dcCore::app()->blog->settings->sitemaps->sitemaps_related_pr);
-
-            $rs = dcCore::app()->blog->getPosts(['post_type' => 'related', 'post_status' => dcBlog::POST_PUBLISHED, 'no_content' => true]);
-            $rs->extend('rsRelated');
-
-            while ($rs->fetch()) {
-                if ($rs->post_password != '') {
-                    continue;
-                }
-                $sitemaps->addEntry($rs->getURL(), $prio, $freq, $rs->getISO8601Date());
-            }
-        }
+        $rs->extend(RsRelated::class);
     }
 }

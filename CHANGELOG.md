@@ -1,3 +1,7 @@
+# related 1.9.0 - 2023-10-20
+
+- Adapt plugin for dotclear 2.27
+
 # related 1.8.2 - 2022-10-30
 
 - Update code for dotclear 2.24. Thanks to [Philippe](https://github.com/Philippe-dev)
