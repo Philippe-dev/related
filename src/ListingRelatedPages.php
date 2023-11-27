@@ -15,17 +15,17 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\related;
 
+use Dotclear\App;
+use Dotclear\Core\Blog;
 use Dotclear\Core\Backend\Listing\Listing;
 use Dotclear\Helper\Html\Html;
 use Dotclear\Core\Backend\Listing\Pager;
 use Dotclear\Helper\Date;
-use dcBlog;
-use dcMeta;
 use form;
 
 class ListingRelatedPages extends Listing
 {
-    public function display(int $page, int $nb_per_page, string $enclose_block = '')
+    public function display(int $page, ?int $nb_per_page, string $enclose_block = '')
     {
         if ($this->rs->isEmpty()) {
             echo '<p><strong>' . __('No page') . '</strong></p>';
@@ -78,21 +78,13 @@ class ListingRelatedPages extends Listing
     private function pageLine($count)
     {
         $img = '<img alt="%1$s" title="%1$s" src="images/%2$s" />';
-        switch ($this->rs->post_status) {
-            case dcBlog::POST_PUBLISHED :
-                $img_status = sprintf($img, __('published'), 'check-on.png');
-                break;
-            case dcBlog::POST_UNPUBLISHED :
-                $img_status = sprintf($img, __('unpublished'), 'check-off.png');
-                break;
-            case dcBlog::POST_PENDING :
-                $img_status = sprintf($img, __('pending'), 'check-wrn.png');
-                break;
-            case dcBlog::POST_SCHEDULED : $img_status = sprintf($img, __('scheduled'), 'scheduled.png');
-                break;
-            default:
-                $img_status = sprintf($img, __('unpublished'), 'check-off.png');
-        }
+        $img_status = match ($this->rs->post_status) {
+            Blog::POST_PUBLISHED => sprintf($img, __('published'), 'check-on.png'),
+            Blog::POST_UNPUBLISHED => sprintf($img, __('unpublished'), 'check-off.png'),
+            Blog::POST_PENDING => sprintf($img, __('pending'), 'check-wrn.png'),
+            Blog::POST_SCHEDULED => sprintf($img, __('scheduled'), 'scheduled.png'),
+            default => sprintf($img, __('unpublished'), 'check-off.png'),
+        };
 
         $protected = '';
         if ($this->rs->post_password) {
@@ -105,11 +97,10 @@ class ListingRelatedPages extends Listing
         }
 
         $subtype = '(N/A)';
-        $meta = new dcMeta();
-        $meta_rs = $meta->getMetaRecordset($this->rs->post_meta, 'related_file');
+        $meta_rs = App::meta()->getMetaRecordset($this->rs->post_meta, 'related_file');
         $subtype = (!$meta_rs->isEmpty())?__('included page'):__('post as page');
 
-        $res = '<tr class="line' . ($this->rs->post_status != dcBlog::POST_PUBLISHED ? ' offline' : '') . '"' .
+        $res = '<tr class="line' . ($this->rs->post_status != Blog::POST_PUBLISHED ? ' offline' : '') . '"' .
             ' id="p' . $this->rs->post_id . '">';
 
         $res .=

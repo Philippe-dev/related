@@ -13,5 +13,5 @@ parameters:
   scanDirectories:
     - ../dotclear
 
-  reportUnmatchedIgnoredErrors: false
+  reportUnmatchedIgnoredErrors: true
 

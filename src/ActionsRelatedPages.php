@@ -18,14 +18,14 @@ namespace Dotclear\Plugin\related;
 use Dotclear\Core\Backend\Action\ActionsPosts;
 use Dotclear\Core\Backend\Action\ActionsPostsDefault;
 use Dotclear\Core\Backend\Page;
-use dcCore;
+use Dotclear\App;
 
 class ActionsRelatedPages extends ActionsPosts
 {
     public const ADD_TO_WIDGET_ACTION = 'selected';
     public const REMOVE_FROM_WIDGET_ACTION = 'unselected';
 
-    protected $use_render = true;
+    protected bool $use_render = true;
 
     public function __construct(?string $uri, array $redirect_args = [])
     {
@@ -34,10 +34,10 @@ class ActionsRelatedPages extends ActionsPosts
         $this->redirect_fields = ['p', 'part'];
         $this->caller_title = __('Related pages');
 
-        if (dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
-            dcCore::app()->auth::PERMISSION_PUBLISH,
-            dcCore::app()->auth::PERMISSION_CONTENT_ADMIN,
-        ]), dcCore::app()->blog->id)) {
+        if (App::auth()->check(App::auth()->makePermissions([
+            App::auth()::PERMISSION_PUBLISH,
+            App::auth()::PERMISSION_CONTENT_ADMIN,
+        ]), App::blog()->id())) {
             $this->addAction(
                 [__('Status') => [
                     __('Publish') => 'publish',

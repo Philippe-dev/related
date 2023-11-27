@@ -15,21 +15,23 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\related;
 
+use ArrayObject;
+use Exception;
 use Dotclear\Core\Backend\Combos;
 use Dotclear\Core\Backend\Filter\Filter;
 use Dotclear\Core\Backend\Filter\Filters;
 use Dotclear\Core\Backend\Filter\FiltersLibrary;
-use dcCore;
-use dcUtils;
+use Dotclear\App;
 
 class FilterPages extends Filters
 {
-    public function __construct(string $type = 'posts', private string $post_type = 'related')
+    public function __construct(private string $post_type = 'related')
     {
-        parent::__construct($type);
+        parent::__construct('posts');
+
         $this->add((new Filter('post_type', $post_type))->param('post_type'));
 
-        $filters = new \ArrayObject([
+        $filters = new ArrayObject([
             FiltersLibrary::getPageFilter(),
             $this->getPostUserFilter(),
             $this->getPostStatusFilter(),
@@ -48,18 +50,18 @@ class FilterPages extends Filters
         $users = null;
 
         try {
-            $users = dcCore::app()->blog->getPostsUsers($this->post_type);
+            $users = App::blog()->getPostsUsers($this->post_type);
             if ($users->isEmpty()) {
                 return null;
             }
-        } catch (\Exception $e) {
-            dcCore::app()->error->add($e->getMessage());
+        } catch (Exception $e) {
+            App::error()->add($e->getMessage());
 
             return null;
         }
 
         $combo = Combos::getUsersCombo($users);
-        dcUtils::lexicalKeySort($combo, dcUtils::ADMIN_LOCALE);
+        App::lexical()->lexicalKeySort($combo, App::lexical()::ADMIN_LOCALE);
 
         return (new Filter('user_id'))
             ->param()
@@ -88,15 +90,15 @@ class FilterPages extends Filters
         $dates = null;
 
         try {
-            $dates = dcCore::app()->blog->getDates([
+            $dates = App::blog()->getDates([
                 'type' => 'month',
                 'post_type' => $this->post_type,
             ]);
             if ($dates->isEmpty()) {
                 return null;
             }
-        } catch (\Exception $e) {
-            dcCore::app()->error->add($e->getMessage());
+        } catch (Exception $e) {
+            App::error()->add($e->getMessage());
 
             return null;
         }
@@ -116,12 +118,12 @@ class FilterPages extends Filters
         $langs = null;
 
         try {
-            $langs = dcCore::app()->blog->getLangs(['post_type' => $this->post_type]);
+            $langs = App::blog()->getLangs(['post_type' => $this->post_type]);
             if ($langs->isEmpty()) {
                 return null;
             }
-        } catch (\Exception $e) {
-            dcCore::app()->error->add($e->getMessage());
+        } catch (Exception $e) {
+            App::error()->add($e->getMessage());
 
             return null;
         }

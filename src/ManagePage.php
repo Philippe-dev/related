@@ -15,6 +15,11 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\related;
 
+use Dotclear\Plugin\pages\Pages;
+use Dotclear\Core\Auth;
+use Dotclear\Core\Blog;
+use Exception;
+use ArrayObject;
 use Dotclear\Core\Backend\Combos;
 use Dotclear\Core\Backend\Notices;
 use Dotclear\Core\Backend\Page;
@@ -24,12 +29,8 @@ use Dotclear\Helper\Network\Http;
 use Dotclear\Helper\File\Files;
 use Dotclear\Helper\Text;
 use Dotclear\Plugin\related\Entity\Post;
-use dcAuth;
-use dcBlog;
-use dcCore;
-use dcMeta;
+use Dotclear\App;
 use form;
-use initPages;
 
 class ManagePage extends Process
 {
@@ -38,7 +39,7 @@ class ManagePage extends Process
     private static string $page_title = '';
     private static string $page_title_edit = '';
     private static string $post_url = '';
-    private static $bad_dt = false;
+    private static bool $bad_dt = false;
 
     private static Post $post;
     private static array $post_editor = [];
@@ -70,24 +71,24 @@ class ManagePage extends Process
         }
 
         self::$post = new Post();
-        self::$post->setPostFormat(dcCore::app()->auth->getOption('post_format'));
-        if ($user_lang = dcCore::app()->auth->getInfo('user_lang')) {
+        self::$post->setPostFormat(App::auth()->getOption('post_format'));
+        if ($user_lang = App::auth()->getInfo('user_lang')) {
             self::$post->setPostLang($user_lang);
         }
 
-        if ($user_post_status = dcCore::app()->auth->getInfo('user_post_status')) {
+        if ($user_post_status = App::auth()->getInfo('user_post_status')) {
             self::$post->setPostStatus((int) $user_post_status);
         }
 
         self::$page_title = __('New page');
-        self::$post_editor = dcCore::app()->auth->getOption('editor');
+        self::$post_editor = App::auth()->getOption('editor');
 
-        Page::check(dcCore::app()->auth->makePermissions([initPages::PERMISSION_PAGES, dcAuth::PERMISSION_CONTENT_ADMIN]));
-        self::$permissions['can_edit_post'] = dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([initPages::PERMISSION_PAGES, dcAuth::PERMISSION_CONTENT_ADMIN]), dcCore::app()->blog->id);
-        self::$permissions['can_publish'] = dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_CONTENT_ADMIN]), dcCore::app()->blog->id);
+        Page::check(App::auth()->makePermissions([Pages::PERMISSION_PAGES, Auth::PERMISSION_CONTENT_ADMIN]));
+        self::$permissions['can_edit_post'] = App::auth()->check(App::auth()->makePermissions([Pages::PERMISSION_PAGES, Auth::PERMISSION_CONTENT_ADMIN]), App::blog()->id());
+        self::$permissions['can_publish'] = App::auth()->check(App::auth()->makePermissions([Auth::PERMISSION_CONTENT_ADMIN]), App::blog()->id());
 
         if (!self::$permissions['can_publish']) {
-            self::$post->setPostStatus(dcBlog::POST_PENDING);
+            self::$post->setPostStatus(Blog::POST_PENDING);
         }
 
         self::$pageIsFile = (!empty($_REQUEST['type']) && $_REQUEST['type'] === 'file');
@@ -98,7 +99,7 @@ class ManagePage extends Process
             $params['post_id'] = $_REQUEST['id'];
             $params['post_type'] = self::POST_TYPE;
 
-            $dcPost = dcCore::app()->blog->getPosts($params, false);
+            $dcPost = App::blog()->getPosts($params, false);
             $dcPost->extend('rsRelated');
 
             if ($dcPost->isEmpty()) {
@@ -115,13 +116,12 @@ class ManagePage extends Process
                 self::$post->fromMetaRecord($dcPost);
 
                 try {
-                    dcCore::app()->meta = new dcMeta();
-                    $post_metas = dcCore::app()->meta->getMetaRecordset($dcPost->post_meta, 'related_file');
+                    $post_metas = App::meta()->getMetaRecordset($dcPost->post_meta, 'related_file');
                     if (!$post_metas->isEmpty()) {
                         self::$page_related_file = $post_metas->meta_id;
                         self::$pageIsFile = true;
                     }
-                } catch (\Exception $e) {
+                } catch (Exception) {
                 }
             }
         }
@@ -130,7 +130,7 @@ class ManagePage extends Process
             self::$post->setPostContent('/** external content **/');
             self::$post->setPostContentXhtml('/** external content **/');
 
-            $dir = @dir(dcCore::app()->blog->settings->related->files_path);
+            $dir = @dir(App::blog()->settings()->related->files_path);
             $allowed_exts = ['php', 'html', 'xml', 'txt'];
 
             if ($dir) {
@@ -160,7 +160,7 @@ class ManagePage extends Process
                 $post_content = $_POST['post_content'];
             }
 
-            dcCore::app()->blog->setPostContent($post_id, self::$post->getPostFormat(), self::$post->getPostLang(), $post_excerpt, $post_excerpt_xhtml, $post_content, $post_content_xhtml);
+            App::blog()->setPostContent($post_id, self::$post->getPostFormat(), self::$post->getPostLang(), $post_excerpt, $post_excerpt_xhtml, $post_content, $post_content_xhtml);
             self::$post->setPostExcerpt($post_excerpt);
             self::$post->setPostExcerptXhtml($post_excerpt_xhtml);
             self::$post->setPostContent($post_content);
@@ -180,11 +180,11 @@ class ManagePage extends Process
                     if (!$post_dt || $post_dt == -1) {
                         self::$bad_dt = true;
 
-                        throw new \Exception(__('Invalid publication date'));
+                        throw new Exception(__('Invalid publication date'));
                     }
                     self::$post->setPostDate(date('Y-m-d H:i', $post_dt));
-                } catch (\Exception $e) {
-                    dcCore::app()->error->add($e->getMessage());
+                } catch (Exception $e) {
+                    App::error()->add($e->getMessage());
                 }
             }
 
@@ -213,94 +213,92 @@ class ManagePage extends Process
                         if ($related_upl) {
                             files::uploadStatus($_FILES['up_file']);
                             $src_file = $_FILES['up_file']['tmp_name'];
-                            $trg_file = dcCore::app()->blog->settings->related->files_path . '/' . $_FILES['up_file']['name'];
+                            $trg_file = App::blog()->settings()->related->files_path . '/' . $_FILES['up_file']['name'];
                             if (move_uploaded_file($src_file, $trg_file)) {
                                 self::$page_related_file = $_FILES['up_file']['name'];
                             }
                         } else {
                             self::$page_related_file = $_POST['repository_file'];
                         }
-                    } catch (\Exception $e) {
+                    } catch (Exception $e) {
                         Notices::addErrorNotice($e->getMessage());
                     }
                 }
             }
 
-            $cur = dcCore::app()->con->openCursor(dcCore::app()->prefix . 'post');
+            $cur = App::con()->openCursor(App::con()->prefix() . 'post');
             self::$post->setCursor($cur);
 
             if ($post_id) {
                 try {
                     if (self::$pageIsFile && empty(self::$page_related_file)) {
-                        throw new \Exception(__('Missing file.'));
+                        throw new Exception(__('Missing file.'));
                     }
 
                     // --BEHAVIOR-- adminBeforePostUpdate
-                    dcCore::app()->callBehavior('adminBeforePostUpdate', $cur, $post_id);
+                    App::behavior()->callBehavior('adminBeforePostUpdate', $cur, $post_id);
                     // --BEHAVIOR-- adminBeforePageUpdate
-                    dcCore::app()->callBehavior('adminBeforePageUpdate', $cur, $post_id);
+                    App::behavior()->callBehavior('adminBeforePageUpdate', $cur, $post_id);
 
-                    dcCore::app()->con->begin();
-                    dcCore::app()->blog->updPost($post_id, $cur);
+                    App::con()->begin();
+                    App::blog()->updPost($post_id, $cur);
                     if (self::$pageIsFile) {
                         try {
-                            dcCore::app()->meta = new dcMeta();
-                            dcCore::app()->meta->delPostMeta($post_id, 'related_file');
-                            dcCore::app()->meta->setPostMeta($post_id, 'related_file', self::$page_related_file);
-                        } catch (\Exception $e) {
-                            dcCore::app()->con->rollback();
+                            App::meta()->delPostMeta($post_id, 'related_file');
+                            App::meta()->setPostMeta($post_id, 'related_file', self::$page_related_file);
+                        } catch (Exception $e) {
+                            App::con()->rollback();
                             throw $e;
                         }
                     }
-                    dcCore::app()->con->commit();
+                    App::con()->commit();
 
                     // --BEHAVIOR-- adminAfterPostUpdate
-                    dcCore::app()->callBehavior('adminAfterPostUpdate', $cur, $post_id);
+                    App::behavior()->callBehavior('adminAfterPostUpdate', $cur, $post_id);
                     // --BEHAVIOR-- adminAfterPageUpdate
-                    dcCore::app()->callBehavior('adminAfterPageUpdate', $cur, $post_id);
+                    App::behavior()->callBehavior('adminAfterPageUpdate', $cur, $post_id);
 
                     Notices::addSuccessNotice(__('Page has been updated.'));
                     My::redirect(['part' => 'page', 'id' => $post_id]);
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     Notices::addErrorNotice($e->getMessage());
                 }
             } else {
-                $cur->user_id = dcCore::app()->auth->userID();
+                $cur->user_id = App::auth()->userID();
                 if (!isset($_POST['post_url'])) {
                     $cur->post_url = Text::str2URL(self::$post->getPostTitle());
                 }
 
                 try {
                     if (self::$pageIsFile && empty(self::$page_related_file)) {
-                        throw new \Exception(__('Missing file.'));
+                        throw new Exception(__('Missing file.'));
                     }
 
                     // --BEHAVIOR-- adminBeforePostCreate
-                    dcCore::app()->callBehavior('adminBeforePostCreate', $cur);
+                    App::behavior()->callBehavior('adminBeforePostCreate', $cur);
                     // --BEHAVIOR-- adminBeforePageCreate
-                    dcCore::app()->callBehavior('adminBeforePageCreate', $cur);
+                    App::behavior()->callBehavior('adminBeforePageCreate', $cur);
 
-                    dcCore::app()->con->begin();
-                    $return_id = dcCore::app()->blog->addPost($cur);
+                    App::con()->begin();
+                    $return_id = App::blog()->addPost($cur);
                     if (self::$pageIsFile) {
                         try {
-                            dcCore::app()->meta = new dcMeta();
-                            dcCore::app()->meta->setPostMeta($return_id, 'related_file', self::$page_related_file);
-                        } catch (\Exception $e) {
-                            dcCore::app()->con->rollback();
+                            App::meta()->setPostMeta($return_id, 'related_file', self::$page_related_file);
+                        } catch (Exception $e) {
+                            App::con()->rollback();
                             throw $e;
                         }
                     }
-                    dcCore::app()->con->commit();
+                    App::con()->commit();
 
                     // --BEHAVIOR-- adminAfterPostCreate
-                    dcCore::app()->callBehavior('adminAfterPostCreate', $cur, $return_id);
+                    App::behavior()->callBehavior('adminAfterPostCreate', $cur, $return_id);
                     // --BEHAVIOR-- adminAfterPageCreate
-                    dcCore::app()->callBehavior('adminAfterPageCreate', $cur, $return_id);
+                    App::behavior()->callBehavior('adminAfterPageCreate', $cur, $return_id);
 
                     Notices::addSuccessNotice(__('Page has been created.'));
                     My::redirect(['part' => 'page', 'id' => $return_id]);
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     Notices::addErrorNotice($e->getMessage());
                 }
             }
@@ -310,7 +308,7 @@ class ManagePage extends Process
             try {
                 Notices::addSuccessNotice(__('Page has been deleted.'));
                 My::redirect(['part' => 'pages']);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 Notices::addErrorNotice($e->getMessage());
             }
         }
@@ -334,7 +332,7 @@ class ManagePage extends Process
 
         $admin_post_behavior = '';
         if (self::$post_editor && !empty(self::$post_editor[self::$post->getPostFormat()])) {
-            $admin_post_behavior = dcCore::app()->callBehavior(
+            $admin_post_behavior = App::behavior()->callBehavior(
                 'adminPostEditor',
                 self::$post_editor[self::$post->getPostFormat()],
                 self::POST_TYPE,
@@ -348,13 +346,13 @@ class ManagePage extends Process
 	        Page::jsLoad('js/_post.js') .
 	        Page::jsConfirmClose('entry-form') .
 	        // --BEHAVIOR-- adminRelatedHeaders
-	        dcCore::app()->callBehavior('adminRelatedHeaders') .
+	        App::behavior()->callBehavior('adminRelatedHeaders') .
             Page::jsPageTabs($default_tab)
         );
 
         echo Page::breadcrumb(
             [
-                Html::escapeHTML(dcCore::app()->blog->name) => '',
+                Html::escapeHTML(App::blog()->name()) => '',
                 __('Related pages') => My::manageUrl(),
                 (self::$post->getPostId() ? self::$page_title_edit : self::$page_title) => ''
             ]
@@ -371,17 +369,17 @@ class ManagePage extends Process
         Notices::GetNotices();
 
         $status_combo = Combos::getPostStatusesCombo();
-        $lang_combo = Combos::getLangsCombo(dcCore::app()->blog->getLangs(['order' => 'asc']), true);
+        $lang_combo = Combos::getLangsCombo(App::blog()->getLangs(['order' => 'asc']), true);
 
         $available_formats = ['' => ''];
-        foreach (dcCore::app()->getFormaters() as $formats) {
+        foreach (App::formater()->getFormaters() as $formats) {
             foreach ($formats as $format) {
-                $available_formats[dcCore::app()->getFormaterName($format)] = $format;
+                $available_formats[App::formater()->getFormaterName($format)] = $format;
             }
         }
 
         if (self::$permissions['can_edit_post']) {
-            $sidebar_items = new \ArrayObject([
+            $sidebar_items = new ArrayObject([
                 'status-box' => [
                     'title' => __('Status'),
                     'items' => [
@@ -426,7 +424,7 @@ class ManagePage extends Process
                         '</p></div>'
                     ]]]);
 
-            $main_items = new \ArrayObject([
+            $main_items = new ArrayObject([
                 "post_title" => '<p class="col">' .
                 '<label class="required no-margin bold" for="post_title"><abbr title="' . __('Required field') . '">*</abbr> ' . __('Title:') . '</label>' .
                 form::field('post_title', 20, 255, html::escapeHTML(self::$post->getPostTitle()), 'maximal') .
@@ -441,15 +439,16 @@ class ManagePage extends Process
             if (!self::$pageIsFile) {
                 $main_items['post_content'] = '<p class="area" id="content-area"><label class="required bold" ' .
                     'for="post_content"><abbr title="' . __('Required field') . '">*</abbr> ' . __('Content:') . '</label> ' .
-                    form::textarea('post_content', 50, dcCore::app()->auth->getOption('edit_size'), html::escapeHTML(self::$post->getPostContent())) .
+                    form::textarea('post_content', 50, App::auth()->getOption('edit_size'), html::escapeHTML(self::$post->getPostContent())) .
                     '</p>';
             } else {
+                Page::helpBlock('post', 'page_relatedfile');
+
                 $main_items['post_content'] = '<div style="display:none">' .
                     form::textarea('post_content', 1, 1, html::escapeHTML(self::$post->getPostContent())) .
                     '</div>';
                 $main_items['is_file'] = '<p class="col"><label class="required" title="' . __('Required field') . '" ' .
-                    'for="repository_file">' . __('Included file:') .
-                    Page::helpBlock('post', 'page_relatedfile') . '</label></p>' .
+                    'for="repository_file">' . __('Included file:') . '</label></p>' .
                     '<div class="fieldset">' .
                     '<p><label>' . __('Pick up a local file in your related pages repository') . ' ' .
                     form::combo('repository_file', self::$related_pages_files, self::$page_related_file) .
@@ -470,7 +469,7 @@ class ManagePage extends Process
                 '</p>';
 
 
-            if (self::$post->getPostId() && self::$post->getPostStatus() === dcBlog::POST_PUBLISHED) {
+            if (self::$post->getPostId() && self::$post->getPostStatus() === Blog::POST_PUBLISHED) {
                 echo '<p><a class="onblog_link outgoing" href="', self::$post_url, '" title="' . Html::escapeHTML(trim(Html::clean(self::$post->getPostTitle()))), '">';
                 echo __('Go to this related page on the site'), ' <img src="images/outgoing-link.svg" alt="" /></a></p>';
             }
@@ -487,7 +486,7 @@ class ManagePage extends Process
             }
 
             // --BEHAVIOR-- adminPostForm (may be deprecated)
-            dcCore::app()->callBehavior('adminPostForm', self::$post ?? null);
+            App::behavior()->callBehavior('adminPostForm', self::$post ?? null);
 
             echo
             '<p class="border-top">' .
@@ -497,18 +496,17 @@ class ManagePage extends Process
 
             if (self::$post->getPostId()) {
                 $preview_url =
-                dcCore::app()->blog->url . dcCore::app()->url->getURLFor('relatedPreview', dcCore::app()->auth->userID() . '/' .
-                Http::browserUID(DC_MASTER_KEY . dcCore::app()->auth->userID() . dcCore::app()->auth->getInfo('user_pwd')) .
+                App::blog()->url() . App::url()->getURLFor('relatedPreview', App::auth()->userID() . '/' .
+                Http::browserUID(DC_MASTER_KEY . App::auth()->userID() . App::auth()->getInfo('user_pwd')) .
                 '/' . self::$post->getPostUrl());
                 echo '<a id="post-preview" href="' . $preview_url . '" class="button modal" accesskey="p">' . __('Preview') . ' (p)' . '</a> ';
             } else {
                 echo
-                '<a id="post-cancel" href="' . dcCore::app()->admin->url->get("admin.home") . '" class="button" accesskey="c">' . __('Cancel') . ' (c)</a>';
+                '<a id="post-cancel" href="' . App::backend()->url()->get("admin.home") . '" class="button" accesskey="c">' . __('Cancel') . ' (c)</a>';
             }
 
             echo
                 (self::$permissions['can_delete'] ? '<input type="submit" class="delete" value="' . __('Delete') . '" name="delete" />' : '') .
-                dcCore::app()->formNonce() .
                 '</p>';
 
             echo '</div></div>';		// End #entry-content
@@ -529,13 +527,13 @@ class ManagePage extends Process
 
 
             // --BEHAVIOR-- adminPostFormSidebar (may be deprecated)
-            dcCore::app()->callBehavior('adminPostFormSidebar', self::$post ?? null);
+            App::behavior()->callBehavior('adminPostFormSidebar', self::$post ?? null);
             echo '</div>';		// End #entry-sidebar
 
             echo '</form>';
 
             // --BEHAVIOR-- adminPostForm
-            dcCore::app()->callBehavior('adminPostAfterForm', self::$post->getPostId() ? self::$post->toMetaRecord() : null);
+            App::behavior()->callBehavior('adminPostAfterForm', self::$post->getPostId() ? self::$post->toMetaRecord() : null);
 
             echo '</div>';
         }
@@ -553,22 +551,13 @@ class ManagePage extends Process
         $img_status = '';
         $img_status_pattern = '<img class="img_select_option" alt="%1$s" title="%1$s" src="images/%2$s" />';
 
-        switch (self::$post->getPostStatus()) {
-            case dcBlog::POST_PUBLISHED:
-                $img_status = sprintf($img_status_pattern, __('Published'), 'check-on.png');
-                break;
-            case dcBlog::POST_UNPUBLISHED:
-                $img_status = sprintf($img_status_pattern, __('Unpublished'), 'check-off.png');
-                break;
-            case dcBlog::POST_SCHEDULED:
-                $img_status = sprintf($img_status_pattern, __('Scheduled'), 'scheduled.png');
-                break;
-            case dcBlog::POST_PENDING:
-                $img_status = sprintf($img_status_pattern, __('Pending'), 'check-wrn.png');
-                break;
-            default:
-                $img_status = '';
-        }
+        $img_status = match (self::$post->getPostStatus()) {
+            Blog::POST_PUBLISHED => sprintf($img_status_pattern, __('Published'), 'check-on.png'),
+            Blog::POST_UNPUBLISHED => sprintf($img_status_pattern, __('Unpublished'), 'check-off.png'),
+            Blog::POST_SCHEDULED => sprintf($img_status_pattern, __('Scheduled'), 'scheduled.png'),
+            Blog::POST_PENDING => sprintf($img_status_pattern, __('Pending'), 'check-wrn.png'),
+            default => '',
+        };
 
         return $img_status;
     }

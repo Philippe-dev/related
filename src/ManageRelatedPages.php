@@ -15,13 +15,13 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\related;
 
+use Exception;
 use Dotclear\Core\Backend\Notices;
 use Dotclear\Core\Backend\Page;
 use Dotclear\Core\Process;
 use Dotclear\Database\MetaRecord;
 use Dotclear\Helper\Html\Html;
-use dcCore;
-use dcMeta;
+use Dotclear\App;
 use form;
 
 class ManageRelatedPages extends Process
@@ -45,27 +45,27 @@ class ManageRelatedPages extends Process
             return false;
         }
 
-        dcCore::app()->admin->related_filter = new FilterPages();
+        App::backend()->related_filter = new FilterPages();
 
-        $params = dcCore::app()->admin->related_filter->params();
+        $params = App::backend()->related_filter->params();
         $params['post_type'] = 'related';
         $params['no_content'] = true;
 
-        dcCore::app()->admin->related_list = null;
+        App::backend()->related_list = null;
         try {
-            self::$pages = dcCore::app()->blog->getPosts($params);
+            self::$pages = App::blog()->getPosts($params);
             self::$pages->extend(RsRelated::class);
-            $counter = dcCore::app()->blog->getPosts($params, true);
-            dcCore::app()->admin->related_list = new ListingRelatedPages(self::$pages, $counter->f(0));
-        } catch (\Exception $e) {
-            dcCore::app()->error->add($e->getMessage());
+            $counter = App::blog()->getPosts($params, true);
+            App::backend()->related_list = new ListingRelatedPages(self::$pages, $counter->f(0));
+        } catch (Exception $e) {
+            App::error()->add($e->getMessage());
         }
 
-        dcCore::app()->admin->related_actions = new ActionsRelatedPages(My::manageUrl(['part' => 'pages']));
+        App::backend()->related_actions = new ActionsRelatedPages(My::manageUrl(['part' => 'pages']));
 
-        dcCore::app()->admin->related_actions_rendered = null;
-        if (dcCore::app()->admin->related_actions->process()) {
-            dcCore::app()->admin->related_actions_rendered = true;
+        App::backend()->related_actions_rendered = null;
+        if (App::backend()->related_actions->process()) {
+            App::backend()->related_actions_rendered = true;
         }
 
         if (isset($_POST['pages_upd'])) {
@@ -74,9 +74,8 @@ class ManageRelatedPages extends Process
             $order = (!empty($_POST['p_order'])) ? $_POST['p_order'] : [];
 
             try {
-                $meta = new dcMeta();
                 foreach ($public_pages as $c_page) {
-                    $cur = dcCore::app()->con->openCursor(dcCore::app()->prefix . 'post');
+                    $cur = App::con()->openCursor(App::con()->prefix() . 'post');
                     $cur->post_upddt = date('Y-m-d H:i:s');
                     $cur->post_selected = (int)in_array($c_page['id'], $visible);
                     $cur->update('WHERE post_id = ' . $c_page['id']);
@@ -85,14 +84,14 @@ class ManageRelatedPages extends Process
                     if (count($order) > 0) {
                         $pos = !empty($order[$c_page['id']]) ? $order[$c_page['id']] + 1 : 1;
                         $pos = (int) $pos + 1;
-                        $meta->delPostMeta($c_page['id'], 'related_position');
-                        $meta->setPostMeta($c_page['id'], 'related_position', (string) $pos);
+                        App::meta()->delPostMeta($c_page['id'], 'related_position');
+                        App::meta()->setPostMeta($c_page['id'], 'related_position', (string) $pos);
                     }
                 }
-                dcCore::app()->blog->triggerBlog();
+                App::blog()->triggerBlog();
                 Notices::addSuccessNotice(__('Pages list has been sorted.'));
                 My::redirect([], '#pages_order');
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 Notices::addErrorNotice($e->getMessage());
             }
         }
@@ -106,8 +105,8 @@ class ManageRelatedPages extends Process
             return;
         }
 
-        if (dcCore::app()->admin->related_actions_rendered) {
-            dcCore::app()->admin->related_actions->render();
+        if (App::backend()->related_actions_rendered) {
+            App::backend()->related_actions->render();
 
             return;
         }
@@ -118,11 +117,11 @@ class ManageRelatedPages extends Process
             Page::jsLoad('js/jquery/jquery.ui.touch-punch.js') .
             My::jsLoad('_pages.js') .
             Page::jsLoad('js/_posts_list.js') .
-            dcCore::app()->admin->related_filter->js(My::manageUrl()) .
+            App::backend()->related_filter->js(My::manageUrl()) .
             Page::jsPageTabs(self::$default_tab)
         );
 
-        echo Page::breadcrumb([Html::escapeHTML(dcCore::app()->blog->name) => '',
+        echo Page::breadcrumb([Html::escapeHTML(App::blog()->name()) => '',
             '<a href="' . My::manageUrl(['part' => 'pages']) . '">' . __('Related pages') . '</a>' => ''
         ]);
 
@@ -130,27 +129,26 @@ class ManageRelatedPages extends Process
 
         echo '<div class="multi-part" id="pages_compose" title="', __('Manage pages'), '">';
 
-        if (!dcCore::app()->error->flag()) {
+        if (!App::error()->flag()) {
             echo '<p class="top-add">';
             echo '<a class="button add" href="', My::manageUrl(['part' => 'page', 'type' => 'post']), '">', __('New post as page'), '</a>&nbsp;';
             echo '<a class="button add" href="', My::manageUrl(['part' => 'page', 'type' => 'file']), '">', __('New included page'), '</a>';
             echo '</p>';
 
-            dcCore::app()->admin->related_filter->display('admin.plugin.' . My::id());
+            App::backend()->related_filter->display('admin.plugin.' . My::id());
 
-            dcCore::app()->admin->related_list->display(
-                dcCore::app()->admin->related_filter->page,
-                dcCore::app()->admin->related_filter->nb,
+            App::backend()->related_list->display(
+                App::backend()->related_filter->page,
+                App::backend()->related_filter->nb,
                 '<form action="' . My::manageUrl() . '" method="post" id="form-entries">' .
                 '%s' .
                 '<div class="two-cols">' .
                 '<p class="col checkboxes-helpers"></p>' .
                 '<p class="col right">' .
                 '<label for="action" class="classic">' . __('Selected entries action:') . '</label>' .
-                form::combo('action', dcCore::app()->admin->related_actions->getCombo()) .
+                form::combo('action', App::backend()->related_actions->getCombo()) .
                 '<input id="do-action" type="submit" value="' . __('ok') . '" />' .
-                dcCore::app()->admin->url->getHiddenFormFields('admin.plugin.' . My::id(), dcCore::app()->admin->related_filter->values()) .
-                dcCore::app()->formNonce() .
+                App::backend()->url()->getHiddenFormFields('admin.plugin.' . My::id(), App::backend()->related_filter->values()) .
                 '</p></div>' .
                 '</form>'
             );
@@ -189,7 +187,7 @@ class ManageRelatedPages extends Process
             echo '</tbody>';
             echo '</table>';
             echo '<p>';
-            echo form::hidden(['public_order'], '') . dcCore::app()->formNonce();
+            echo form::hidden(['public_order'], '');
             echo '<input type="submit" name="pages_upd" value="', __('Save'), '" />';
             echo '</p>';
             echo '<p class="col checkboxes-helpers"></p>';

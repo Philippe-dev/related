@@ -15,7 +15,7 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\related;
 
-use dcCore;
+use Dotclear\App;
 
 class Templates
 {
@@ -26,23 +26,23 @@ class Templates
             $urls = '1';
         }
 
-        $f = dcCore::app()->tpl->getFilters($attr);
+        $f = App::frontend()->template()->getFilters($attr);
 
         if (!empty($attr['full'])) {
-            $content = 'echo ' . sprintf($f, 'dcCore::app()->ctx->posts->getExcerpt(' . $urls . ')." ".dcCore::app()->ctx->posts->getContent(' . $urls . ')') . ';';
+            $content = 'echo ' . sprintf($f, 'App::frontend()->context()->posts->getExcerpt(' . $urls . ')." ".App::frontend()->context()->posts->getContent(' . $urls . ')') . ';';
         } else {
-            $content = 'echo ' . sprintf($f, 'dcCore::app()->ctx->posts->getContent(' . $urls . ')') . ';';
+            $content = 'echo ' . sprintf($f, 'App::frontend()->context()->posts->getContent(' . $urls . ')') . ';';
         }
 
         $p =
-        "<?php if ((\$related_file = dcCore::app()->ctx->posts->getRelatedFilename()) !== false) { \n" .
+        "<?php if ((\$related_file = App::frontend()->context()->posts->getRelatedFilename()) !== false) { \n" .
         	"if (files::getExtension(\$related_file) == 'php') { \n" .
         		'include $related_file;' . "\n" .
         	"} else { \n" .
-        		'$previous_tpl_path = dcCore::app()->tpl->getPath();' . "\n" .
-        		'dcCore::app()->tpl->setPath(My::settings()->files_path);' . "\n" .
-        		'echo dcCore::app()->tpl->getData(basename($related_file));' . "\n" .
-        		'dcCore::app()->tpl->setPath($previous_tpl_path);' . "\n" .
+        		'$previous_tpl_path = App::frontend()->template()->getPath();' . "\n" .
+        		'App::frontend()->template()->setPath(Dotclear\Plugin\related\My::settings()->files_path);' . "\n" .
+        		'echo App::frontend()->template()->getData(basename($related_file));' . "\n" .
+        		'App::frontend()->template()->setPath($previous_tpl_path);' . "\n" .
         		'unset($previous_tpl_path);' . "\n" .
         	"}\n" .
         	'unset($related_file);' . "\n" .

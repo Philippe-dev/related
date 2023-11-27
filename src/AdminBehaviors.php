@@ -15,10 +15,10 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\related;
 
+use Dotclear\Core\Auth;
 use Dotclear\Core\Backend\Favorites;
 use Dotclear\Core\Backend\Page;
-use dcAuth;
-use dcCore;
+use Dotclear\App;
 
 class AdminBehaviors
 {
@@ -29,8 +29,8 @@ class AdminBehaviors
             'url' => My::manageUrl(),
             'small-icon' => [Page::getPF('related/icon.svg'), Page::getPF('related/icon-dark.svg')],
             'large-icon' => [Page::getPF('related/icon.svg'), Page::getPF('related/icon-dark.svg')],
-            'permissions' => dcCore::app()->auth->makePermissions([
-                dcAuth::PERMISSION_USAGE, dcAuth::PERMISSION_CONTENT_ADMIN
+            'permissions' => App::auth()->makePermissions([
+                Auth::PERMISSION_USAGE, Auth::PERMISSION_CONTENT_ADMIN
             ])
         ]);
     }
@@ -40,7 +40,7 @@ class AdminBehaviors
         if ($name === 'related') {
             $params = [];
             $params['post_type'] = 'related';
-            $page_count = dcCore::app()->blog->getPosts($params, true)->f(0);
+            $page_count = App::blog()->getPosts($params, true)->f(0);
             if ($page_count > 0) {
                 $str_pages = ($page_count > 1) ? __('%d related pages') : __('%d related page');
                 $icon[0] = sprintf($str_pages, $page_count);

@@ -13,16 +13,15 @@
 
 namespace Dotclear\Plugin\related;
 
-use dcAuth;
-use dcCore;
-use dcMeta;
-use initPages;
+use Dotclear\Core\Auth;
+use Dotclear\Plugin\pages\Pages;
+use Dotclear\App;
 
 class RsRelated
 {
     public static function isEditable($rs): bool
     {
-        if (dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_CONTENT_ADMIN]), dcCore::app()->blog->id)) {
+        if (App::auth()->check(App::auth()->makePermissions([Auth::PERMISSION_CONTENT_ADMIN]), App::blog()->id())) {
             return true;
         }
 
@@ -30,8 +29,8 @@ class RsRelated
             return false;
         }
 
-        if (dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([initPages::PERMISSION_PAGES]), dcCore::app()->blog->id)
-            && $rs->user_id == dcCore::app()->auth->userID()) {
+        if (App::auth()->check(App::auth()->makePermissions([Pages::PERMISSION_PAGES]), App::blog()->id())
+            && $rs->user_id == App::auth()->userID()) {
             return true;
         }
 
@@ -40,7 +39,7 @@ class RsRelated
 
     public static function isDeletable($rs): bool
     {
-        if (dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_CONTENT_ADMIN]), dcCore::app()->blog->id)) {
+        if (App::auth()->check(App::auth()->makePermissions([Auth::PERMISSION_CONTENT_ADMIN]), App::blog()->id())) {
             return true;
         }
 
@@ -48,8 +47,8 @@ class RsRelated
             return false;
         }
 
-        if (dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([initPages::PERMISSION_PAGES]), dcCore::app()->blog->id)
-            && $rs->user_id == dcCore::app()->auth->userID()) {
+        if (App::auth()->check(App::auth()->makePermissions([Pages::PERMISSION_PAGES]), App::blog()->id())
+            && $rs->user_id == App::auth()->userID()) {
             return true;
         }
 
@@ -58,15 +57,14 @@ class RsRelated
 
     public static function getRelatedFilename($rs)
     {
-        if (is_null(dcCore::app()->blog->settings->related->files_path)) {
+        if (is_null(App::blog()->settings()->related->files_path)) {
             return false;
         }
 
-        $meta = new dcMeta();
-        $meta_rs = $meta->getMetaRecordset($rs->post_meta, 'related_file');
+        $meta_rs = App::meta()->getMetaRecordset($rs->post_meta, 'related_file');
 
         if (!$meta_rs->isEmpty()) {
-            $filename = dcCore::app()->blog->settings->related->files_path . '/' . $meta_rs->meta_id;
+            $filename = App::blog()->settings()->related->files_path . '/' . $meta_rs->meta_id;
             if (is_readable($filename)) {
                 return $filename;
             } else {
@@ -79,12 +77,11 @@ class RsRelated
 
     public static function getPosition($rs)
     {
-        if (is_null(dcCore::app()->blog->settings->related->files_path)) {
+        if (is_null(App::blog()->settings()->related->files_path)) {
             return false;
         }
 
-        $meta = new dcMeta();
-        $meta_rs = $meta->getMetaRecordset($rs->post_meta, 'related_position');
+        $meta_rs = App::meta()->getMetaRecordset($rs->post_meta, 'related_position');
 
         if (!$meta_rs->isEmpty()) {
             return (int)$meta_rs->meta_id;

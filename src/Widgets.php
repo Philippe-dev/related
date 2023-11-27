@@ -15,7 +15,7 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\related;
 
-use dcCore;
+use Dotclear\App;
 use Dotclear\Helper\Html\Html;
 use Dotclear\Plugin\widgets\WidgetsElement;
 use Dotclear\Plugin\widgets\WidgetsStack;
@@ -50,8 +50,8 @@ class Widgets
           return;
       }
 
-      if (($w->homeonly == 1 && dcCore::app()->url->type != 'default') ||
-      ($w->homeonly == 2 && dcCore::app()->url->type == 'default')) {
+      if (($w->homeonly == 1 && App::url()->getType() != 'default') ||
+      ($w->homeonly == 2 && App::url()->getType() == 'default')) {
           return;
       }
 
@@ -59,7 +59,7 @@ class Widgets
       $params['no_content'] = true;
       $params['post_selected'] = true;
       $params['limit'] = abs((integer) $w->limit);
-      $rs = dcCore::app()->blog->getPosts($params);
+      $rs = App::blog()->getPosts($params);
       $rs->extend(RsRelated::class);
 
       if ($rs->isEmpty()) {

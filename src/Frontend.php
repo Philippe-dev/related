@@ -15,7 +15,7 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\related;
 
-use dcCore;
+use Dotclear\App;
 use Dotclear\Core\Process;
 
 class Frontend extends Process
@@ -31,14 +31,14 @@ class Frontend extends Process
             return false;
         }
 
-        dcCore::app()->addBehavior('coreBlogGetPosts', [PublicBehaviors::class, 'coreBlogGetPosts']);
-        dcCore::app()->addBehavior('publicBeforeDocument', [PublicBehaviors::class, 'publicBeforeDocument']);
-        dcCore::app()->addBehavior('templateBeforeBlock', [PublicBehaviors::class, 'templateBeforeBlock']);
+        App::behavior()->addBehavior('coreBlogGetPosts', [PublicBehaviors::class, 'coreBlogGetPosts']);
+        App::behavior()->addBehavior('publicBeforeDocument', [PublicBehaviors::class, 'publicBeforeDocument']);
+        App::behavior()->addBehavior('templateBeforeBlock', [PublicBehaviors::class, 'templateBeforeBlock']);
 
-        dcCore::app()->tpl->addValue('EntryContent', [Templates::class, 'PageContent']);
+        App::frontend()->template()->addValue('EntryContent', [Templates::class, 'PageContent']);
 
-        dcCore::app()->addBehavior('initWidgets', [Widgets::class, 'init']);
-        dcCore::app()->addBehavior('initDefaultWidgets', [Widgets::class, 'initDefaultWidgets']);
+        App::behavior()->addBehavior('initWidgets', [Widgets::class, 'init']);
+        App::behavior()->addBehavior('initDefaultWidgets', [Widgets::class, 'initDefaultWidgets']);
 
         return true;
     }

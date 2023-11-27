@@ -15,10 +15,10 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\related;
 
-use dcCore;
-use dcUrlHandlers;
+use Dotclear\App;
+use Dotclear\Core\Frontend\Url;
 
-class UrlHandler extends dcUrlHandlers
+class UrlHandler extends Url
 {
     public static function related($args)
     {
@@ -26,25 +26,25 @@ class UrlHandler extends dcUrlHandlers
             self::p404();
         }
 
-        dcCore::app()->blog->withoutPassword(false);
+        App::blog()->withoutPassword(false);
 
         $params['post_url'] = $args;
         $params['post_type'] = 'related';
-        dcCore::app()->ctx->posts = dcCore::app()->blog->getPosts($params);
-        dcCore::app()->ctx->posts->extend(RsRelated::class);
+        App::frontend()->context()->posts = App::blog()->getPosts($params);
+        App::frontend()->context()->posts->extend(RsRelated::class);
 
-        dcCore::app()->blog->withoutPassword(true);
+        App::blog()->withoutPassword(true);
 
-        if (dcCore::app()->ctx->posts->isEmpty()) {
+        if (App::frontend()->context()->posts->isEmpty()) {
             // No entry
             self::p404();
         }
 
-        $post_id = dcCore::app()->ctx->posts->post_id;
-        $post_password = dcCore::app()->ctx->posts->post_password;
+        $post_id = App::frontend()->context()->posts->post_id;
+        $post_password = App::frontend()->context()->posts->post_password;
 
         // Password protected entry
-        if ($post_password != '' && !dcCore::app()->ctx->preview) {
+        if ($post_password != '' && !App::frontend()->context()->preview) {
             // Get passwords cookie
             if (isset($_COOKIE['dc_passwd'])) {
                 $pwd_cookie = unserialize($_COOKIE['dc_passwd']);
@@ -56,14 +56,14 @@ class UrlHandler extends dcUrlHandlers
             if ((!empty($_POST['password']) && $_POST['password'] === $post_password)
                 || (isset($pwd_cookie[$post_id]) && $pwd_cookie[$post_id] === $post_password)) {
                 $pwd_cookie[$post_id] = $post_password;
-                setcookie('dc_passwd', serialize($pwd_cookie), 0, '/');
+                setcookie('dc_passwd', serialize($pwd_cookie), ['expires' => 0, 'path' => '/']);
             } else {
                 self::serveDocument('password-form.html', 'text/html', false);
                 exit;
             }
         }
 
-        if ($filename = dcCore::app()->ctx->posts->getRelatedFilename()) {
+        if ($filename = App::frontend()->context()->posts->getRelatedFilename()) {
             $GLOBALS['mod_files'][] = $filename;
         }
 
@@ -79,11 +79,11 @@ class UrlHandler extends dcUrlHandlers
             $user_id = $m[1];
             $user_key = $m[2];
             $post_url = $m[3];
-            if (!dcCore::app()->auth->checkUser($user_id, null, $user_key)) {
+            if (!App::auth()->checkUser($user_id, null, $user_key)) {
                 // The user has no access to the entry.
                 self::p404();
             } else {
-                dcCore::app()->ctx->preview = true;
+                App::frontend()->context()->preview = true;
                 self::related($post_url);
             }
         }

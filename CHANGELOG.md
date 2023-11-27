@@ -1,3 +1,7 @@
+# related 2.0.0 - 2023-11-27
+
+- Adapt plugin for dotclear 2.28
+
 # related 1.9.0 - 2023-10-20
 
 - Adapt plugin for dotclear 2.27

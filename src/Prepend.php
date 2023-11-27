@@ -16,7 +16,7 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\related;
 
 use Dotclear\Core\Process;
-use dcCore;
+use Dotclear\App;
 
 class Prepend extends Process
 {
@@ -36,12 +36,12 @@ class Prepend extends Process
             $url_prefix = (empty($url_prefix))?'static':$url_prefix;
             $url_pattern = $url_prefix . '/(.+)$';
 
-            dcCore::app()->url->register('related', $url_prefix, $url_pattern, [UrlHandler::class, 'related']);
-            dcCore::app()->url->register('relatedpreview', 'relatedpreview', '^relatedpreview/(.+)$', [UrlHandler::class, 'relatedpreview']);
+            App::url()->register('related', $url_prefix, $url_pattern, [UrlHandler::class, 'related']);
+            App::url()->register('relatedpreview', 'relatedpreview', '^relatedpreview/(.+)$', [UrlHandler::class, 'relatedpreview']);
             unset($url_prefix, $url_pattern);
 
             // Registering new post_type
-            dcCore::app()->setPostType('related', 'plugin.php?p=related&part=page&id=%d', dcCore::app()->url->getBase('related') . '/%s');
+            App::postTypes()->setPostType('related', 'plugin.php?p=related&part=page&id=%d', App::url()->getBase('related') . '/%s');
         }
 
         return true;

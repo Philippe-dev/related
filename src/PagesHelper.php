@@ -13,7 +13,7 @@
 
 namespace Dotclear\Plugin\related;
 
-use dcBlog;
+use Dotclear\Core\Blog;
 use Dotclear\Database\MetaRecord;
 
 class PagesHelper
@@ -26,7 +26,7 @@ class PagesHelper
 
         $res = [];
         while ($rs->fetch()) {
-            if ($rs->post_status != dcBlog::POST_PUBLISHED) {
+            if ($rs->post_status != Blog::POST_PUBLISHED) {
                 continue;
             }
 

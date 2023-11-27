@@ -11,16 +11,20 @@
  *  -- END LICENSE BLOCK ------------------------------------
  */
 
+use Dotclear\App;
+use Dotclear\Core\Auth;
+use Dotclear\Plugin\pages\Pages;
+
 $this->registerModule(
     "Related pages", // Name
     "Serve pages & scripts", // Description
     "Pep, contributors, Nicolas Roudaire", // Author
-    '1.9.0', // Version
+    '2.0.0', // Version
     [
-        'permissions' => dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_CONTENT_ADMIN, initPages::PERMISSION_PAGES]),
+        'permissions' => App::auth()->makePermissions([Auth::PERMISSION_CONTENT_ADMIN, Pages::PERMISSION_PAGES]),
         'type' => 'plugin',
-        'dc_min' => '2.27',
-        'requires' => [['core', '2.27']],
+        'dc_min' => '2.28',
+        'requires' => [['core', '2.28']],
         'repository' => 'https://github.com/nikrou/related',
         'support' => 'http://forum.dotclear.net/viewtopic.php?id=48205',
         'details' => 'http://plugins.dotaddict.org/dc2/details/related'

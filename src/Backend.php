@@ -17,7 +17,7 @@ namespace Dotclear\Plugin\related;
 
 use Dotclear\Core\Backend\Menus;
 use Dotclear\Core\Process;
-use dcCore;
+use Dotclear\App;
 
 class Backend extends Process
 {
@@ -34,11 +34,11 @@ class Backend extends Process
 
         My::addBackendMenuItem(Menus::MENU_BLOG);
 
-        dcCore::app()->addBehavior('adminDashboardFavoritesV2', [AdminBehaviors::class, 'dashboardFavorites']);
-        dcCore::app()->addBehavior('adminDashboardFavsIconV2', [AdminBehaviors::class, 'dashboardFavsIcon']);
+        App::behavior()->addBehavior('adminDashboardFavoritesV2', [AdminBehaviors::class, 'dashboardFavorites']);
+        App::behavior()->addBehavior('adminDashboardFavsIconV2', [AdminBehaviors::class, 'dashboardFavsIcon']);
 
-        dcCore::app()->addBehavior('initWidgets', [Widgets::class, 'init']);
-        dcCore::app()->addBehavior('initDefaultWidgets', [Widgets::class, 'initDefaultWidgets']);
+        App::behavior()->addBehavior('initWidgets', [Widgets::class, 'init']);
+        App::behavior()->addBehavior('initDefaultWidgets', [Widgets::class, 'initDefaultWidgets']);
 
         return true;
     }
