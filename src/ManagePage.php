@@ -459,6 +459,7 @@ class ManagePage extends Process
                     '</label></p>' .
                     '</div>' .
                     form::hidden('part', 'page') .
+                    App::nonce()->getFormNonce() .
                     form::hidden('type', 'file');
             }
 
@@ -486,12 +487,13 @@ class ManagePage extends Process
             }
 
             // --BEHAVIOR-- adminPostForm (may be deprecated)
-            App::behavior()->callBehavior('adminPostForm', self::$post ?? null);
+            App::behavior()->callBehavior('adminPostForm', self::$post->toMetaRecord() ?? null);
 
             echo
             '<p class="border-top">' .
             (self::$post->getPostId() ? form::hidden('id', self::$post->getPostId()) : '') .
             form::hidden('part', 'page') .
+            App::nonce()->getFormNonce() .
             '<input type="submit" value="' . __('Save') . ' (s)" accesskey="s" name="save" /> ';
 
             if (self::$post->getPostId()) {

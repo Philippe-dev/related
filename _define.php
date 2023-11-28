@@ -19,7 +19,7 @@ $this->registerModule(
     "Related pages", // Name
     "Serve pages & scripts", // Description
     "Pep, contributors, Nicolas Roudaire", // Author
-    '2.0.0', // Version
+    '2.0.2', // Version
     [
         'permissions' => App::auth()->makePermissions([Auth::PERMISSION_CONTENT_ADMIN, Pages::PERMISSION_PAGES]),
         'type' => 'plugin',

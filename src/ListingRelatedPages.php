@@ -78,7 +78,7 @@ class ListingRelatedPages extends Listing
     private function pageLine($count)
     {
         $img = '<img alt="%1$s" title="%1$s" src="images/%2$s" />';
-        $img_status = match ($this->rs->post_status) {
+        $img_status = match ((int) $this->rs->post_status) {
             Blog::POST_PUBLISHED => sprintf($img, __('published'), 'check-on.png'),
             Blog::POST_UNPUBLISHED => sprintf($img, __('unpublished'), 'check-off.png'),
             Blog::POST_PENDING => sprintf($img, __('pending'), 'check-wrn.png'),

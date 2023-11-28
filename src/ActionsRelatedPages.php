@@ -45,7 +45,7 @@ class ActionsRelatedPages extends ActionsPosts
                     __('Schedule') => 'schedule',
                     __('Mark as pending') => 'pending',
                 ]],
-                [self::class, 'doChangePostStatus']
+                [ActionsPostsDefault::class, 'doChangePostStatus']
             );
         }
 

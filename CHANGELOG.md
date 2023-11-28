@@ -1,3 +1,11 @@
+# related 2.0.2 - 2023-11-28
+
+- Fix issue with adminPostForm behavior. post must be exported as MetaRecod. Thanks to [Philippe](https://github.com/Philippe-dev)
+
+# related 2.0.1 - 2023-11-27
+
+- Fix issue with updating status. Thanks to [Philippe](https://github.com/Philippe-dev)
+
 # related 2.0.0 - 2023-11-27
 
 - Adapt plugin for dotclear 2.28

@@ -149,6 +149,7 @@ class ManageRelatedPages extends Process
                 form::combo('action', App::backend()->related_actions->getCombo()) .
                 '<input id="do-action" type="submit" value="' . __('ok') . '" />' .
                 App::backend()->url()->getHiddenFormFields('admin.plugin.' . My::id(), App::backend()->related_filter->values()) .
+                App::nonce()->getFormNonce() .
                 '</p></div>' .
                 '</form>'
             );
