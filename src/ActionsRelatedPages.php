@@ -102,7 +102,7 @@ class ActionsRelatedPages extends ActionsPosts
     {
         $ids = $ap->getIDs();
         if (empty($ids)) {
-            throw new Exception(__('No element selected'));
+            throw new Exception(__('No page selected'));
         }
         // Backward compatibility
         foreach ($ids as $id) {
@@ -117,7 +117,7 @@ class ActionsRelatedPages extends ActionsPosts
         Page::addSuccessNotice(
             sprintf(
                 __(
-                    '%d element has been successfully deleted',
+                    '%d page has been successfully deleted',
                     '%d elements have been successfully deleted',
                     count($ids)
                 ),
