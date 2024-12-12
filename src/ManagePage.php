@@ -130,7 +130,7 @@ class ManagePage extends Process
             self::$post->setPostContent('/** external content **/');
             self::$post->setPostContentXhtml('/** external content **/');
 
-            $dir = @dir(App::blog()->settings()->related->files_path);
+            $dir = @dir((string) App::blog()->settings()->related->files_path);
             $allowed_exts = ['php', 'html', 'xml', 'txt'];
 
             if ($dir) {
@@ -211,7 +211,7 @@ class ManagePage extends Process
                 if (!is_null($related_upl)) {
                     try {
                         if ($related_upl) {
-                            files::uploadStatus($_FILES['up_file']);
+                            Files::uploadStatus($_FILES['up_file']);
                             $src_file = $_FILES['up_file']['tmp_name'];
                             $trg_file = App::blog()->settings()->related->files_path . '/' . $_FILES['up_file']['name'];
                             if (move_uploaded_file($src_file, $trg_file)) {
