@@ -200,7 +200,7 @@ class ManageRelatedPages extends Process
         echo '</div>';
 
 
-        Page::helpBlock(My::id());
+        Page::helpBlock('related_pages');
         Page::closeModule();
     }
 }
