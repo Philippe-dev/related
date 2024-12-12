@@ -118,7 +118,7 @@ class ActionsRelatedPages extends ActionsPosts
             sprintf(
                 __(
                     '%d page has been successfully deleted',
-                    '%d elements have been successfully deleted',
+                    '%d pages have been successfully deleted',
                     count($ids)
                 ),
                 count($ids)
