@@ -34,7 +34,7 @@ class FilterPages extends Filters
             FiltersLibrary::getPageFilter(),
             $this->getPostUserFilter(),
             $this->getPostStatusFilter(),
-            $this->getInWidgetFilter(),
+            $this->getPostSelectedFilter(),
             $this->getPostMonthFilter(),
             $this->getPostLangFilter(),
         ]);
@@ -136,16 +136,15 @@ class FilterPages extends Filters
             ));
     }
 
-    public function getInWidgetFilter(): ?Filter
+    public function getPostSelectedFilter(): Filter
     {
-        return (new Filter('in_widget'))
-        ->param('post_selected')
-        ->title(__('In widget:'))
-        ->options(array_merge(
-            ['-'          => '',
-                __('yes') => 1,
-                __('no')  => 0,
-            ]
-        ));
+        return (new Filter('selected'))
+            ->param('post_selected')
+            ->title(__('In widget:'))
+            ->options([
+                '-'       => '',
+                __('yes') => '1',
+                __('no')  => '0',
+            ]);
     }
 }
