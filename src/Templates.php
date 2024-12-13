@@ -36,7 +36,7 @@ class Templates
 
         $p =
         "<?php if ((\$related_file = App::frontend()->context()->posts->getRelatedFilename()) !== false) { \n" .
-        	"if (files::getExtension(\$related_file) == 'php') { \n" .
+        	"if (Dotclear\Helper\File\Files::getExtension(\$related_file) == 'php') { \n" .
         		'include $related_file;' . "\n" .
         	"} else { \n" .
         		'$previous_tpl_path = App::frontend()->template()->getPath();' . "\n" .

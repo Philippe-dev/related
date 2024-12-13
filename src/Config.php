@@ -123,7 +123,7 @@ class Config extends Process
                 (new Fieldset())->class('fieldset')->legend((new Legend(__('General options'))))->fields([
                     (new Para())->items([
                         (new Label(__('Repository path:'), Label::OUTSIDE_LABEL_AFTER))->for('related_files_path')->class('classic'),
-                        (new Input('related_files_path', $settings->files_path))->size(80)->max(255)->value($settings->files_path),
+                        (new Input('related_files_path', (string) $settings->files_path))->size(80)->max(255)->value($settings->files_path),
                     ]),
                 ]),
             ])->render();
@@ -133,7 +133,7 @@ class Config extends Process
                 (new Fieldset())->class('fieldset')->legend((new Legend(__('Advanced options'))))->fields([
                     (new Para())->items([
                         (new Label(__('URL prefix:'), Label::OUTSIDE_LABEL_AFTER))->for('related_url_prefix')->class('classic'),
-                        (new Input('related_url_prefix', $settings->url_prefix))->size(80)->max(255)->value($settings->url_prefix),
+                        (new Input('related_url_prefix', (string) $settings->url_prefix))->size(80)->max(255)->value($settings->url_prefix),
                     ]),
                 ]),
             ])->render();

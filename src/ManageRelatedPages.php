@@ -117,7 +117,7 @@ class ManageRelatedPages extends Process
             Page::jsLoad('js/jquery/jquery.ui.touch-punch.js') .
             My::jsLoad('_pages.js') .
             Page::jsLoad('js/_posts_list.js') .
-            App::backend()->related_filter->js(My::manageUrl()) .
+            App::backend()->related_filter->js(App::backend()->url()->get('admin.plugin') . '&p=' . My::id()) .
             Page::jsPageTabs(self::$default_tab)
         );
 
@@ -160,7 +160,7 @@ class ManageRelatedPages extends Process
         echo '<div class="multi-part" id="pages_order" title="', __('Arrange public list'), '">';
         $public_pages = PagesHelper::getPublicList(self::$pages);
 
-        if (count($public_pages) > 0) {
+        if (count((array) $public_pages) > 0) {
             echo '<form action="', My::manageUrl(), '" method="post" id="form-public-pages">';
             echo '<table class="dragable">';
             echo '<thead>';
@@ -189,7 +189,8 @@ class ManageRelatedPages extends Process
             echo '</table>';
             echo '<p>';
             echo form::hidden(['public_order'], '');
-            echo '<input type="submit" name="pages_upd" value="', __('Save'), '" />';
+            echo '<input type="submit" name="pages_upd" value="', __('Save'), '" />'.
+            App::nonce()->getFormNonce() ;
             echo '</p>';
             echo '<p class="col checkboxes-helpers"></p>';
             echo '</form>';
@@ -199,7 +200,7 @@ class ManageRelatedPages extends Process
         echo '</div>';
 
 
-        Page::helpBlock(My::id());
+        Page::helpBlock('related_pages');
         Page::closeModule();
     }
 }

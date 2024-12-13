@@ -30,7 +30,7 @@ class ListingRelatedPages extends Listing
         if ($this->rs->isEmpty()) {
             echo '<p><strong>' . __('No page') . '</strong></p>';
         } else {
-            $pager = new Pager($page, $this->rs_count, $nb_per_page, 10);
+            $pager           = new Pager($page, $this->rs_count, $nb_per_page, 10);
             $pager->var_page = 'page';
 
             $columns = [
@@ -38,7 +38,7 @@ class ListingRelatedPages extends Listing
                 '<th>' . __('Date') . '</th>',
                 '<th>' . __('Author') . '</th>',
                 '<th>' . __('Type') . '</th>' .
-                '<th>' . __('Status') . '</th>'
+                '<th>' . __('Status') . '</th>',
             ];
 
             $html_block = '<table class="clear"><tr>' .
@@ -58,17 +58,17 @@ class ListingRelatedPages extends Listing
                 echo $this->pageLine($count);
                 $count++;
             }
+
             echo $blocks[1];
 
-            $fmt = fn ($title, $image) => sprintf('<img alt="%1$s" title="%1$s" src="images/%2$s" /> %1$s', $title, $image);
+            $fmt = fn ($title, $image, $class) => sprintf('<img alt="%1$s" src="images/%2$s" class="mark mark-%3$s"> %1$s', $title, $image, $class);
             echo '<p class="info">' . __('Legend: ') .
-                $fmt(__('Published'), 'check-on.png') . ' - ' .
-                $fmt(__('Unpublished'), 'check-off.png') . ' - ' .
-                $fmt(__('Scheduled'), 'scheduled.png') . ' - ' .
-                $fmt(__('Pending'), 'check-wrn.png') . ' - ' .
-                $fmt(__('Protected'), 'locker.png') . ' - ' .
-                $fmt(__('Selected'), 'selected.png') . ' - ' .
-                $fmt(__('Attachments'), 'attach.png') .
+                $fmt(__('Published'), 'published.svg', 'published') . ' - ' .
+                $fmt(__('Unpublished'), 'unpublished.svg', 'unpublished') . ' - ' .
+                $fmt(__('Scheduled'), 'scheduled.svg', 'scheduled') . ' - ' .
+                $fmt(__('Pending'), 'pending.svg', 'pending') . ' - ' .
+                $fmt(__('Protected'), 'locker.svg', 'locked') . ' - ' .
+                $fmt(__('In widget'), 'selected.svg', 'selected') .
                 '</p>';
 
             echo $pager->getLinks();
@@ -77,34 +77,50 @@ class ListingRelatedPages extends Listing
 
     private function pageLine($count)
     {
-        $img = '<img alt="%1$s" title="%1$s" src="images/%2$s" />';
-        $img_status = match ((int) $this->rs->post_status) {
-            Blog::POST_PUBLISHED => sprintf($img, __('published'), 'check-on.png'),
-            Blog::POST_UNPUBLISHED => sprintf($img, __('unpublished'), 'check-off.png'),
-            Blog::POST_PENDING => sprintf($img, __('pending'), 'check-wrn.png'),
-            Blog::POST_SCHEDULED => sprintf($img, __('scheduled'), 'scheduled.png'),
-            default => sprintf($img, __('unpublished'), 'check-off.png'),
-        };
+        $img        = '<img alt="%1$s" title="%1$s" src="images/%2$s" class="mark mark-%3$s">';
+        $img_status = '';
+        $sts_class  = '';
+        switch ($this->rs->post_status) {
+            case App::blog()::POST_PUBLISHED:
+                $img_status = sprintf($img, __('Published'), 'check-on.svg', 'published');
+                $sts_class  = 'sts-online';
+
+                break;
+            case App::blog()::POST_UNPUBLISHED:
+                $img_status = sprintf($img, __('Unpublished'), 'check-off.svg', 'unpublished');
+                $sts_class  = 'sts-offline';
+
+                break;
+            case App::blog()::POST_SCHEDULED:
+                $img_status = sprintf($img, __('Scheduled'), 'scheduled.svg', 'scheduled');
+                $sts_class  = 'sts-scheduled';
+
+                break;
+            case App::blog()::POST_PENDING:
+                $img_status = sprintf($img, __('Pending'), 'check-wrn.svg', 'pending');
+                $sts_class  = 'sts-pending';
+
+                break;
+        }
 
         $protected = '';
         if ($this->rs->post_password) {
-            $protected = sprintf($img, __('protected'), 'locker.png');
+            $protected = sprintf($img, __('Protected'), 'locker.svg', 'locked');
         }
 
         $selected = '';
         if ($this->rs->post_selected) {
-            $selected = sprintf($img, __('In widget'), 'selected.png');
+            $selected = sprintf($img, __('In widget'), 'selected.svg', 'selected');
         }
 
         $subtype = '(N/A)';
         $meta_rs = App::meta()->getMetaRecordset($this->rs->post_meta, 'related_file');
-        $subtype = (!$meta_rs->isEmpty())?__('included page'):__('post as page');
+        $subtype = (!$meta_rs->isEmpty()) ? __('included page') : __('post as page');
 
         $res = '<tr class="line' . ($this->rs->post_status != Blog::POST_PUBLISHED ? ' offline' : '') . '"' .
             ' id="p' . $this->rs->post_id . '">';
 
-        $res .=
-            '<td class="nowrap minimal">' .
+        $res .= '<td class="nowrap minimal">' .
             form::checkbox(['entries[]'], $this->rs->post_id, '', '', '', !$this->rs->isEditable()) . '</td>' .
             '<td class="maximal"><a href="' . My::manageUrl(['part' => 'page', 'id' => $this->rs->post_id]) . '">' .
             Html::escapeHTML($this->rs->post_title) . '</a></td>' .

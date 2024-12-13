@@ -11,9 +11,6 @@
  *  -- END LICENSE BLOCK ------------------------------------
  */
 
-use Dotclear\App;
-use Dotclear\Core\Auth;
-use Dotclear\Plugin\pages\Pages;
 
 $this->registerModule(
     "Related pages", // Name
@@ -21,7 +18,7 @@ $this->registerModule(
     "Pep, contributors, Nicolas Roudaire", // Author
     '2.0.2', // Version
     [
-        'permissions' => App::auth()->makePermissions([Auth::PERMISSION_CONTENT_ADMIN, Pages::PERMISSION_PAGES]),
+        'permissions' => 'My',
         'type' => 'plugin',
         'dc_min' => '2.28',
         'requires' => [['core', '2.28']],
