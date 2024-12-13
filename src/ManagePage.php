@@ -442,7 +442,7 @@ class ManagePage extends Process
                     form::textarea('post_content', 50, App::auth()->getOption('edit_size'), html::escapeHTML(self::$post->getPostContent())) .
                     '</p>';
             } else {
-                    $main_items['post_content'] = '<div style="display:none">' .
+                $main_items['post_content'] = '<div style="display:none">' .
                     form::textarea('post_content', 1, 1, html::escapeHTML(self::$post->getPostContent())) .
                     '</div>';
                 $main_items['is_file'] = '<p class="col"><label class="required" title="' . __('Required field') . '" ' .
