@@ -307,6 +307,7 @@ class ManagePage extends Process
 
         if (!empty($_POST['delete']) && self::$permissions['can_delete']) {
             try {
+                App::blog()->delPost((int) $post_id);
                 Notices::addSuccessNotice(__('Page has been deleted.'));
                 My::redirect(['part' => 'pages']);
             } catch (Exception $e) {
