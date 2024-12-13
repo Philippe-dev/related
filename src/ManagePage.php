@@ -130,7 +130,7 @@ class ManagePage extends Process
             self::$post->setPostContent('/** external content **/');
             self::$post->setPostContentXhtml('/** external content **/');
 
-            $dir = @dir(App::blog()->settings()->related->files_path);
+            $dir = @dir((string) App::blog()->settings()->related->files_path);
             $allowed_exts = ['php', 'html', 'xml', 'txt'];
 
             if ($dir) {
@@ -211,7 +211,7 @@ class ManagePage extends Process
                 if (!is_null($related_upl)) {
                     try {
                         if ($related_upl) {
-                            files::uploadStatus($_FILES['up_file']);
+                            Files::uploadStatus($_FILES['up_file']);
                             $src_file = $_FILES['up_file']['tmp_name'];
                             $trg_file = App::blog()->settings()->related->files_path . '/' . $_FILES['up_file']['name'];
                             if (move_uploaded_file($src_file, $trg_file)) {
@@ -551,13 +551,13 @@ class ManagePage extends Process
         }
 
         $img_status = '';
-        $img_status_pattern = '<img class="img_select_option" alt="%1$s" title="%1$s" src="images/%2$s" />';
+        $img_status_pattern = '<img class="img_select_option mark mark-%3$s" alt="%1$s" title="%1$s" src="images/%2$s" />';
 
         $img_status = match (self::$post->getPostStatus()) {
-            Blog::POST_PUBLISHED => sprintf($img_status_pattern, __('Published'), 'check-on.png'),
-            Blog::POST_UNPUBLISHED => sprintf($img_status_pattern, __('Unpublished'), 'check-off.png'),
-            Blog::POST_SCHEDULED => sprintf($img_status_pattern, __('Scheduled'), 'scheduled.png'),
-            Blog::POST_PENDING => sprintf($img_status_pattern, __('Pending'), 'check-wrn.png'),
+            Blog::POST_PUBLISHED => sprintf($img_status_pattern, __('Published'), 'check-on.svg', 'published'),
+            Blog::POST_UNPUBLISHED => sprintf($img_status_pattern, __('Unpublished'), 'check-off.svg', 'unpublished'),
+            Blog::POST_SCHEDULED => sprintf($img_status_pattern, __('Scheduled'), 'scheduled.svg', 'scheduled'),
+            Blog::POST_PENDING => sprintf($img_status_pattern, __('Pending'), 'check-wrn.svg', 'pending'),
             default => '',
         };
 
