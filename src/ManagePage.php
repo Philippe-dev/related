@@ -366,7 +366,7 @@ class ManagePage extends Process
             Notices::message(__('Don\'t forget to validate your XHTML conversion by saving your post.'));
         }
 
-        Notices::GetNotices();
+        echo Notices::GetNotices();
 
         $status_combo = Combos::getPostStatusesCombo();
         $lang_combo = Combos::getLangsCombo(App::blog()->getLangs(['order' => 'asc']), true);
