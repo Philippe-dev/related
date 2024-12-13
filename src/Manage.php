@@ -1,14 +1,13 @@
 <?php
-/*
- *  -- BEGIN LICENSE BLOCK ----------------------------------
+/**
+ * @brief related, a plugin for Dotclear 2
  *
- *  This file is part of Related, a plugin for DotClear2.
+ * @package Dotclear
+ * @subpackage Plugins
  *
- *  Licensed under the GPL version 2.0 license.
- *  See LICENSE file or
- *  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * @author Pep, Nicolas Roudaire and contributors
  *
- *  -- END LICENSE BLOCK ------------------------------------
+ * @copyright GPL-2.0 [https://www.gnu.org/licenses/gpl-2.0.html]
  */
 
 declare(strict_types=1);
@@ -25,8 +24,8 @@ class Manage extends Process
     public static function init(): bool
     {
         if (My::checkContext(My::MANAGE)) {
-            $default_part = My::settings()->active ? 'pages' : 'order';
-            self::$active_part = $_REQUEST['part'] ?? $default_part;
+            $default_part                       = My::settings()->active ? 'pages' : 'order';
+            self::$active_part                  = $_REQUEST['part'] ?? $default_part;
             App::backend()->related_default_tab = self::$active_part;
 
             if (self::$active_part === 'pages') {

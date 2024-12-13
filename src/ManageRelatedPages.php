@@ -1,14 +1,13 @@
 <?php
-/*
- *  -- BEGIN LICENSE BLOCK ----------------------------------
+/**
+ * @brief related, a plugin for Dotclear 2
  *
- *  This file is part of Related, a plugin for DotClear2.
+ * @package Dotclear
+ * @subpackage Plugins
  *
- *  Licensed under the GPL version 2.0 license.
- *  See LICENSE file or
- *  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * @author Pep, Nicolas Roudaire and contributors
  *
- *  -- END LICENSE BLOCK ------------------------------------
+ * @copyright GPL-2.0 [https://www.gnu.org/licenses/gpl-2.0.html]
  */
 
 declare(strict_types=1);
@@ -47,15 +46,16 @@ class ManageRelatedPages extends Process
 
         App::backend()->related_filter = new FilterPages();
 
-        $params = App::backend()->related_filter->params();
-        $params['post_type'] = 'related';
+        $params               = App::backend()->related_filter->params();
+        $params['post_type']  = 'related';
         $params['no_content'] = true;
 
         App::backend()->related_list = null;
+
         try {
             self::$pages = App::blog()->getPosts($params);
             self::$pages->extend(RsRelated::class);
-            $counter = App::blog()->getPosts($params, true);
+            $counter                     = App::blog()->getPosts($params, true);
             App::backend()->related_list = new ListingRelatedPages(self::$pages, $counter->f(0));
         } catch (Exception $e) {
             App::error()->add($e->getMessage());
@@ -70,20 +70,19 @@ class ManageRelatedPages extends Process
 
         if (isset($_POST['pages_upd'])) {
             $public_pages = PagesHelper::getPublicList(self::$pages);
-            $visible = (!empty($_POST['p_visibles']) && is_array($_POST['p_visibles'])) ? $_POST['p_visibles'] : [];
-            $order = (!empty($_POST['p_order'])) ? $_POST['p_order'] : [];
+            $visible      = (!empty($_POST['p_visibles']) && is_array($_POST['p_visibles'])) ? $_POST['p_visibles'] : [];
+            $order        = (!empty($_POST['p_order'])) ? $_POST['p_order'] : [];
 
             try {
                 foreach ($public_pages as $c_page) {
-                    $cur = App::con()->openCursor(App::con()->prefix() . 'post');
-                    $cur->post_upddt = date('Y-m-d H:i:s');
-                    $cur->post_selected = (int)in_array($c_page['id'], $visible);
+                    $cur                = App::con()->openCursor(App::con()->prefix() . 'post');
+                    $cur->post_upddt    = date('Y-m-d H:i:s');
+                    $cur->post_selected = (int) in_array($c_page['id'], $visible);
                     $cur->update('WHERE post_id = ' . $c_page['id']);
-
 
                     if (count($order) > 0) {
                         $pos = !empty($order[$c_page['id']]) ? $order[$c_page['id']] + 1 : 1;
-                        $pos = (int) $pos + 1;
+                        $pos = (int) $pos                                            + 1;
                         App::meta()->delPostMeta($c_page['id'], 'related_position');
                         App::meta()->setPostMeta($c_page['id'], 'related_position', (string) $pos);
                     }
@@ -121,8 +120,8 @@ class ManageRelatedPages extends Process
             Page::jsPageTabs(self::$default_tab)
         );
 
-        echo Page::breadcrumb([Html::escapeHTML(App::blog()->name()) => '',
-            '<a href="' . My::manageUrl(['part' => 'pages']) . '">' . __('Related pages') . '</a>' => ''
+        echo Page::breadcrumb([Html::escapeHTML(App::blog()->name())                               => '',
+            '<a href="' . My::manageUrl(['part' => 'pages']) . '">' . __('Related pages') . '</a>' => '',
         ]);
 
         echo Notices::getNotices();
@@ -173,7 +172,7 @@ class ManageRelatedPages extends Process
             echo '<tbody id="pages-list">';
             $i = 1;
             foreach ($public_pages as $page) {
-                echo '<tr class="line', $page['active']? '' : ' offline', '" id="p_', $page['id'], '">';
+                echo '<tr class="line', $page['active'] ? '' : ' offline', '" id="p_', $page['id'], '">';
                 echo '<td class="handle">';
                 echo form::field(['p_order[' . $page['id'] . ']'], 2, 5, (string) $i, 'position');
                 echo '</td>';
@@ -189,7 +188,7 @@ class ManageRelatedPages extends Process
             echo '</table>';
             echo '<p>';
             echo form::hidden(['public_order'], '');
-            echo '<input type="submit" name="pages_upd" value="', __('Save'), '" />'.
+            echo '<input type="submit" name="pages_upd" value="', __('Save'), '" />' .
             App::nonce()->getFormNonce() ;
             echo '</p>';
             echo '<p class="col checkboxes-helpers"></p>';
@@ -198,7 +197,6 @@ class ManageRelatedPages extends Process
             echo '<p><strong>', __('No page'), '</strong></p>';
         }
         echo '</div>';
-
 
         Page::helpBlock('related_pages');
         Page::closeModule();

@@ -1,14 +1,13 @@
 <?php
-/*
- *  -- BEGIN LICENSE BLOCK ----------------------------------
+/**
+ * @brief related, a plugin for Dotclear 2
  *
- *  This file is part of Related, a plugin for DotClear2.
+ * @package Dotclear
+ * @subpackage Plugins
  *
- *  Licensed under the GPL version 2.0 license.
- *  See LICENSE file or
- *  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * @author Pep, Nicolas Roudaire and contributors
  *
- *  -- END LICENSE BLOCK ------------------------------------
+ * @copyright GPL-2.0 [https://www.gnu.org/licenses/gpl-2.0.html]
  */
 
 declare(strict_types=1);
@@ -22,22 +21,22 @@ class Post
 {
     private ?MetaRecord $post_meta_record = null;
 
-    private string $post_id = '';
-    private ?string $cat_id = '';
-    private string $post_dt = '';
-    private string $post_type = 'related';
-    private string $post_format = '';
-    private ?string $post_password = null;
-    private string $post_url = '';
-    private string $post_lang = '';
-    private string $post_title = '';
-    private string $post_excerpt = '';
+    private string $post_id            = '';
+    private ?string $cat_id            = '';
+    private string $post_dt            = '';
+    private string $post_type          = 'related';
+    private string $post_format        = '';
+    private ?string $post_password     = null;
+    private string $post_url           = '';
+    private string $post_lang          = '';
+    private string $post_title         = '';
+    private string $post_excerpt       = '';
     private string $post_excerpt_xhtml = '';
-    private string $post_content = '';
+    private string $post_content       = '';
     private string $post_content_xhtml = '';
-    private string $post_notes = '';
-    private int $post_status = 0;
-    private bool $post_selected = true;
+    private string $post_notes         = '';
+    private int $post_status           = 0;
+    private bool $post_selected        = true;
 
     public function __construct()
     {
@@ -47,21 +46,21 @@ class Post
     {
         $this->post_meta_record = $post;
 
-        $this->post_id = $post->post_id;
-        $this->post_dt = date('Y-m-d H:i', strtotime($post->post_dt));
-        $this->post_selected = (boolean) $post->post_selected;
-        $this->cat_id = $post->cat_id;
-        $this->post_format = $post->post_format;
-        $this->post_password = $post->post_password;
-        $this->post_url = $post->post_url;
-        $this->post_lang = $post->post_lang;
-        $this->post_title = $post->post_title;
-        $this->post_excerpt = $post->post_excerpt;
+        $this->post_id            = $post->post_id;
+        $this->post_dt            = date('Y-m-d H:i', strtotime($post->post_dt));
+        $this->post_selected      = (bool) $post->post_selected;
+        $this->cat_id             = $post->cat_id;
+        $this->post_format        = $post->post_format;
+        $this->post_password      = $post->post_password;
+        $this->post_url           = $post->post_url;
+        $this->post_lang          = $post->post_lang;
+        $this->post_title         = $post->post_title;
+        $this->post_excerpt       = $post->post_excerpt;
         $this->post_excerpt_xhtml = $post->post_excerpt_xhtml;
-        $this->post_content = $post->post_content;
+        $this->post_content       = $post->post_content;
         $this->post_content_xhtml = $post->post_content_xhtml;
-        $this->post_notes = $post->post_notes;
-        $this->post_status = (int) $post->post_status;
+        $this->post_notes         = $post->post_notes;
+        $this->post_status        = (int) $post->post_status;
 
         return $this;
     }
@@ -73,23 +72,23 @@ class Post
 
     public function setCursor(Cursor $cur): void
     {
-        $cur->post_title = $this->post_title;
-        $cur->cat_id = null;
-        $cur->post_dt = $this->post_dt;
-        $cur->post_type = $this->post_type;
-        $cur->post_format = $this->post_format;
-        $cur->post_password = $this->post_password;
-        $cur->post_lang = $this->post_lang;
-        $cur->post_excerpt = $this->post_excerpt;
+        $cur->post_title         = $this->post_title;
+        $cur->cat_id             = null;
+        $cur->post_dt            = $this->post_dt;
+        $cur->post_type          = $this->post_type;
+        $cur->post_format        = $this->post_format;
+        $cur->post_password      = $this->post_password;
+        $cur->post_lang          = $this->post_lang;
+        $cur->post_excerpt       = $this->post_excerpt;
         $cur->post_excerpt_xhtml = $this->post_excerpt_xhtml;
-        $cur->post_content = $this->post_content;
+        $cur->post_content       = $this->post_content;
         $cur->post_content_xhtml = $this->post_content_xhtml;
-        $cur->post_notes = $this->post_notes;
-        $cur->post_status = $this->post_status;
-        $cur->post_selected = (int) $this->post_selected;
-        $cur->post_url = $this->post_url;
-        $cur->post_open_comment = 0;
-        $cur->post_open_tb = 0;
+        $cur->post_notes         = $this->post_notes;
+        $cur->post_status        = $this->post_status;
+        $cur->post_selected      = (int) $this->post_selected;
+        $cur->post_url           = $this->post_url;
+        $cur->post_open_comment  = 0;
+        $cur->post_open_tb       = 0;
     }
 
     public function getPostId(): string

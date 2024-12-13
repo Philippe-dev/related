@@ -1,14 +1,13 @@
 <?php
-/*
- *  -- BEGIN LICENSE BLOCK ----------------------------------
+/**
+ * @brief related, a plugin for Dotclear 2
  *
- *  This file is part of Related, a plugin for DotClear2.
+ * @package Dotclear
+ * @subpackage Plugins
  *
- *  Licensed under the GPL version 2.0 license.
- *  See LICENSE file or
- *  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * @author Pep, Nicolas Roudaire and contributors
  *
- *  -- END LICENSE BLOCK ------------------------------------
+ * @copyright GPL-2.0 [https://www.gnu.org/licenses/gpl-2.0.html]
  */
 
 declare(strict_types=1);
@@ -36,10 +35,10 @@ class ManagePage extends Process
 {
     private const POST_TYPE = 'related';
 
-    private static string $page_title = '';
+    private static string $page_title      = '';
     private static string $page_title_edit = '';
-    private static string $post_url = '';
-    private static bool $bad_dt = false;
+    private static string $post_url        = '';
+    private static bool $bad_dt            = false;
 
     private static Post $post;
     private static array $post_editor = [];
@@ -47,12 +46,12 @@ class ManagePage extends Process
     private static array $permissions = [
         'can_view_page' => true,
         'can_edit_post' => false,
-        'can_publish' => false,
-        'can_delete' => false,
+        'can_publish'   => false,
+        'can_delete'    => false,
     ];
 
-    private static bool $pageIsFile = true;
-    private static string $page_related_file = '';
+    private static bool $pageIsFile           = true;
+    private static string $page_related_file  = '';
     private static array $related_pages_files = ['-' => ''];
 
     public static function init(): bool
@@ -80,12 +79,12 @@ class ManagePage extends Process
             self::$post->setPostStatus((int) $user_post_status);
         }
 
-        self::$page_title = __('New page');
+        self::$page_title  = __('New page');
         self::$post_editor = App::auth()->getOption('editor');
 
         Page::check(App::auth()->makePermissions([Pages::PERMISSION_PAGES, Auth::PERMISSION_CONTENT_ADMIN]));
         self::$permissions['can_edit_post'] = App::auth()->check(App::auth()->makePermissions([Pages::PERMISSION_PAGES, Auth::PERMISSION_CONTENT_ADMIN]), App::blog()->id());
-        self::$permissions['can_publish'] = App::auth()->check(App::auth()->makePermissions([Auth::PERMISSION_CONTENT_ADMIN]), App::blog()->id());
+        self::$permissions['can_publish']   = App::auth()->check(App::auth()->makePermissions([Auth::PERMISSION_CONTENT_ADMIN]), App::blog()->id());
 
         if (!self::$permissions['can_publish']) {
             self::$post->setPostStatus(Blog::POST_PENDING);
@@ -95,8 +94,8 @@ class ManagePage extends Process
 
         $post_id = '';
         if (!empty($_REQUEST['id'])) {
-            $params = [];
-            $params['post_id'] = $_REQUEST['id'];
+            $params              = [];
+            $params['post_id']   = $_REQUEST['id'];
             $params['post_type'] = self::POST_TYPE;
 
             $dcPost = App::blog()->getPosts($params, false);
@@ -106,12 +105,12 @@ class ManagePage extends Process
                 Notices::addErrorNotice(__('This page does not exist.'));
                 self::$permissions['can_view_page'] = false;
             } else {
-                $post_id = $dcPost->post_id;
-                self::$post_url = $dcPost->getURL();
+                $post_id          = $dcPost->post_id;
+                self::$post_url   = $dcPost->getURL();
                 self::$page_title = __('Edit page');
 
                 self::$permissions['can_edit_post'] = $dcPost->isEditable();
-                self::$permissions['can_delete'] = $dcPost->isDeletable();
+                self::$permissions['can_delete']    = $dcPost->isDeletable();
 
                 self::$post->fromMetaRecord($dcPost);
 
@@ -119,7 +118,7 @@ class ManagePage extends Process
                     $post_metas = App::meta()->getMetaRecordset($dcPost->post_meta, 'related_file');
                     if (!$post_metas->isEmpty()) {
                         self::$page_related_file = $post_metas->meta_id;
-                        self::$pageIsFile = true;
+                        self::$pageIsFile        = true;
                     }
                 } catch (Exception) {
                 }
@@ -130,7 +129,7 @@ class ManagePage extends Process
             self::$post->setPostContent('/** external content **/');
             self::$post->setPostContentXhtml('/** external content **/');
 
-            $dir = @dir((string) App::blog()->settings()->related->files_path);
+            $dir          = @dir((string) App::blog()->settings()->related->files_path);
             $allowed_exts = ['php', 'html', 'xml', 'txt'];
 
             if ($dir) {
@@ -146,9 +145,9 @@ class ManagePage extends Process
         }
 
         if (!empty($_POST) && !empty($_POST['save']) && self::$permissions['can_edit_post']) {
-            $post_content = self::$post->getPostContent();
+            $post_content       = self::$post->getPostContent();
             $post_content_xhtml = self::$post->getPostContentXhtml();
-            $post_excerpt = self::$post->getPostExcerpt();
+            $post_excerpt       = self::$post->getPostExcerpt();
             $post_excerpt_xhtml = self::$post->getPostExcerptXhtml();
 
             self::$post->setPostFormat($_POST['post_format']);
@@ -248,6 +247,7 @@ class ManagePage extends Process
                             App::meta()->setPostMeta($post_id, 'related_file', self::$page_related_file);
                         } catch (Exception $e) {
                             App::con()->rollback();
+
                             throw $e;
                         }
                     }
@@ -286,6 +286,7 @@ class ManagePage extends Process
                             App::meta()->setPostMeta($return_id, 'related_file', self::$page_related_file);
                         } catch (Exception $e) {
                             App::con()->rollback();
+
                             throw $e;
                         }
                     }
@@ -312,6 +313,7 @@ class ManagePage extends Process
                 Notices::addErrorNotice($e->getMessage());
             }
         }
+
         return true;
     }
 
@@ -343,18 +345,18 @@ class ManagePage extends Process
         Page::openModule(
             My::name(),
             Page::jsModal() . $admin_post_behavior .
-	        Page::jsLoad('js/_post.js') .
-	        Page::jsConfirmClose('entry-form') .
-	        // --BEHAVIOR-- adminRelatedHeaders
-	        App::behavior()->callBehavior('adminRelatedHeaders') .
+            Page::jsLoad('js/_post.js') .
+            Page::jsConfirmClose('entry-form') .
+            // --BEHAVIOR-- adminRelatedHeaders
+            App::behavior()->callBehavior('adminRelatedHeaders') .
             Page::jsPageTabs($default_tab)
         );
 
         echo Page::breadcrumb(
             [
-                Html::escapeHTML(App::blog()->name()) => '',
-                __('Related pages') => My::manageUrl(),
-                (self::$post->getPostId() ? self::$page_title_edit : self::$page_title) => ''
+                Html::escapeHTML(App::blog()->name())                                   => '',
+                __('Related pages')                                                     => My::manageUrl(),
+                (self::$post->getPostId() ? self::$page_title_edit : self::$page_title) => '',
             ]
         );
 
@@ -369,7 +371,7 @@ class ManagePage extends Process
         echo Notices::GetNotices();
 
         $status_combo = Combos::getPostStatusesCombo();
-        $lang_combo = Combos::getLangsCombo(App::blog()->getLangs(['order' => 'asc']), true);
+        $lang_combo   = Combos::getLangsCombo(App::blog()->getLangs(['order' => 'asc']), true);
 
         $available_formats = ['' => ''];
         foreach (App::formater()->getFormaters() as $formats) {
@@ -405,7 +407,7 @@ class ManagePage extends Process
                     'items' => [
                         'post_selected' => '<p><label for="post_selected" class="classic">' .
                         form::checkbox('post_selected', 1, self::$post->getPostSelected()) . ' ' .
-                        __('In widget') . '</label></p>'
+                        __('In widget') . '</label></p>',
                     ],
                 ],
 
@@ -421,19 +423,19 @@ class ManagePage extends Process
                         '</p>' .
                         '<p class="form-note warn">' .
                         __('Warning: If you set the URL manually, it may conflict with another entry.') .
-                        '</p></div>'
+                        '</p></div>',
                     ]]]);
 
             $main_items = new ArrayObject([
-                "post_title" => '<p class="col">' .
+                'post_title' => '<p class="col">' .
                 '<label class="required no-margin bold" for="post_title"><abbr title="' . __('Required field') . '">*</abbr> ' . __('Title:') . '</label>' .
                 form::field('post_title', 20, 255, html::escapeHTML(self::$post->getPostTitle()), 'maximal') .
                 '</p>',
 
-                "post_excerpt" => '<p class="area" id="excerpt-area"><label for="post_excerpt" class="bold">' . __('Excerpt:') . ' <span class="form-note">' .
+                'post_excerpt' => '<p class="area" id="excerpt-area"><label for="post_excerpt" class="bold">' . __('Excerpt:') . ' <span class="form-note">' .
                 __('Introduction to the post.') . '</span></label> ' .
                 form::textarea('post_excerpt', 50, 5, html::escapeHTML(self::$post->getPostExcerpt())) .
-                '</p>'
+                '</p>',
             ]);
 
             if (!self::$pageIsFile) {
@@ -461,12 +463,11 @@ class ManagePage extends Process
                     form::hidden('type', 'file');
             }
 
-            $main_items["post_notes"] = '<p class="area" id="notes-area">' .
+            $main_items['post_notes'] = '<p class="area" id="notes-area">' .
                 '<label for="post_notes" class="bold">' . __('Personal notes:') . ' <span class="form-note">' .
                 __('Unpublished notes.') . '</span></label>' .
                 form::textarea('post_notes', 50, 5, html::escapeHTML(self::$post->getPostNotes())) .
                 '</p>';
-
 
             if (self::$post->getPostId() && self::$post->getPostStatus() === Blog::POST_PUBLISHED) {
                 echo '<p><a class="onblog_link outgoing" href="', self::$post_url, '" title="' . Html::escapeHTML(trim(Html::clean(self::$post->getPostTitle()))), '">';
@@ -495,14 +496,13 @@ class ManagePage extends Process
             '<input type="submit" value="' . __('Save') . ' (s)" accesskey="s" name="save" /> ';
 
             if (self::$post->getPostId()) {
-                $preview_url =
-                App::blog()->url() . App::url()->getURLFor('relatedPreview', App::auth()->userID() . '/' .
+                $preview_url = App::blog()->url() . App::url()->getURLFor('relatedPreview', App::auth()->userID() . '/' .
                 Http::browserUID(DC_MASTER_KEY . App::auth()->userID() . App::auth()->getInfo('user_pwd')) .
                 '/' . self::$post->getPostUrl());
                 echo '<a id="post-preview" href="' . $preview_url . '" class="button modal" accesskey="p">' . __('Preview') . ' (p)' . '</a> ';
             } else {
                 echo
-                '<a id="post-cancel" href="' . App::backend()->url()->get("admin.home") . '" class="button" accesskey="c">' . __('Cancel') . ' (c)</a>';
+                '<a id="post-cancel" href="' . App::backend()->url()->get('admin.home') . '" class="button" accesskey="c">' . __('Cancel') . ' (c)</a>';
             }
 
             echo
@@ -524,7 +524,6 @@ class ManagePage extends Process
                 }
                 echo '</div>';
             }
-
 
             // --BEHAVIOR-- adminPostFormSidebar (may be deprecated)
             App::behavior()->callBehavior('adminPostFormSidebar', self::$post ?? null);
@@ -548,15 +547,15 @@ class ManagePage extends Process
             return '';
         }
 
-        $img_status = '';
+        $img_status         = '';
         $img_status_pattern = '<img class="img_select_option mark mark-%3$s" alt="%1$s" title="%1$s" src="images/%2$s" />';
 
         $img_status = match (self::$post->getPostStatus()) {
-            Blog::POST_PUBLISHED => sprintf($img_status_pattern, __('Published'), 'check-on.svg', 'published'),
+            Blog::POST_PUBLISHED   => sprintf($img_status_pattern, __('Published'), 'check-on.svg', 'published'),
             Blog::POST_UNPUBLISHED => sprintf($img_status_pattern, __('Unpublished'), 'check-off.svg', 'unpublished'),
-            Blog::POST_SCHEDULED => sprintf($img_status_pattern, __('Scheduled'), 'scheduled.svg', 'scheduled'),
-            Blog::POST_PENDING => sprintf($img_status_pattern, __('Pending'), 'check-wrn.svg', 'pending'),
-            default => '',
+            Blog::POST_SCHEDULED   => sprintf($img_status_pattern, __('Scheduled'), 'scheduled.svg', 'scheduled'),
+            Blog::POST_PENDING     => sprintf($img_status_pattern, __('Pending'), 'check-wrn.svg', 'pending'),
+            default                => '',
         };
 
         return $img_status;

@@ -1,14 +1,13 @@
 <?php
-/*
- *  -- BEGIN LICENSE BLOCK ----------------------------------
+/**
+ * @brief related, a plugin for Dotclear 2
  *
- *  This file is part of Related, a plugin for DotClear2.
+ * @package Dotclear
+ * @subpackage Plugins
  *
- *  Licensed under the GPL version 2.0 license.
- *  See LICENSE file or
- *  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * @author Pep, Nicolas Roudaire and contributors
  *
- *  -- END LICENSE BLOCK ------------------------------------
+ * @copyright GPL-2.0 [https://www.gnu.org/licenses/gpl-2.0.html]
  */
 
 declare(strict_types=1);
@@ -34,18 +33,17 @@ class Templates
             $content = 'echo ' . sprintf($f, 'App::frontend()->context()->posts->getContent(' . $urls . ')') . ';';
         }
 
-        $p =
-        "<?php if ((\$related_file = App::frontend()->context()->posts->getRelatedFilename()) !== false) { \n" .
-        	"if (Dotclear\Helper\File\Files::getExtension(\$related_file) == 'php') { \n" .
-        		'include $related_file;' . "\n" .
-        	"} else { \n" .
-        		'$previous_tpl_path = App::frontend()->template()->getPath();' . "\n" .
-        		'App::frontend()->template()->setPath(Dotclear\Plugin\related\My::settings()->files_path);' . "\n" .
-        		'echo App::frontend()->template()->getData(basename($related_file));' . "\n" .
-        		'App::frontend()->template()->setPath($previous_tpl_path);' . "\n" .
-        		'unset($previous_tpl_path);' . "\n" .
-        	"}\n" .
-        	'unset($related_file);' . "\n" .
+        $p = "<?php if ((\$related_file = App::frontend()->context()->posts->getRelatedFilename()) !== false) { \n" .
+            "if (Dotclear\Helper\File\Files::getExtension(\$related_file) == 'php') { \n" .
+                'include $related_file;' . "\n" .
+            "} else { \n" .
+                '$previous_tpl_path = App::frontend()->template()->getPath();' . "\n" .
+                'App::frontend()->template()->setPath(Dotclear\Plugin\related\My::settings()->files_path);' . "\n" .
+                'echo App::frontend()->template()->getData(basename($related_file));' . "\n" .
+                'App::frontend()->template()->setPath($previous_tpl_path);' . "\n" .
+                'unset($previous_tpl_path);' . "\n" .
+            "}\n" .
+            'unset($related_file);' . "\n" .
         "} else { \n" .
             $content .
         "} ?>\n";

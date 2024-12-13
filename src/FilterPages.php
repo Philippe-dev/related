@@ -1,14 +1,13 @@
 <?php
-/*
- *  -- BEGIN LICENSE BLOCK ----------------------------------
+/**
+ * @brief related, a plugin for Dotclear 2
  *
- *  This file is part of Related, a plugin for DotClear2.
+ * @package Dotclear
+ * @subpackage Plugins
  *
- *  Licensed under the GPL version 2.0 license.
- *  See LICENSE file or
- *  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * @author Pep, Nicolas Roudaire and contributors
  *
- *  -- END LICENSE BLOCK ------------------------------------
+ * @copyright GPL-2.0 [https://www.gnu.org/licenses/gpl-2.0.html]
  */
 
 declare(strict_types=1);
@@ -91,7 +90,7 @@ class FilterPages extends Filters
 
         try {
             $dates = App::blog()->getDates([
-                'type' => 'month',
+                'type'      => 'month',
                 'post_type' => $this->post_type,
             ]);
             if ($dates->isEmpty()) {
@@ -143,9 +142,9 @@ class FilterPages extends Filters
         ->param('post_selected')
         ->title(__('In widget:'))
         ->options(array_merge(
-            ['-' => '',
+            ['-'          => '',
                 __('yes') => 1,
-                __('no') => 0
+                __('no')  => 0,
             ]
         ));
     }

@@ -1,14 +1,13 @@
 <?php
-/*
- *  -- BEGIN LICENSE BLOCK ----------------------------------
+/**
+ * @brief related, a plugin for Dotclear 2
  *
- *  This file is part of Related, a plugin for DotClear2.
+ * @package Dotclear
+ * @subpackage Plugins
  *
- *  Licensed under the GPL version 2.0 license.
- *  See LICENSE file or
- *  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * @author Pep, Nicolas Roudaire and contributors
  *
- *  -- END LICENSE BLOCK ------------------------------------
+ * @copyright GPL-2.0 [https://www.gnu.org/licenses/gpl-2.0.html]
  */
 
 declare(strict_types=1);
@@ -25,16 +24,16 @@ use Exception;
 
 class ActionsRelatedPages extends ActionsPosts
 {
-    public const ADD_TO_WIDGET_ACTION = 'selected';
+    public const ADD_TO_WIDGET_ACTION      = 'selected';
     public const REMOVE_FROM_WIDGET_ACTION = 'unselected';
-    protected bool $use_render = true;
+    protected bool $use_render             = true;
 
     public function __construct(?string $uri, array $redirect_args = [])
     {
         parent::__construct($uri, $redirect_args);
 
         $this->redirect_fields = ['p', 'part'];
-        $this->caller_title = __('Related pages');
+        $this->caller_title    = __('Related pages');
 
         if (App::auth()->check(App::auth()->makePermissions([
             App::auth()::PERMISSION_PUBLISH,
@@ -42,9 +41,9 @@ class ActionsRelatedPages extends ActionsPosts
         ]), App::blog()->id())) {
             $this->addAction(
                 [__('Status') => [
-                    __('Publish') => 'publish',
-                    __('Unpublish') => 'unpublish',
-                    __('Schedule') => 'schedule',
+                    __('Publish')         => 'publish',
+                    __('Unpublish')       => 'unpublish',
+                    __('Schedule')        => 'schedule',
                     __('Mark as pending') => 'pending',
                 ]],
                 ActionsPostsDefault::doChangePostStatus(...)
@@ -64,7 +63,7 @@ class ActionsRelatedPages extends ActionsPosts
 
         $this->addAction(
             [__('Widget') => [
-                __('Add to widget') => self::ADD_TO_WIDGET_ACTION,
+                __('Add to widget')      => self::ADD_TO_WIDGET_ACTION,
                 __('Remove from widget') => self::REMOVE_FROM_WIDGET_ACTION,
             ]],
             ActionsPostsDefault::doUpdateSelectedPost(...)

@@ -1,14 +1,13 @@
 <?php
-/*
- *  -- BEGIN LICENSE BLOCK ----------------------------------
+/**
+ * @brief related, a plugin for Dotclear 2
  *
- *  This file is part of Related, a plugin for DotClear2.
+ * @package Dotclear
+ * @subpackage Plugins
  *
- *  Licensed under the GPL version 2.0 license.
- *  See LICENSE file or
- *  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * @author Pep, Nicolas Roudaire and contributors
  *
- *  -- END LICENSE BLOCK ------------------------------------
+ * @copyright GPL-2.0 [https://www.gnu.org/licenses/gpl-2.0.html]
  */
 
 declare(strict_types=1);
@@ -50,16 +49,15 @@ class Widgets
             return;
         }
 
-        if (($w->homeonly == 1 && App::url()->getType() != 'default') ||
-        ($w->homeonly == 2 && App::url()->getType() == 'default')) {
+        if (($w->homeonly == 1 && App::url()->getType() != 'default') || ($w->homeonly == 2 && App::url()->getType() == 'default')) {
             return;
         }
 
-        $params['post_type'] = 'related';
-        $params['no_content'] = true;
+        $params['post_type']     = 'related';
+        $params['no_content']    = true;
         $params['post_selected'] = true;
-        $params['limit'] = abs((integer) $w->limit);
-        $rs = App::blog()->getPosts($params);
+        $params['limit']         = abs((int) $w->limit);
+        $rs                      = App::blog()->getPosts($params);
         $rs->extend(RsRelated::class);
 
         if ($rs->isEmpty()) {

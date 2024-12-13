@@ -1,14 +1,13 @@
 <?php
-/*
- *  -- BEGIN LICENSE BLOCK ----------------------------------
+/**
+ * @brief related, a plugin for Dotclear 2
  *
- *  This file is part of Related, a plugin for DotClear2.
+ * @package Dotclear
+ * @subpackage Plugins
  *
- *  Licensed under the GPL version 2.0 license.
- *  See LICENSE file or
- *  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * @author Pep, Nicolas Roudaire and contributors
  *
- *  -- END LICENSE BLOCK ------------------------------------
+ * @copyright GPL-2.0 [https://www.gnu.org/licenses/gpl-2.0.html]
  */
 
 declare(strict_types=1);
@@ -28,8 +27,8 @@ class UrlHandler extends Url
 
         App::blog()->withoutPassword(false);
 
-        $params['post_url'] = $args;
-        $params['post_type'] = 'related';
+        $params['post_url']               = $args;
+        $params['post_type']              = 'related';
         App::frontend()->context()->posts = App::blog()->getPosts($params);
         App::frontend()->context()->posts->extend(RsRelated::class);
 
@@ -40,7 +39,7 @@ class UrlHandler extends Url
             self::p404();
         }
 
-        $post_id = App::frontend()->context()->posts->post_id;
+        $post_id       = App::frontend()->context()->posts->post_id;
         $post_password = App::frontend()->context()->posts->post_password;
 
         // Password protected entry
@@ -76,7 +75,7 @@ class UrlHandler extends Url
             // The specified Preview URL is malformed.
             self::p404();
         } else {
-            $user_id = $m[1];
+            $user_id  = $m[1];
             $user_key = $m[2];
             $post_url = $m[3];
             if (!App::auth()->checkUser($user_id, null, $user_key)) {

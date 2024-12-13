@@ -1,14 +1,13 @@
 <?php
-/*
- *  -- BEGIN LICENSE BLOCK ----------------------------------
+/**
+ * @brief related, a plugin for Dotclear 2
  *
- *  This file is part of Related, a plugin for DotClear2.
+ * @package Dotclear
+ * @subpackage Plugins
  *
- *  Licensed under the GPL version 2.0 license.
- *  See LICENSE file or
- *  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * @author Pep, Nicolas Roudaire and contributors
  *
- *  -- END LICENSE BLOCK ------------------------------------
+ * @copyright GPL-2.0 [https://www.gnu.org/licenses/gpl-2.0.html]
  */
 
 declare(strict_types=1);
@@ -25,25 +24,25 @@ class AdminBehaviors
     public static function dashboardFavorites(Favorites $favorites)
     {
         $favorites->register('related', [
-            'title' => __('Related pages'),
-            'url' => My::manageUrl(),
-            'small-icon' => [Page::getPF('related/icon.svg'), Page::getPF('related/icon-dark.svg')],
-            'large-icon' => [Page::getPF('related/icon.svg'), Page::getPF('related/icon-dark.svg')],
+            'title'       => __('Related pages'),
+            'url'         => My::manageUrl(),
+            'small-icon'  => [Page::getPF('related/icon.svg'), Page::getPF('related/icon-dark.svg')],
+            'large-icon'  => [Page::getPF('related/icon.svg'), Page::getPF('related/icon-dark.svg')],
             'permissions' => App::auth()->makePermissions([
-                Auth::PERMISSION_USAGE, Auth::PERMISSION_CONTENT_ADMIN
-            ])
+                Auth::PERMISSION_USAGE, Auth::PERMISSION_CONTENT_ADMIN,
+            ]),
         ]);
     }
 
     public static function dashboardFavsIcon($name, $icon)
     {
         if ($name === 'related') {
-            $params = [];
+            $params              = [];
             $params['post_type'] = 'related';
-            $page_count = App::blog()->getPosts($params, true)->f(0);
+            $page_count          = App::blog()->getPosts($params, true)->f(0);
             if ($page_count > 0) {
                 $str_pages = ($page_count > 1) ? __('%d related pages') : __('%d related page');
-                $icon[0] = sprintf($str_pages, $page_count);
+                $icon[0]   = sprintf($str_pages, $page_count);
             } else {
                 $icon[0] = __('Related pages');
             }
