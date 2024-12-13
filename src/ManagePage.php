@@ -366,7 +366,7 @@ class ManagePage extends Process
             Notices::message(__('Don\'t forget to validate your XHTML conversion by saving your post.'));
         }
 
-        Notices::GetNotices();
+        echo Notices::GetNotices();
 
         $status_combo = Combos::getPostStatusesCombo();
         $lang_combo = Combos::getLangsCombo(App::blog()->getLangs(['order' => 'asc']), true);
@@ -442,8 +442,6 @@ class ManagePage extends Process
                     form::textarea('post_content', 50, App::auth()->getOption('edit_size'), html::escapeHTML(self::$post->getPostContent())) .
                     '</p>';
             } else {
-                Page::helpBlock('post', 'page_relatedfile');
-
                 $main_items['post_content'] = '<div style="display:none">' .
                     form::textarea('post_content', 1, 1, html::escapeHTML(self::$post->getPostContent())) .
                     '</div>';
