@@ -21,7 +21,7 @@ $this->registerModule(
         'type' => 'plugin',
         'dc_min' => '2.32',
         'requires' => [['core', '2.32']],
-        'repository' => 'https://github.com/nikrou/related',
+        'repository' => 'https://github.com/Philippe-dev/related',
         'support' => 'http://forum.dotclear.net/viewtopic.php?id=48205',
         'details' => 'http://plugins.dotaddict.org/dc2/details/related'
     ]

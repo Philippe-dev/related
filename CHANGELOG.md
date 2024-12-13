@@ -1,3 +1,7 @@
+# related 2.1.1 - 2024-12-13
+
+- small fixes: notices on page edit and documentation
+
 # related 2.1.0 - 2024-12-13
 
 - Adapt plugin for dotclear 2.32. Thanks to [Philippe](https://github.com/Philippe-dev)
