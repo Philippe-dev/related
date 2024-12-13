@@ -496,9 +496,17 @@ class ManagePage extends Process
             '<input type="submit" value="' . __('Save') . ' (s)" accesskey="s" name="save" /> ';
 
             if (self::$post->getPostId()) {
-                $preview_url = App::blog()->url() . App::url()->getURLFor('relatedPreview', App::auth()->userID() . '/' .
-                Http::browserUID(DC_MASTER_KEY . App::auth()->userID() . App::auth()->getInfo('user_pwd')) .
-                '/' . self::$post->getPostUrl());
+                $preview_url = App::blog()->url() .
+                                    App::url()->getURLFor(
+                                        'relatedpreview',
+                                        App::auth()->userID() . '/' .
+                                        Http::browserUID(App::config()->masterKey() . App::auth()->userID() . App::auth()->cryptLegacy((string) App::auth()->userID())) .
+                                        '/' . self::$post->getPostUrl()
+                                    );
+
+                // Prevent browser caching on preview
+                $preview_url .= (parse_url($preview_url, PHP_URL_QUERY) ? '&' : '?') . 'rand=' . md5((string) random_int(0, mt_getrandmax()));
+
                 echo '<a id="post-preview" href="' . $preview_url . '" class="button modal" accesskey="p">' . __('Preview') . ' (p)' . '</a> ';
             } else {
                 echo

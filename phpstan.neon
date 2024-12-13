@@ -1,0 +1,17 @@
+includes:
+  - phpstan-baseline.neon
+
+parameters:
+  level: 5
+
+  bootstrapFiles:
+    - phpstan.bootstrap
+
+  paths:
+    - src
+
+  scanDirectories:
+    - ../dotclear
+
+  reportUnmatchedIgnoredErrors: true
+
