@@ -13,7 +13,7 @@ $this->registerModule(
     'Related pages', // Name
     'Serve pages & scripts', // Description
     'Pep, Nicolas Roudaire and contributors', // Author
-    '2.1.1', // Version
+    '2.2', // Version
     [
         'permissions' => 'My',
         'type'        => 'plugin',

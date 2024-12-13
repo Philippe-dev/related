@@ -150,7 +150,8 @@ class ManageRelatedPages extends Process
                 App::backend()->url()->getHiddenFormFields('admin.plugin.' . My::id(), App::backend()->related_filter->values()) .
                 App::nonce()->getFormNonce() .
                 '</p></div>' .
-                '</form>'
+                '</form>',
+                App::backend()->related_filter->show()
             );
         }
 
