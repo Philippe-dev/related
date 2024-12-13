@@ -10,8 +10,8 @@
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.2",
         "phpstan/extension-installer": "^1.0",
-        "phpstan/phpstan": "^1.1",
-        "rector/rector": "^0.18.10"
+        "phpstan/phpstan": "^2.0",
+        "rector/rector": "2.*"
     },
     "config": {
         "preferred-install": {
@@ -30,7 +30,6 @@
     },
     "scripts": {
         "phpstan": "phpstan analyse",
-        "rector": "rector process",
-        "psalm": "psalm"
+        "rector": "rector process"
     }
 }

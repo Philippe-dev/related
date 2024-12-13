@@ -24,6 +24,7 @@ class PagesHelper
             return;
         }
 
+        /** @var array $res */
         $res = [];
         while ($rs->fetch()) {
             if ($rs->post_status != Blog::POST_PUBLISHED) {
@@ -46,7 +47,7 @@ class PagesHelper
                 'order' => $pos
             ];
         }
-        usort($res, [self::class, 'orderCallBack']);
+        usort($res, self::orderCallBack(...));
 
         return $res;
     }

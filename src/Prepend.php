@@ -32,12 +32,12 @@ class Prepend extends Process
         }
 
         if (My::settings()->active) {
-            $url_prefix  = My::settings()->url_prefix;
-            $url_prefix  = (empty($url_prefix)) ? 'static' : $url_prefix;
+            $url_prefix = My::settings()->url_prefix;
+            $url_prefix = (empty($url_prefix)) ? 'static' : $url_prefix;
             $url_pattern = $url_prefix . '/(.+)$';
 
-            App::url()->register('related', $url_prefix, $url_pattern, [UrlHandler::class, 'related']);
-            App::url()->register('relatedpreview', 'relatedpreview', '^relatedpreview/(.+)$', [UrlHandler::class, 'relatedpreview']);
+            App::url()->register('related', $url_prefix, $url_pattern, UrlHandler::related(...));
+            App::url()->register('relatedpreview', 'relatedpreview', '^relatedpreview/(.+)$', UrlHandler::relatedpreview(...));
             unset($url_prefix, $url_pattern);
 
             // Registering new post_type

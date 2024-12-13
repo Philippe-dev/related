@@ -19,12 +19,14 @@ use Dotclear\Core\Backend\Action\ActionsPosts;
 use Dotclear\Core\Backend\Action\ActionsPostsDefault;
 use Dotclear\Core\Backend\Page;
 use Dotclear\App;
+use Dotclear\Core\Backend\Notices;
+use Dotclear\Plugin\pages\BackendActions;
+use Exception;
 
 class ActionsRelatedPages extends ActionsPosts
 {
-    public const ADD_TO_WIDGET_ACTION      = 'selected';
+    public const ADD_TO_WIDGET_ACTION = 'selected';
     public const REMOVE_FROM_WIDGET_ACTION = 'unselected';
-
     protected bool $use_render = true;
 
     public function __construct(?string $uri, array $redirect_args = [])
@@ -32,7 +34,7 @@ class ActionsRelatedPages extends ActionsPosts
         parent::__construct($uri, $redirect_args);
 
         $this->redirect_fields = ['p', 'part'];
-        $this->caller_title    = __('Related pages');
+        $this->caller_title = __('Related pages');
 
         if (App::auth()->check(App::auth()->makePermissions([
             App::auth()::PERMISSION_PUBLISH,
@@ -40,32 +42,32 @@ class ActionsRelatedPages extends ActionsPosts
         ]), App::blog()->id())) {
             $this->addAction(
                 [__('Status') => [
-                    __('Publish')         => 'publish',
-                    __('Unpublish')       => 'unpublish',
-                    __('Schedule')        => 'schedule',
+                    __('Publish') => 'publish',
+                    __('Unpublish') => 'unpublish',
+                    __('Schedule') => 'schedule',
                     __('Mark as pending') => 'pending',
                 ]],
-                [ActionsPostsDefault::class, 'doChangePostStatus']
+                ActionsPostsDefault::doChangePostStatus(...)
             );
         }
 
         if (App::auth()->check(App::auth()->makePermissions([
             App::auth()::PERMISSION_DELETE,
             App::auth()::PERMISSION_CONTENT_ADMIN,
-        ]), App::blog()->id)) {
+        ]), App::blog()->id())) {
             $this->addAction(
                 [__('Delete') => [
                     __('Delete') => 'delete', ]],
-                [ActionsPostsDefault::class, 'doDeletePost']
+                ActionsPostsDefault::doDeletePost(...)
             );
         }
 
         $this->addAction(
             [__('Widget') => [
-                __('Add to widget')      => self::ADD_TO_WIDGET_ACTION,
+                __('Add to widget') => self::ADD_TO_WIDGET_ACTION,
                 __('Remove from widget') => self::REMOVE_FROM_WIDGET_ACTION,
             ]],
-            [ActionsPostsDefault::class, 'doUpdateSelectedPost']
+            ActionsPostsDefault::doUpdateSelectedPost(...)
         );
     }
 
@@ -106,15 +108,15 @@ class ActionsRelatedPages extends ActionsPosts
         }
         // Backward compatibility
         foreach ($ids as $id) {
-            # --BEHAVIOR-- adminBeforePostDelete -- int
+            // --BEHAVIOR-- adminBeforePostDelete -- int
             App::behavior()->callBehavior('adminBeforePostDelete', (int) $id);
         }
 
-        # --BEHAVIOR-- adminBeforePostsDelete -- array<int,string>
+        // --BEHAVIOR-- adminBeforePostsDelete -- array<int,string>
         App::behavior()->callBehavior('adminBeforePostsDelete', $ids);
 
         App::blog()->delPosts($ids);
-        Page::addSuccessNotice(
+        Notices::addSuccessNotice(
             sprintf(
                 __(
                     '%d page has been successfully deleted',

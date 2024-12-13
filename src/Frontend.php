@@ -31,14 +31,14 @@ class Frontend extends Process
             return false;
         }
 
-        App::behavior()->addBehavior('coreBlogGetPosts', [PublicBehaviors::class, 'coreBlogGetPosts']);
-        App::behavior()->addBehavior('publicBeforeDocument', [PublicBehaviors::class, 'publicBeforeDocument']);
-        App::behavior()->addBehavior('templateBeforeBlock', [PublicBehaviors::class, 'templateBeforeBlock']);
+        App::behavior()->addBehavior('coreBlogGetPosts', PublicBehaviors::coreBlogGetPosts(...));
+        App::behavior()->addBehavior('publicBeforeDocument', PublicBehaviors::publicBeforeDocument(...));
+        App::behavior()->addBehavior('templateBeforeBlock', PublicBehaviors::templateBeforeBlock(...));
 
-        App::frontend()->template()->addValue('EntryContent', [Templates::class, 'PageContent']);
+        App::frontend()->template()->addValue('EntryContent', Templates::PageContent(...));
 
-        App::behavior()->addBehavior('initWidgets', [Widgets::class, 'init']);
-        App::behavior()->addBehavior('initDefaultWidgets', [Widgets::class, 'initDefaultWidgets']);
+        App::behavior()->addBehavior('initWidgets', Widgets::init(...));
+        App::behavior()->addBehavior('initDefaultWidgets', Widgets::initDefaultWidgets(...));
 
         return true;
     }

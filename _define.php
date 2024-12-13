@@ -11,17 +11,16 @@
  *  -- END LICENSE BLOCK ------------------------------------
  */
 
-
 $this->registerModule(
     "Related pages", // Name
     "Serve pages & scripts", // Description
     "Pep, contributors, Nicolas Roudaire", // Author
-    '2.0.2', // Version
+    '2.1.0', // Version
     [
         'permissions' => 'My',
         'type' => 'plugin',
-        'dc_min' => '2.28',
-        'requires' => [['core', '2.28']],
+        'dc_min' => '2.32',
+        'requires' => [['core', '2.32']],
         'repository' => 'https://github.com/nikrou/related',
         'support' => 'http://forum.dotclear.net/viewtopic.php?id=48205',
         'details' => 'http://plugins.dotaddict.org/dc2/details/related'
