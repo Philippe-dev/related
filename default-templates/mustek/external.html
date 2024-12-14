@@ -1,28 +1,28 @@
 <!DOCTYPE html>
 <html lang="{{tpl:BlogLanguage}}">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="ROBOTS" content="{{tpl:BlogMetaRobots}}" />
+    <meta charset="UTF-8">
+    <meta name="ROBOTS" content="{{tpl:BlogMetaRobots}}">
 
     <title>{{tpl:EntryTitle encode_html="1"}} - {{tpl:BlogName encode_html="1"}}</title>
-    <meta name="copyright" content="{{tpl:BlogCopyrightNotice encode_html="1"}}" />
-    <meta name="author" content="{{tpl:EntryAuthorCommonName encode_html="1"}}" />
-    <meta name="date" content="{{tpl:EntryDate iso8601="1"}}" />
+    <meta name="copyright" content="{{tpl:BlogCopyrightNotice encode_html="1"}}">
+    <meta name="author" content="{{tpl:EntryAuthorCommonName encode_html="1"}}">
+    <meta name="date" content="{{tpl:EntryDate iso8601="1"}}">
 
-    <link rel="schema.dc" href="http://purl.org/dc/elements/1.1/" />
-    <meta property="dc.title" content="{{tpl:EntryTitle encode_html="1"}}" />
-    <meta property="dc.creator" content="{{tpl:EntryAuthorCommonName encode_html="1"}}" />
-    <meta property="dc.language" content="{{tpl:EntryLang}}" />
-    <meta property="dc.publisher" content="{{tpl:BlogEditor encode_html="1"}}" />
-    <meta property="dc.rights" content="{{tpl:BlogCopyrightNotice encode_html="1"}}" />
-    <meta property="dc.date" content="{{tpl:EntryDate iso8601="1"}}" />
-    <meta property="dc.type" content="text" />
-    <meta property="dc.format" content="text/html" />
+    <link rel="schema.dc" href="http://purl.org/dc/elements/1.1/">
+    <meta property="dc.title" content="{{tpl:EntryTitle encode_html="1"}}">
+    <meta property="dc.creator" content="{{tpl:EntryAuthorCommonName encode_html="1"}}">
+    <meta property="dc.language" content="{{tpl:EntryLang}}">
+    <meta property="dc.publisher" content="{{tpl:BlogEditor encode_html="1"}}">
+    <meta property="dc.rights" content="{{tpl:BlogCopyrightNotice encode_html="1"}}">
+    <meta property="dc.date" content="{{tpl:EntryDate iso8601="1"}}">
+    <meta property="dc.type" content="text">
+    <meta property="dc.format" content="text/html">
 
-    <link rel="top" href="{{tpl:BlogURL}}" title="{{tpl:lang Home}}" />
-    <link rel="contents" href="{{tpl:BlogArchiveURL}}" title="{{tpl:lang Archives}}" />
+    <link rel="top" href="{{tpl:BlogURL}}" title="{{tpl:lang Home}}">
+    <link rel="contents" href="{{tpl:BlogArchiveURL}}" title="{{tpl:lang Archives}}">
 
-    <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="{{tpl:BlogFeedURL type="atom"}}" />
+    <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="{{tpl:BlogFeedURL type="atom"}}">
 
     {{tpl:include src="_head.html"}}
   </head>

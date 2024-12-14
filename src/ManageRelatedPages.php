@@ -146,7 +146,7 @@ class ManageRelatedPages extends Process
                 '<p class="col right">' .
                 '<label for="action" class="classic">' . __('Selected entries action:') . '</label>' .
                 form::combo('action', App::backend()->related_actions->getCombo()) .
-                '<input id="do-action" type="submit" value="' . __('ok') . '" />' .
+                '<input id="do-action" type="submit" value="' . __('ok') . '">' .
                 App::backend()->url()->getHiddenFormFields('admin.plugin.' . My::id(), App::backend()->related_filter->values()) .
                 App::nonce()->getFormNonce() .
                 '</p></div>' .
@@ -189,7 +189,7 @@ class ManageRelatedPages extends Process
             echo '</table>';
             echo '<p>';
             echo form::hidden(['public_order'], '');
-            echo '<input type="submit" name="pages_upd" value="', __('Save'), '" />' .
+            echo '<input type="submit" name="pages_upd" value="', __('Save'), '">' .
             App::nonce()->getFormNonce() ;
             echo '</p>';
             echo '<p class="col checkboxes-helpers"></p>';

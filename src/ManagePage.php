@@ -456,7 +456,7 @@ class ManagePage extends Process
                     '</label></p>' .
                     form::hidden(['MAX_FILE_SIZE'], DC_MAX_UPLOAD_SIZE) .
                     '<p><label>' . __('or upload a new file') . ' ' .
-                    '<input type="file" page_relid="up_file" name="up_file" />' .
+                    '<input type="file" page_relid="up_file" name="up_file">' .
                     '</label></p>' .
                     '</div>' .
                     form::hidden('part', 'page') .
@@ -472,7 +472,7 @@ class ManagePage extends Process
 
             if (self::$post->getPostId() && self::$post->getPostStatus() === Blog::POST_PUBLISHED) {
                 echo '<p><a class="onblog_link outgoing" href="', self::$post_url, '" title="' . Html::escapeHTML(trim(Html::clean(self::$post->getPostTitle()))), '">';
-                echo __('Go to this related page on the site'), ' <img src="images/outgoing-link.svg" alt="" /></a></p>';
+                echo __('Go to this related page on the site'), ' <img src="images/outgoing-link.svg" alt=""></a></p>';
             }
 
             echo '<div class="multi-part" title="' . (self::$post->getPostId() ? __('Edit page') : __('New page')) . '" id="edit-entry">';
@@ -494,7 +494,7 @@ class ManagePage extends Process
             (self::$post->getPostId() ? form::hidden('id', self::$post->getPostId()) : '') .
             form::hidden('part', 'page') .
             App::nonce()->getFormNonce() .
-            '<input type="submit" value="' . __('Save') . ' (s)" accesskey="s" name="save" /> ';
+            '<input type="submit" value="' . __('Save') . ' (s)" accesskey="s" name="save"> ';
 
             if (self::$post->getPostId()) {
                 $preview_url = App::blog()->url() .
@@ -515,7 +515,7 @@ class ManagePage extends Process
             }
 
             echo
-                (self::$permissions['can_delete'] ? '<input type="submit" class="delete" value="' . __('Delete') . '" name="delete" />' : '') .
+                (self::$permissions['can_delete'] ? '<input type="submit" class="delete" value="' . __('Delete') . '" name="delete">' : '') .
                 '</p>';
 
             echo '</div></div>';		// End #entry-content
@@ -557,7 +557,7 @@ class ManagePage extends Process
         }
 
         $img_status         = '';
-        $img_status_pattern = '<img class="img_select_option mark mark-%3$s" alt="%1$s" title="%1$s" src="images/%2$s" />';
+        $img_status_pattern = '<img class="img_select_option mark mark-%3$s" alt="%1$s" title="%1$s" src="images/%2$s">';
 
         $img_status = match (self::$post->getPostStatus()) {
             Blog::POST_PUBLISHED   => sprintf($img_status_pattern, __('Published'), 'check-on.svg', 'published'),
