@@ -196,7 +196,7 @@ msgstr "La page a été supprimée."
 
 #: src/ManagePage.php:451
 msgid "Included file:"
-msgstr "Page incluse :"
+msgstr "Fichier inclus :"
 
 #: src/ManagePage.php:454
 msgid "Pick up a local file in your related pages repository"

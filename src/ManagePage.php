@@ -448,8 +448,8 @@ class ManagePage extends Process
                 $main_items['post_content'] = '<div style="display:none">' .
                     form::textarea('post_content', 1, 1, html::escapeHTML(self::$post->getPostContent())) .
                     '</div>';
-                $main_items['is_file'] = '<p class="col"><label class="required" title="' . __('Required field') . '" ' .
-                    'for="repository_file">' . __('Included file:') . '</label></p>' .
+                $main_items['is_file'] = '<p class="col"><label class="required no-margin bold" title="' . __('Required field') . '" ' .
+                    'for="repository_file"><abbr title="' . __('Required field') . '">*</abbr> ' . __('Included file:') . '</label></p>' .
                     '<div class="fieldset">' .
                     '<p><label>' . __('Pick up a local file in your related pages repository') . ' ' .
                     form::combo('repository_file', self::$related_pages_files, self::$page_related_file) .
