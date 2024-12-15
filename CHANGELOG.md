@@ -1,6 +1,10 @@
+# related 2.3 - 2024-12-15
+
+- Small fixes, html5 compliant, cleanup
+
 # related 2.1.1 - 2024-12-13
 
-- small fixes: notices on page edit and documentation
+- Fix page preview and delete in page edit
 
 # related 2.1.0 - 2024-12-13
 

@@ -9,11 +9,12 @@
  *
  * @copyright GPL-2.0 [https://www.gnu.org/licenses/gpl-2.0.html]
  */
-$this->registerModule(
+
+ $this->registerModule(
     'Related pages', // Name
     'Serve pages & scripts', // Description
     'Pep, Nicolas Roudaire and contributors', // Author
-    '2.2', // Version
+    '2.3', // Version
     [
         'permissions' => 'My',
         'type'        => 'plugin',
