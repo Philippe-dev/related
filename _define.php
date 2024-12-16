@@ -14,7 +14,7 @@
     'Related pages', // Name
     'Serve pages & scripts', // Description
     'Pep, Nicolas Roudaire and contributors', // Author
-    '2.3', // Version
+    '2.4', // Version
     [
         'permissions' => 'My',
         'type'        => 'plugin',

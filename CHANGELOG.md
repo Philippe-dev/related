@@ -1,3 +1,7 @@
+# related 2.4 - 2024-12-16
+
+- Rebuild translations
+
 # related 2.3 - 2024-12-15
 
 - Small fixes, html5 compliant, cleanup

@@ -1,192 +1,106 @@
 # Language: Français
-# Module: related - 1.8.2
-# Date: 2015-03-24 17:23:51
+# Module: related - 2.3
+# Date: 2024-12-16 09:02:02
+# Translated with translater 2023.11.04
+
 msgid ""
 msgstr ""
-"Project-Id-Version: related 1.8.2\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-20 18:29+0200\n"
-"PO-Revision-Date: \n"
-"Last-Translator: Nicolas <nikrou77@gmail.com>\n"
-"Language-Team: Nicolas <nikrou77@gmail.com>\n"
-"Language: fr\n"
-"MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
+"Project-Id-Version: related 2.3\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2024-12-16T09:02:02+00:00\n"
+"Last-Translator: Philippe\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: src/ManageRelatedPages.php:93
-msgid "Pages list has been sorted."
-msgstr "La liste des pages connexes a été réordonnée."
-
-#: src/ManageRelatedPages.php:116 src/ManageRelatedPages.php:126
-#: src/Widgets.php:32 src/Widgets.php:33 src/AdminBehaviors.php:28
-#: src/AdminBehaviors.php:48 src/ActionsRelatedPages.php:35
-#: src/ActionsRelatedPages.php:67 src/ManagePage.php:358
+#: src/ActionsRelatedPages.php:36
+#: src/AdminBehaviors.php:27
+#: src/ManagePage.php:359
+#: src/ManageRelatedPages.php:114
+#: src/Widgets.php:31
 msgid "Related pages"
 msgstr "Pages connexes"
 
-#: src/ManageRelatedPages.php:131
-msgid "Manage pages"
-msgstr "Gérer les pages"
-
-#: src/ManageRelatedPages.php:135
-msgid "New post as page"
-msgstr "Nouvelle page d'après un billet"
-
-#: src/ManageRelatedPages.php:136
-msgid "New included page"
-msgstr "Nouvelle page incluse"
-
-#: src/ManageRelatedPages.php:149
-msgid "Selected entries action:"
-msgstr "Action sur les entrées sélectionnées :"
-
-#: src/ManageRelatedPages.php:161
-msgid "Arrange public list"
-msgstr "Ordonner la liste publique"
-
-#: src/ManageRelatedPages.php:169
-msgid "Order"
-msgstr "Trier"
-
-#: src/ManageRelatedPages.php:170
-msgid "Visible page in widget"
-msgstr "Page visible dans le widget"
-
-#: src/ManageRelatedPages.php:171
-msgid "Page title"
-msgstr "Titre de la page"
-
-#: src/ManageRelatedPages.php:193 src/ManagePage.php:496
-msgid "Save"
-msgstr "Enregistrer"
-
-#: src/ManageRelatedPages.php:198 src/ListingRelatedPages.php:31
-msgid "No page"
-msgstr "Aucune page"
-
-#: src/Widgets.php:34
-msgid "Pages limit:"
-msgstr "Limite du nombre de pages :"
-
-#: src/AdminBehaviors.php:45
-#, php-format
-msgid "%d related pages"
-msgstr "%d pages connexes"
-
-#: src/AdminBehaviors.php:45
-#, php-format
-msgid "%d related page"
-msgstr "%d pages connexe"
-
-#: src/ListingRelatedPages.php:37
-msgid "Title"
-msgstr "Titre"
-
-#: src/ListingRelatedPages.php:38
-msgid "Date"
-msgstr "Date"
-
-#: src/ListingRelatedPages.php:39
-#, fuzzy
-msgid "Author"
-msgstr "Auteur"
-
-#: src/ListingRelatedPages.php:40
-msgid "Type"
-msgstr "Type"
-
-#: src/ListingRelatedPages.php:104 src/ManagePage.php:410
-msgid "In widget"
-msgstr "Dans le widget"
-
-#: src/ListingRelatedPages.php:110
-msgid "included page"
-msgstr "page incluse"
-
-#: src/ListingRelatedPages.php:110
-msgid "post as page"
-msgstr "page d'après un billet"
-
-#: src/ListingRelatedPages.php:120
-msgid "%Y-%m-%d %H:%M"
-msgstr "%Y-%m-%d %H:%M"
-
-#: src/ActionsRelatedPages.php:54
+#: src/ActionsRelatedPages.php:66
 msgid "Add to widget"
 msgstr "Ajouter au widget"
 
-#: src/ActionsRelatedPages.php:55
+#: src/ActionsRelatedPages.php:67
 msgid "Remove from widget"
 msgstr "Enlever du widget"
 
-#: src/ActionsRelatedPages.php:68
+#: src/ActionsRelatedPages.php:80
 msgid "Back to related page list"
 msgstr "Retour à la liste des pages"
 
-#: src/FilterPages.php:142
-msgid "In widget:"
-msgstr "Dans le widget"
+#: src/ActionsRelatedPages.php:106
+msgid "No page selected"
+msgstr "Aucune page sélectionnée"
 
-#: src/Config.php:81
-#, php-format
-msgid ""
-"Directory \"%s\" for related files repository needs to allow read and write "
-"access."
-msgstr ""
-"Le répertoire \"%s\" pour le dépôt des fichiers liés nécessite un accès en "
-"lecture et écriture."
+#: src/AdminBehaviors.php:44
+msgid "%d related pages"
+msgstr "%d pages connexes"
 
-#: src/Config.php:87
+#: src/AdminBehaviors.php:44
+msgid "%d related page"
+msgstr "%d pages connexe"
+
+#: src/Config.php:82
+msgid "Directory \"%s\" for related files repository needs to allow read and write access."
+msgstr "Le répertoire \"%s\" pour le dépôt des fichiers liés nécessite un accès en lecture et écriture."
+
+#: src/Config.php:88
 msgid "Configuration has been updated."
 msgstr "La configuration a été mise à jour."
 
-#: src/Config.php:111
-msgid "Plugin activation"
-msgstr "Activation du plugin"
-
-#: src/Config.php:114
+#: src/Config.php:115
 msgid "Enable Related plugin"
 msgstr "Activer le plugin pages connexes"
 
-#: src/Config.php:122
+#: src/Config.php:123
 msgid "General options"
 msgstr "Options générales"
 
-#: src/Config.php:124
+#: src/Config.php:125
 msgid "Repository path:"
 msgstr "Chemin du dépôt des pages incluses :"
 
-#: src/Config.php:132
+#: src/Config.php:133
 msgid "Advanced options"
 msgstr "Options avancées"
 
-#: src/Config.php:134
+#: src/Config.php:135
 msgid "URL prefix:"
 msgstr "Préfixe d'URL :"
 
-#: src/ManagePage.php:82 src/ManagePage.php:478
-msgid "New page"
-msgstr "Nouvelle page"
+#: src/FilterPages.php:143
+msgid "In widget:"
+msgstr "Dans le widget"
 
-#: src/ManagePage.php:105
-msgid "This page does not exist."
-msgstr "Cette page n'existe pas."
+#: src/ListingRelatedPages.php:70
+#: src/ManagePage.php:411
+msgid "In widget"
+msgstr "Dans le widget"
 
-#: src/ManagePage.php:110 src/ManagePage.php:478
-msgid "Edit page"
-msgstr "Éditer la page"
+#: src/ListingRelatedPages.php:117
+msgid "included page"
+msgstr "page incluse"
 
-#: src/ManagePage.php:235 src/ManagePage.php:275
+#: src/ListingRelatedPages.php:117
+msgid "post as page"
+msgstr "page d'après un billet"
+
+#: src/ManagePage.php:234
 msgid "Missing file."
 msgstr "Fichier manquant."
 
-#: src/ManagePage.php:262
+#: src/ManagePage.php:261
 msgid "Page has been updated."
 msgstr "La page a été mise à jour."
 
-#: src/ManagePage.php:301
+#: src/ManagePage.php:300
 msgid "Page has been created."
 msgstr "La page a été créée."
 
@@ -194,7 +108,11 @@ msgstr "La page a été créée."
 msgid "Page has been deleted."
 msgstr "La page a été supprimée."
 
-#: src/ManagePage.php:451
+#: src/ManagePage.php:405
+msgid "Convert to XHTML"
+msgstr "Convertir en XHTML"
+
+#: src/ManagePage.php:452
 msgid "Included file:"
 msgstr "Fichier inclus :"
 
@@ -209,4 +127,32 @@ msgstr "ou téléchargez un nouveau fichier"
 #: src/ManagePage.php:475
 msgid "Go to this related page on the site"
 msgstr "Voir cette page connexe sur le site"
+
+#: src/ManageRelatedPages.php:91
+msgid "Pages list has been sorted."
+msgstr "La liste des pages connexes a été réordonnée."
+
+#: src/ManageRelatedPages.php:129
+msgid "Manage pages"
+msgstr "Gérer les pages"
+
+#: src/ManageRelatedPages.php:133
+msgid "New post as page"
+msgstr "Nouvelle page d'après un billet"
+
+#: src/ManageRelatedPages.php:134
+msgid "New included page"
+msgstr "Nouvelle page incluse"
+
+#: src/ManageRelatedPages.php:160
+msgid "Arrange public list"
+msgstr "Ordonner la liste publique"
+
+#: src/ManageRelatedPages.php:169
+msgid "Visible page in widget"
+msgstr "Page visible dans le widget"
+
+#: src/Widgets.php:33
+msgid "Pages limit:"
+msgstr "Limite du nombre de pages :"
 
