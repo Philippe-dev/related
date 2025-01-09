@@ -17,7 +17,7 @@ namespace Dotclear\Plugin\related;
 use ArrayObject;
 use Exception;
 use Dotclear\Core\Backend\Combos;
-use Dotclear\Core\Backend\Filter\Filter;
+use Dotclear\Helper\Stack\Filter;
 use Dotclear\Core\Backend\Filter\Filters;
 use Dotclear\Core\Backend\Filter\FiltersLibrary;
 use Dotclear\App;
