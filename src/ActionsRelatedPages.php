@@ -39,13 +39,12 @@ class ActionsRelatedPages extends ActionsPosts
             App::auth()::PERMISSION_PUBLISH,
             App::auth()::PERMISSION_CONTENT_ADMIN,
         ]), App::blog()->id())) {
+            $actions = [];
+            foreach (App::status()->post()->dump(false) as $status) {
+                $actions[__($status->name())] = $status->id();
+            }
             $this->addAction(
-                [__('Status') => [
-                    __('Publish')         => 'publish',
-                    __('Unpublish')       => 'unpublish',
-                    __('Schedule')        => 'schedule',
-                    __('Mark as pending') => 'pending',
-                ]],
+                [__('Status') => $actions],
                 ActionsPostsDefault::doChangePostStatus(...)
             );
         }
