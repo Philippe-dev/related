@@ -16,6 +16,7 @@
     'Pep, Nicolas Roudaire and contributors', // Author
     '2.6', // Version
     [
+        'date'     => '2025-02-06T00:00:17+0100',
         'permissions' => 'My',
         'type'        => 'plugin',
         'dc_min'      => '2.33',
