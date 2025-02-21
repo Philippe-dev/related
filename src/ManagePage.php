@@ -254,9 +254,9 @@ class ManagePage extends Process
                     App::con()->commit();
 
                     // --BEHAVIOR-- adminAfterPostUpdate
-                    App::behavior()->callBehavior('adminAfterPostUpdate', $cur, $post_id);
+                    App::behavior()->callBehavior('adminAfterPostUpdate', $cur, (int) App::backend()->post_id);
                     // --BEHAVIOR-- adminAfterPageUpdate
-                    App::behavior()->callBehavior('adminAfterPageUpdate', $cur, $post_id);
+                    App::behavior()->callBehavior('adminAfterPageUpdate', $cur, (int) App::backend()->post_id);
 
                     Notices::addSuccessNotice(__('Page has been updated.'));
                     My::redirect(['part' => 'page', 'id' => $post_id]);
