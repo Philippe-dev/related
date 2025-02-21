@@ -535,7 +535,8 @@ class ManagePage extends Process
             }
 
             // --BEHAVIOR-- adminPostFormSidebar (may be deprecated)
-            App::behavior()->callBehavior('adminPostFormSidebar', self::$post ?? null);
+            App::behavior()->callBehavior('adminPostFormSidebar', App::backend()->post ?? null, 'post');
+
             echo '</div>';		// End #entry-sidebar
 
             echo '</form>';
