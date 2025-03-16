@@ -25,6 +25,7 @@ use Dotclear\Helper\Html\Form\Input;
 use Dotclear\Helper\Html\Form\Label;
 use Dotclear\Helper\Html\Form\Legend;
 use Dotclear\Helper\Html\Form\Para;
+use Dotclear\Helper\Html\Form\Note;
 use Dotclear\Helper\Text;
 use Dotclear\App;
 
@@ -134,6 +135,9 @@ class Config extends Process
                     (new Para())->items([
                         (new Label(__('URL prefix:'), Label::OUTSIDE_LABEL_AFTER))->for('related_url_prefix')->class('classic'),
                         (new Input('related_url_prefix', (string) $settings->url_prefix))->size(80)->max(255)->value($settings->url_prefix),
+                        (new Note())
+                            ->class(['form-note', 'warning'])
+                            ->text(__('This prefix will be used to generate the pages URLs. Do not use any existing prefix such as post, category or page.')),
                     ]),
                 ]),
             ])->render();

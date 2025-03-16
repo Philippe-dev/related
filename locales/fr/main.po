@@ -1,14 +1,14 @@
 # Language: Français
-# Module: related - 2.3
-# Date: 2024-12-16 09:02:02
-# Translated with translater 2023.11.04
+# Module: related - 2.7
+# Date: 2025-03-16 10:47:27
+# Translated with translater 2025.03.03
 
 msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
-"Project-Id-Version: related 2.3\n"
+"Project-Id-Version: related 2.7\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2024-12-16T09:02:02+00:00\n"
+"PO-Revision-Date: 2025-03-16T10:47:27+00:00\n"
 "Last-Translator: Philippe\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -23,19 +23,19 @@ msgstr ""
 msgid "Related pages"
 msgstr "Pages connexes"
 
-#: src/ActionsRelatedPages.php:66
+#: src/ActionsRelatedPages.php:65
 msgid "Add to widget"
 msgstr "Ajouter au widget"
 
-#: src/ActionsRelatedPages.php:67
+#: src/ActionsRelatedPages.php:66
 msgid "Remove from widget"
 msgstr "Enlever du widget"
 
-#: src/ActionsRelatedPages.php:80
+#: src/ActionsRelatedPages.php:79
 msgid "Back to related page list"
 msgstr "Retour à la liste des pages"
 
-#: src/ActionsRelatedPages.php:106
+#: src/ActionsRelatedPages.php:105
 msgid "No page selected"
 msgstr "Aucune page sélectionnée"
 
@@ -47,37 +47,45 @@ msgstr "%d pages connexes"
 msgid "%d related page"
 msgstr "%d pages connexe"
 
-#: src/Config.php:82
+#: src/Config.php:83
 msgid "Directory \"%s\" for related files repository needs to allow read and write access."
 msgstr "Le répertoire \"%s\" pour le dépôt des fichiers liés nécessite un accès en lecture et écriture."
 
-#: src/Config.php:88
+#: src/Config.php:89
 msgid "Configuration has been updated."
 msgstr "La configuration a été mise à jour."
 
-#: src/Config.php:115
+#: src/Config.php:116
 msgid "Enable Related plugin"
 msgstr "Activer le plugin pages connexes"
 
-#: src/Config.php:123
+#: src/Config.php:124
 msgid "General options"
 msgstr "Options générales"
 
-#: src/Config.php:125
+#: src/Config.php:126
 msgid "Repository path:"
 msgstr "Chemin du dépôt des pages incluses :"
 
-#: src/Config.php:133
+#: src/Config.php:134
 msgid "Advanced options"
 msgstr "Options avancées"
 
-#: src/Config.php:135
+#: src/Config.php:136
 msgid "URL prefix:"
 msgstr "Préfixe d'URL :"
+
+#: src/Config.php:140
+msgid "This prefix will be used to generate the pages URLs. Do not use any existing prefix such as post, category or page."
+msgstr "Ce préfixe sera utilisé pour générer les URLs des pages. N'utilisez pas un préfixe existant tel que post, category ou page."
 
 #: src/FilterPages.php:143
 msgid "In widget:"
 msgstr "Dans le widget"
+
+#: src/Install.php:40
+msgid "Directory for related files repository needs to allow read and write access."
+msgstr "Le répertoire des pages connexes doit être accessible en lecture et écriture."
 
 #: src/ListingRelatedPages.php:70
 #: src/ManagePage.php:411
