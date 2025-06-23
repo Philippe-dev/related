@@ -14,90 +14,223 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\related;
 
-use Dotclear\App;
-use Dotclear\Core\Blog;
-use Dotclear\Core\Backend\Listing\Listing;
-use Dotclear\Helper\Html\Html;
-use Dotclear\Core\Backend\Listing\Pager;
-use Dotclear\Helper\Date;
-use form;
 
+use ArrayObject;
+use Dotclear\App;
+use Dotclear\Core\Backend\Listing\Pager;
+use Dotclear\Core\Backend\Listing\Listing;
+use Dotclear\Helper\Date;
+use Dotclear\Helper\Html\Form\Checkbox;
+use Dotclear\Helper\Html\Form\Div;
+use Dotclear\Helper\Html\Form\Img;
+use Dotclear\Helper\Html\Form\Link;
+use Dotclear\Helper\Html\Form\Number;
+use Dotclear\Helper\Html\Form\Para;
+use Dotclear\Helper\Html\Form\Span;
+use Dotclear\Helper\Html\Form\Strong;
+use Dotclear\Helper\Html\Form\Table;
+use Dotclear\Helper\Html\Form\Tbody;
+use Dotclear\Helper\Html\Form\Td;
+use Dotclear\Helper\Html\Form\Text;
+use Dotclear\Helper\Html\Form\Th;
+use Dotclear\Helper\Html\Form\Thead;
+use Dotclear\Helper\Html\Form\Timestamp;
+use Dotclear\Helper\Html\Form\Tr;
+use Dotclear\Helper\Html\Html;
+
+/**
+ * @brief   The module backend pages listing.
+ * @ingroup pages
+ */
 class ListingRelatedPages extends Listing
 {
-    public function display(int $page, ?int $nb_per_page, string $enclose_block = '')
+    /**
+     * Display a list of pages.
+     *
+     * @param   int     $page           The page
+     * @param   int     $nb_per_page    The number of per page
+     * @param   string  $enclose_block  The enclose block
+     * @param   bool    $include_type   Include the post type column
+     */
+    public function display(int $page, int $nb_per_page, string $enclose_block = '', bool $include_type = false): void
     {
         if ($this->rs->isEmpty()) {
-            echo '<p><strong>' . __('No page') . '</strong></p>';
-        } else {
-            $pager           = new Pager($page, $this->rs_count, $nb_per_page, 10);
-            $pager->var_page = 'page';
+            echo (new Para())
+                ->items([
+                    (new Strong(__('No page'))),
+                ])
+            ->render();
 
-            $columns = [
-                '<th colspan="2">' . __('Title') . '</th>',
-                '<th>' . __('Date') . '</th>',
-                '<th>' . __('Author') . '</th>',
-                '<th>' . __('Type') . '</th>' .
-                '<th>' . __('Status') . '</th>',
-            ];
-
-            $html_block = '<table class="clear"><tr>' .
-            join('', $columns) .
-            '</tr>%s</table>';
-
-            if ($enclose_block) {
-                $html_block = sprintf($enclose_block, $html_block);
-            }
-
-            echo $pager->getLinks();
-            $blocks = explode('%s', $html_block);
-            echo $blocks[0];
-
-            $count = 0;
-            while ($this->rs->fetch()) {
-                echo $this->pageLine($count);
-                $count++;
-            }
-
-            echo $blocks[1];
-
-            $fmt = fn ($title, $image, $class) => sprintf('<img alt="%1$s" src="images/%2$s" class="mark mark-%3$s"> %1$s', $title, $image, $class);
-            echo '<p class="info">' . __('Legend: ') .
-                $fmt(__('Published'), 'published.svg', 'published') . ' - ' .
-                $fmt(__('Unpublished'), 'unpublished.svg', 'unpublished') . ' - ' .
-                $fmt(__('Scheduled'), 'scheduled.svg', 'scheduled') . ' - ' .
-                $fmt(__('Pending'), 'pending.svg', 'pending') . ' - ' .
-                $fmt(__('Protected'), 'locker.svg', 'locked') . ' - ' .
-                $fmt(__('In widget'), 'selected.svg', 'selected') .
-                '</p>';
-
-            echo $pager->getLinks();
+            return;
         }
+
+        $pager   = (new Pager($page, (int) $this->rs_count, $nb_per_page, 10))->getLinks();
+        $entries = [];
+        if (isset($_REQUEST['entries'])) {
+            foreach ($_REQUEST['entries'] as $v) {
+                $entries[(int) $v] = true;
+            }
+        }
+
+        $cols = [
+            'title' => (new Th())
+                ->scope('col')
+                ->colspan(3)
+                ->class('first')
+                ->text(__('Title'))
+            ->render(),
+            'date' => (new Th())
+                ->scope('col')
+                ->text(__('Date'))
+            ->render(),
+            'author' => (new Th())
+                ->scope('col')
+                ->text(__('Author'))
+            ->render(),
+            'comments' => (new Th())
+                ->scope('col')
+                ->items([
+                    (new Img('images/comments.svg'))
+                        ->class('light-only')
+                        ->alt(__('Comments')),
+                    (new Img('images/comments-dark.svg'))
+                        ->class('dark-only')
+                        ->alt(__('Comments')),
+                    (new Span(__('Comments')))
+                        ->class('hidden'),
+                ])
+            ->render(),
+            'trackbacks' => (new Th())
+                ->scope('col')
+                ->items([
+                    (new Img('images/trackbacks.svg'))
+                        ->class('light-only')
+                        ->alt(__('Trackbacks')),
+                    (new Img('images/trackbacks-dark.svg'))
+                        ->class('dark-only')
+                        ->alt(__('Trackbacks')),
+                    (new Span(__('Trackbacks')))
+                        ->class('hidden'),
+                ])
+            ->render(),
+            'status' => (new Th())
+                ->scope('col')
+                ->text(__('Status'))
+            ->render(),
+        ];
+
+        if ($include_type) {
+            $cols = array_merge($cols, [
+                'type' => (new Th())
+                    ->scope('col')
+                    ->text(__('Type'))
+                ->render(),
+            ]);
+        }
+
+        $cols = new ArrayObject($cols);
+        # --BEHAVIOR-- adminPagesListHeaderV2 -- MetaRecord, ArrayObject
+        App::behavior()->callBehavior('adminPagesListHeaderV2', $this->rs, $cols);
+
+        // Cope with optional columns
+        $this->userColumns('pages', $cols);
+
+        // Prepare listing
+        $lines = [];
+        $count = 0;
+        while ($this->rs->fetch()) {
+            $lines[] = $this->postLine($count, isset($entries[$this->rs->post_id]), $include_type);
+            $count++;
+        }
+
+        $fmt = fn ($title, $image, $class): string => sprintf(
+            (new Img('images/%2$s'))
+                    ->alt('%1$s')
+                    ->class(['mark', 'mark-%3$s'])
+                    ->render() . ' %1$s',
+            $title,
+            $image,
+            $class
+        );
+
+        $buffer = (new Div())
+            ->class('table-outer')
+            ->items([
+                (new Table())
+                    ->class(['maximal', 'dragable'])
+                    ->items([
+                        (new Thead())
+                            ->rows([
+                                (new Tr())
+                                    ->items([
+                                        (new Text(null, implode('', iterator_to_array($cols)))),
+                                    ]),
+                            ]),
+                        (new Tbody())
+                            ->id('pageslist')
+                            ->rows($lines),
+                    ]),
+                (new Para())
+                    ->class('info')
+                    ->items([
+                        (new Text(
+                            null,
+                            __('Legend: ') .
+                            $fmt(__('Published'), 'published.svg', 'published') . ' - ' .
+                            $fmt(__('Unpublished'), 'unpublished.svg', 'unpublished') . ' - ' .
+                            $fmt(__('Scheduled'), 'scheduled.svg', 'scheduled') . ' - ' .
+                            $fmt(__('Pending'), 'pending.svg', 'pending') . ' - ' .
+                            $fmt(__('Protected'), 'locker.svg', 'locked') . ' - ' .
+                            $fmt(__('Hidden'), 'hidden.svg', 'hidden') . ' - ' .
+                            $fmt(__('Attachments'), 'attach.svg', 'attach')
+                        )),
+                    ]),
+            ])
+        ->render();
+        if ($enclose_block !== '') {
+            $buffer = sprintf($enclose_block, $buffer);
+        }
+
+        echo $pager . $buffer . $pager;
     }
 
-    private function pageLine($count)
+    /**
+     * Return a page line.
+     *
+     * @param   int     $count          The count
+     * @param   bool    $checked        The checked
+     * @param   bool    $include_type   Include the post type column
+     */
+    private function postLine(int $count, bool $checked, bool $include_type): Tr
     {
-        $img        = '<img alt="%1$s" title="%1$s" src="images/%2$s" class="mark mark-%3$s">';
+        $img = (new Img('images/%2$s'))
+            ->alt('%1$s')
+            ->class(['mark', 'mark-%3$s'])
+            ->render();
+        $post_classes = ['line'];
+        if (App::status()->post()->isRestricted((int) $this->rs->post_status)) {
+            $post_classes[] = 'offline';
+        }
         $img_status = '';
-        $sts_class  = '';
-        switch ($this->rs->post_status) {
-            case App::blog()::POST_PUBLISHED:
-                $img_status = sprintf($img, __('Published'), 'check-on.svg', 'published');
-                $sts_class  = 'sts-online';
+        switch ((int) $this->rs->post_status) {
+            case App::status()->post()::PUBLISHED:
+                $img_status     = sprintf($img, __('Published'), 'published.svg', 'published');
+                $post_classes[] = 'sts-online';
 
                 break;
-            case App::blog()::POST_UNPUBLISHED:
-                $img_status = sprintf($img, __('Unpublished'), 'check-off.svg', 'unpublished');
-                $sts_class  = 'sts-offline';
+            case App::status()->post()::UNPUBLISHED:
+                $img_status     = sprintf($img, __('Unpublished'), 'unpublished.svg', 'unpublished');
+                $post_classes[] = 'sts-offline';
 
                 break;
-            case App::blog()::POST_SCHEDULED:
-                $img_status = sprintf($img, __('Scheduled'), 'scheduled.svg', 'scheduled');
-                $sts_class  = 'sts-scheduled';
+            case App::status()->post()::SCHEDULED:
+                $img_status     = sprintf($img, __('Scheduled'), 'scheduled.svg', 'scheduled');
+                $post_classes[] = 'sts-scheduled';
 
                 break;
-            case App::blog()::POST_PENDING:
-                $img_status = sprintf($img, __('Pending'), 'check-wrn.svg', 'pending');
-                $sts_class  = 'sts-pending';
+            case App::status()->post()::PENDING:
+                $img_status     = sprintf($img, __('Pending'), 'pending.svg', 'pending');
+                $post_classes[] = 'sts-pending';
 
                 break;
         }
@@ -109,26 +242,96 @@ class ListingRelatedPages extends Listing
 
         $selected = '';
         if ($this->rs->post_selected) {
-            $selected = sprintf($img, __('In widget'), 'selected.svg', 'selected');
+            $selected = sprintf($img, __('Selected'), 'selected.svg', 'selected');
         }
 
-        $subtype = '(N/A)';
-        $meta_rs = App::meta()->getMetaRecordset($this->rs->post_meta, 'related_file');
-        $subtype = (!$meta_rs->isEmpty()) ? __('included page') : __('post as page');
+        $attach   = '';
+        $nb_media = $this->rs->countMedia();
+        if ($nb_media > 0) {
+            $attach_str = $nb_media == 1 ? __('%d attachment') : __('%d attachments');
+            $attach     = sprintf($img, sprintf($attach_str, $nb_media), 'attach.svg', 'attach');
+        }
 
-        $res = '<tr class="line' . ($this->rs->post_status != Blog::POST_PUBLISHED ? ' offline' : '') . '"' .
-            ' id="p' . $this->rs->post_id . '">';
+        $pos_classes = ['nowrap', 'minimal'];
+        if (!App::auth()->prefs()->accessibility->nodragdrop) {
+            $pos_classes[] = 'handle';
+        }
 
-        $res .= '<td class="nowrap minimal">' .
-            form::checkbox(['entries[]'], $this->rs->post_id, '', '', '', !$this->rs->isEditable()) . '</td>' .
-            '<td class="maximal"><a href="' . My::manageUrl(['part' => 'page', 'id' => $this->rs->post_id]) . '">' .
-            Html::escapeHTML($this->rs->post_title) . '</a></td>' .
-            '<td class="nowrap">' . Date::dt2str(__('%Y-%m-%d %H:%M'), $this->rs->post_dt) . '</td>' .
-            '<td class="nowrap">' . $this->rs->user_id . '</td>' .
-            '<td class="nowrap">' . $subtype . '</td>' .
-            '<td class="nowrap status">' . $img_status . ' ' . $selected . ' ' . $protected . '</td>' .
-            '</tr>';
+        $cols = [
+            'position' => (new Td())
+                ->class($pos_classes)->items([
+                    (new Number(['order[' . $this->rs->post_id . ']'], 1))
+                        ->value($count + 1)
+                        ->class('position')
+                        ->title(sprintf(__('position of %s'), Html::escapeHTML($this->rs->post_title))),
+                ])
+            ->render(),
+            'check' => (new Td())
+                ->class('nowrap')
+                ->items([
+                    (new Checkbox(['entries[]'], $checked))
+                        ->value($this->rs->post_id)
+                        ->disabled(!$this->rs->isEditable())
+                        ->title(__('Select this page')),
+                ])
+            ->render(),
+            'title' => (new Td())
+                ->class('maximal')
+                ->items([
+                    (new Link())
+                        ->href(App::postTypes()->get($this->rs->post_type)->adminUrl($this->rs->post_id))
+                        ->text(Html::escapeHTML($this->rs->post_title)),
+                ])
+            ->render(),
+            'date' => (new Td())
+                ->class(['nowrap', 'count'])
+                ->items([
+                    (new Timestamp(Date::dt2str(__('%Y-%m-%d %H:%M'), $this->rs->post_dt)))
+                        ->datetime(Date::iso8601((int) strtotime($this->rs->post_dt), App::auth()->getInfo('user_tz'))),
+                ])
+            ->render(),
+            'author' => (new Td())
+                ->class('nowrap')
+                ->text($this->rs->user_id)
+            ->render(),
+            'comments' => (new Td())
+                ->class(['nowrap', 'count'])
+                ->text($this->rs->nb_comment)
+            ->render(),
+            'trackbacks' => (new Td())
+                ->class(['nowrap', 'count'])
+                ->text($this->rs->nb_trackback)
+            ->render(),
+            'status' => (new Td())
+                ->class(['nowrap', 'status'])
+                ->text($img_status . ' ' . $selected . ' ' . $protected . ' ' . $attach)
+            ->render(),
+        ];
 
-        return $res;
+        if ($include_type) {
+            $cols = array_merge($cols, [
+                'type' => (new Td())
+                    ->class(['nowrap', 'status'])
+                    ->separator(' ')
+                    ->items([
+                        App::postTypes()->image($this->rs->post_type),
+                    ])
+                ->render(),
+            ]);
+        }
+
+        $cols = new ArrayObject($cols);
+        # --BEHAVIOR-- adminPagesListValueV2 -- MetaRecord, ArrayObject
+        App::behavior()->callBehavior('adminPagesListValueV2', $this->rs, $cols);
+
+        // Cope with optional columns
+        $this->userColumns('pages', $cols);
+
+        return (new Tr())
+            ->id('p' . $this->rs->post_id)
+            ->class($post_classes)
+            ->items([
+                (new Text(null, implode('', iterator_to_array($cols)))),
+            ]);
     }
 }

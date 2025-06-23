@@ -14,14 +14,24 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\related;
 
-use Exception;
+use Dotclear\App;
 use Dotclear\Core\Backend\Notices;
 use Dotclear\Core\Backend\Page;
 use Dotclear\Core\Process;
 use Dotclear\Database\MetaRecord;
+use Dotclear\Helper\Html\Form\Button;
+use Dotclear\Helper\Html\Form\Div;
+use Dotclear\Helper\Html\Form\Form;
+use Dotclear\Helper\Html\Form\Hidden;
+use Dotclear\Helper\Html\Form\Label;
+use Dotclear\Helper\Html\Form\Link;
+use Dotclear\Helper\Html\Form\Note;
+use Dotclear\Helper\Html\Form\Para;
+use Dotclear\Helper\Html\Form\Select;
+use Dotclear\Helper\Html\Form\Submit;
+use Dotclear\Helper\Html\Form\Text;
 use Dotclear\Helper\Html\Html;
-use Dotclear\App;
-use form;
+use Exception;
 
 class ManageRelatedPages extends Process
 {
@@ -68,7 +78,7 @@ class ManageRelatedPages extends Process
             App::backend()->related_actions_rendered = true;
         }
 
-        if (isset($_POST['pages_upd'])) {
+        if (isset($_POST['reorder'])) {
             $public_pages = PagesHelper::getPublicList(self::$pages);
             $visible      = (!empty($_POST['p_visibles']) && is_array($_POST['p_visibles'])) ? $_POST['p_visibles'] : [];
             $order        = (!empty($_POST['p_order'])) ? $_POST['p_order'] : [];
@@ -110,94 +120,89 @@ class ManageRelatedPages extends Process
             return;
         }
 
+        $head = '';
+        if (!App::auth()->prefs()->accessibility->nodragdrop) {
+            $head = Page::jsLoad('js/jquery/jquery-ui.custom.js') .
+            Page::jsLoad('js/jquery/jquery.ui.touch-punch.js');
+        }
+
         Page::openModule(
-            __('Related pages'),
-            Page::jsLoad('js/jquery/jquery-ui.custom.js') .
-            Page::jsLoad('js/jquery/jquery.ui.touch-punch.js') .
-            My::jsLoad('_pages.js') .
-            Page::jsLoad('js/_posts_list.js') .
-            App::backend()->related_filter->js(App::backend()->url()->get('admin.plugin') . '&p=' . My::id()) .
-            Page::jsPageTabs(self::$default_tab)
+            __('Pages'),
+            $head .
+            Page::jsJson('pages_list', ['confirm_delete_posts' => __('Are you sure you want to delete selected pages?')]) .
+            My::jsLoad('list')
         );
 
-        echo Page::breadcrumb([Html::escapeHTML(App::blog()->name())                               => '',
-            '<a href="' . My::manageUrl(['part' => 'pages']) . '">' . __('Related pages') . '</a>' => '',
-        ]);
+        echo
+        Page::breadcrumb(
+            [
+                Html::escapeHTML(App::blog()->name()) => '',
+                My::name()                            => '',
+            ]
+        ) .
+        Notices::getNotices();
 
-        echo Notices::getNotices();
+        if (!empty($_GET['upd'])) {
+            Notices::success(__('Selected pages have been successfully updated.'));
+        } elseif (!empty($_GET['del'])) {
+            Notices::success(__('Selected pages have been successfully deleted.'));
+        } elseif (!empty($_GET['reo'])) {
+            Notices::success(__('Selected pages have been successfully reordered.'));
+        }
 
-        echo '<div class="multi-part" id="pages_compose" title="', __('Manage pages'), '">';
+        echo (new Para())
+            ->class('new-stuff')
+            ->items([
+                (new Link())
+                    ->class(['button', 'add'])
+                    ->href(My::manageUrl(['part' => 'page', 'type' => 'file']))
+                    ->text(__('New page')),
+            ])
+        ->render();
 
-        if (!App::error()->flag()) {
-            echo '<p class="top-add">';
-            echo '<a class="button add" href="', My::manageUrl(['part' => 'page', 'type' => 'post']), '">', __('New post as page'), '</a>&nbsp;';
-            echo '<a class="button add" href="', My::manageUrl(['part' => 'page', 'type' => 'file']), '">', __('New included page'), '</a>';
-            echo '</p>';
-
-            App::backend()->related_filter->display('admin.plugin.' . My::id());
-
+        if (!App::error()->flag() && App::backend()->related_list) {
+            
+            // Show pages
             App::backend()->related_list->display(
                 App::backend()->related_filter->page,
                 App::backend()->related_filter->nb,
-                '<form action="' . My::manageUrl() . '" method="post" id="form-entries">' .
-                '%s' .
-                '<div class="two-cols">' .
-                '<p class="col checkboxes-helpers"></p>' .
-                '<p class="col right">' .
-                '<label for="action" class="classic">' . __('Selected entries action:') . '</label>' .
-                form::combo('action', App::backend()->related_actions->getCombo()) .
-                '<input id="do-action" type="submit" value="' . __('ok') . '">' .
-                App::backend()->url()->getHiddenFormFields('admin.plugin.' . My::id(), App::backend()->related_filter->values()) .
-                App::nonce()->getFormNonce() .
-                '</p></div>' .
-                '</form>',
-                App::backend()->related_filter->show()
+                (new Form('form-entries'))
+                    ->method('post')
+                    ->action(App::backend()->getPageURL())
+                    ->fields([
+                        (new Text(null, '%s')), // List of pages
+                        (new Div())
+                            ->class('two-cols')
+                            ->items([
+                                (new Para())->class(['col', 'checkboxes-helpers']),
+                                (new Para())
+                                    ->class(['col', 'right', 'form-buttons'])
+                                    ->items([
+                                        (new Select('action'))
+                                            ->items(App::backend()->related_actions->getCombo())
+                                            ->label((new Label(__('Selected pages action:'), Label::OUTSIDE_TEXT_BEFORE))->class('classic')),
+                                        (new Submit('do-action', __('ok'))),
+                                    ]),
+                            ]),
+                        (new Note())
+                            ->class(['form-note', 'hidden-if-js', 'clear'])
+                            ->text(__('To rearrange pages order, change number at the begining of the line, then click on “Save pages order” button.')),
+                        (new Note())
+                            ->class(['form-note', 'hidden-if-no-js', 'clear'])
+                            ->text(__('To rearrange pages order, move items by drag and drop, then click on “Save pages order” button.')),
+                        (new Para())
+                            ->class('form-buttons')
+                            ->items([
+                                ...My::hiddenFields(),
+                                (new Hidden(['post_type'], 'related')),
+                                (new Hidden(['public_order'], '')),
+                                (new Submit(['reorder'], __('Save pages order'))),
+                                (new Button(['back'], __('Back')))->class(['go-back','reset','hidden-if-no-js']),
+                            ]),
+                    ])
+                ->render()
             );
         }
-
-        echo '</div>';
-
-        echo '<div class="multi-part" id="pages_order" title="', __('Arrange public list'), '">';
-        $public_pages = PagesHelper::getPublicList(self::$pages);
-
-        if (count((array) $public_pages) > 0) {
-            echo '<form action="', My::manageUrl(), '" method="post" id="form-public-pages">';
-            echo '<table class="dragable">';
-            echo '<thead>';
-            echo '<tr>';
-            echo '<th>', __('Order'), '</th>';
-            echo '<th class="nowrap">', __('Visible page in widget'), '</th>';
-            echo '<th class="nowrap maximal">',  __('Page title'), '</th>';
-            echo '</tr>';
-            echo '</thead>';
-            echo '<tbody id="pages-list">';
-            $i = 1;
-            foreach ($public_pages as $page) {
-                echo '<tr class="line', $page['active'] ? '' : ' offline', '" id="p_', $page['id'], '">';
-                echo '<td class="handle">';
-                echo form::field(['p_order[' . $page['id'] . ']'], 2, 5, (string) $i, 'position');
-                echo '</td>';
-                echo '<td class="nowrap">';
-                echo form::checkbox(['p_visibles[]'], $page['id'], $page['active']);
-                echo '</td>';
-                echo '<td class="nowrap">';
-                echo $page['title'];
-                echo '</td>';
-                echo '</tr>';
-            }
-            echo '</tbody>';
-            echo '</table>';
-            echo '<p>';
-            echo form::hidden(['public_order'], '');
-            echo '<input type="submit" name="pages_upd" value="', __('Save'), '">' .
-            App::nonce()->getFormNonce() ;
-            echo '</p>';
-            echo '<p class="col checkboxes-helpers"></p>';
-            echo '</form>';
-        } else {
-            echo '<p><strong>', __('No page'), '</strong></p>';
-        }
-        echo '</div>';
 
         Page::helpBlock('related_pages');
         Page::closeModule();
