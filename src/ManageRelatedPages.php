@@ -139,7 +139,7 @@ class ManageRelatedPages extends Process
             ->items([
                 (new Link())
                     ->class(['button', 'add'])
-                    ->href(App::backend()->getPageURL() . '&act=page')
+                    ->href(My::manageUrl(['part' => 'page', 'type' => 'file']))
                     ->text(__('New page')),
             ])
         ->render();
@@ -178,7 +178,7 @@ class ManageRelatedPages extends Process
                             ->items([
                                 ...My::hiddenFields(),
                                 (new Hidden(['post_type'], 'related')),
-                                //(new Hidden(['act'], 'list')),
+                                (new Hidden(['act'], 'list')),
                                 (new Submit(['reorder'], __('Save pages order'))),
                                 (new Button(['back'], __('Back')))->class(['go-back','reset','hidden-if-no-js']),
                             ]),
