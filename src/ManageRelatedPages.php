@@ -18,6 +18,7 @@ use Dotclear\App;
 use Dotclear\Core\Backend\Notices;
 use Dotclear\Core\Backend\Page;
 use Dotclear\Core\Process;
+use Dotclear\Core\Backend\UserPref;
 use Dotclear\Database\MetaRecord;
 use Dotclear\Helper\Html\Form\Button;
 use Dotclear\Helper\Html\Form\Div;
@@ -54,55 +55,38 @@ class ManageRelatedPages extends Process
             return false;
         }
 
-        App::backend()->related_filter = new FilterPages();
+        $params = [
+            'post_type' => 'related',
+        ];
 
-        $params               = App::backend()->related_filter->params();
-        $params['post_type']  = 'related';
+        App::backend()->page        = empty($_GET['page']) ? 1 : max(1, (int) $_GET['page']);
+        App::backend()->nb_per_page = UserPref::getUserFilters('pages', 'nb');
+
+        if (!empty($_GET['nb']) && (int) $_GET['nb'] > 0) {
+            App::backend()->nb_per_page = (int) $_GET['nb'];
+        }
+
+        $params['limit'] = [((App::backend()->page - 1) * App::backend()->nb_per_page), App::backend()->nb_per_page];
+
         $params['no_content'] = true;
+        $params['order']      = 'post_position ASC, post_title ASC';
 
-        App::backend()->related_list = null;
+        App::backend()->post_list = null;
 
         try {
-            self::$pages = App::blog()->getPosts($params);
-            self::$pages->extend(RsRelated::class);
-            $counter                     = App::blog()->getPosts($params, true);
-            App::backend()->related_list = new ListingRelatedPages(self::$pages, $counter->f(0));
+            $pages   = App::blog()->getPosts($params);
+            $counter = App::blog()->getPosts($params, true);
+
+            App::backend()->post_list = new ListingRelatedPages($pages, $counter->f(0));
         } catch (Exception $e) {
             App::error()->add($e->getMessage());
         }
 
-        App::backend()->related_actions = new ActionsRelatedPages(My::manageUrl(['part' => 'pages']));
-
-        App::backend()->related_actions_rendered = null;
-        if (App::backend()->related_actions->process()) {
-            App::backend()->related_actions_rendered = true;
-        }
-
-        if (isset($_POST['reorder'])) {
-            $public_pages = PagesHelper::getPublicList(self::$pages);
-            $visible      = (!empty($_POST['p_visibles']) && is_array($_POST['p_visibles'])) ? $_POST['p_visibles'] : [];
-            $order        = (!empty($_POST['p_order'])) ? $_POST['p_order'] : [];
-
-            try {
-                foreach ($public_pages as $c_page) {
-                    $cur                = App::con()->openCursor(App::con()->prefix() . 'post');
-                    $cur->post_upddt    = date('Y-m-d H:i:s');
-                    $cur->post_selected = (int) in_array($c_page['id'], $visible);
-                    $cur->update('WHERE post_id = ' . $c_page['id']);
-
-                    if (count($order) > 0) {
-                        $pos = !empty($order[$c_page['id']]) ? $order[$c_page['id']] + 1 : 1;
-                        $pos = (int) $pos                                            + 1;
-                        App::meta()->delPostMeta($c_page['id'], 'related_position');
-                        App::meta()->setPostMeta($c_page['id'], 'related_position', (string) $pos);
-                    }
-                }
-                App::blog()->triggerBlog();
-                Notices::addSuccessNotice(__('Pages list has been sorted.'));
-                My::redirect([], '#pages_order');
-            } catch (Exception $e) {
-                Notices::addErrorNotice($e->getMessage());
-            }
+        // Actions combo box
+        App::backend()->pages_actions_page          = new ActionsRelatedPages(App::backend()->url()->get('admin.plugin'), ['p' => 'pages']);
+        App::backend()->pages_actions_page_rendered = null;
+        if (App::backend()->pages_actions_page->process()) {
+            App::backend()->pages_actions_page_rendered = true;
         }
 
         return true;
@@ -114,8 +98,8 @@ class ManageRelatedPages extends Process
             return;
         }
 
-        if (App::backend()->related_actions_rendered) {
-            App::backend()->related_actions->render();
+        if (App::backend()->pages_actions_page_rendered) {
+            App::backend()->pages_actions_page->render();
 
             return;
         }
@@ -155,17 +139,16 @@ class ManageRelatedPages extends Process
             ->items([
                 (new Link())
                     ->class(['button', 'add'])
-                    ->href(My::manageUrl(['part' => 'page', 'type' => 'file']))
+                    ->href(App::backend()->getPageURL() . '&act=page')
                     ->text(__('New page')),
             ])
         ->render();
 
-        if (!App::error()->flag() && App::backend()->related_list) {
-            
+        if (!App::error()->flag() && App::backend()->post_list) {
             // Show pages
-            App::backend()->related_list->display(
-                App::backend()->related_filter->page,
-                App::backend()->related_filter->nb,
+            App::backend()->post_list->display(
+                App::backend()->page,
+                App::backend()->nb_per_page,
                 (new Form('form-entries'))
                     ->method('post')
                     ->action(App::backend()->getPageURL())
@@ -179,7 +162,7 @@ class ManageRelatedPages extends Process
                                     ->class(['col', 'right', 'form-buttons'])
                                     ->items([
                                         (new Select('action'))
-                                            ->items(App::backend()->related_actions->getCombo())
+                                            ->items(App::backend()->pages_actions_page->getCombo())
                                             ->label((new Label(__('Selected pages action:'), Label::OUTSIDE_TEXT_BEFORE))->class('classic')),
                                         (new Submit('do-action', __('ok'))),
                                     ]),
@@ -194,8 +177,8 @@ class ManageRelatedPages extends Process
                             ->class('form-buttons')
                             ->items([
                                 ...My::hiddenFields(),
-                                (new Hidden(['post_type'], 'related')),
-                                (new Hidden(['public_order'], '')),
+                                (new Hidden(['post_type'], 'page')),
+                                (new Hidden(['act'], 'list')),
                                 (new Submit(['reorder'], __('Save pages order'))),
                                 (new Button(['back'], __('Back')))->class(['go-back','reset','hidden-if-no-js']),
                             ]),
@@ -203,8 +186,8 @@ class ManageRelatedPages extends Process
                 ->render()
             );
         }
+        Page::helpBlock(My::id());
 
-        Page::helpBlock('related_pages');
         Page::closeModule();
     }
 }
