@@ -177,8 +177,8 @@ class ManageRelatedPages extends Process
                             ->class('form-buttons')
                             ->items([
                                 ...My::hiddenFields(),
-                                (new Hidden(['post_type'], 'page')),
-                                (new Hidden(['act'], 'list')),
+                                (new Hidden(['post_type'], 'related')),
+                                //(new Hidden(['act'], 'list')),
                                 (new Submit(['reorder'], __('Save pages order'))),
                                 (new Button(['back'], __('Back')))->class(['go-back','reset','hidden-if-no-js']),
                             ]),
