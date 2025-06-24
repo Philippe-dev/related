@@ -1,166 +1,123 @@
-# Language: Français
-# Module: related - 2.7
-# Date: 2025-03-16 10:47:27
-# Translated with translater 2025.03.03
-
 msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
-"Project-Id-Version: related 2.7\n"
+"Project-Id-Version: related 2.8\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2025-03-16T10:47:27+00:00\n"
+"PO-Revision-Date: 2025-06-23T21:35:54+00:00\n"
 "Last-Translator: Philippe\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: src/ActionsRelatedPages.php:36
-#: src/AdminBehaviors.php:27
-#: src/ManagePage.php:359
-#: src/ManageRelatedPages.php:114
-#: src/Widgets.php:31
 msgid "Related pages"
 msgstr "Pages connexes"
 
-#: src/ActionsRelatedPages.php:65
-msgid "Add to widget"
-msgstr "Ajouter au widget"
-
-#: src/ActionsRelatedPages.php:66
-msgid "Remove from widget"
-msgstr "Enlever du widget"
-
-#: src/ActionsRelatedPages.php:79
-msgid "Back to related page list"
-msgstr "Retour à la liste des pages"
-
-#: src/ActionsRelatedPages.php:105
-msgid "No page selected"
-msgstr "Aucune page sélectionnée"
-
-#: src/AdminBehaviors.php:44
 msgid "%d related pages"
 msgstr "%d pages connexes"
 
-#: src/AdminBehaviors.php:44
 msgid "%d related page"
 msgstr "%d pages connexe"
 
-#: src/Config.php:83
-msgid "Directory \"%s\" for related files repository needs to allow read and write access."
-msgstr "Le répertoire \"%s\" pour le dépôt des fichiers liés nécessite un accès en lecture et écriture."
+msgid "Add to widget"
+msgstr "Ajouter au widget"
 
-#: src/Config.php:89
-msgid "Configuration has been updated."
-msgstr "La configuration a été mise à jour."
+msgid "Remove from widget"
+msgstr "Enlever du widget"
 
-#: src/Config.php:116
-msgid "Enable Related plugin"
-msgstr "Activer le plugin pages connexes"
+msgid "Pages have been successfully reordered."
+msgstr "Les pages ont été ordonnées avec succès."
 
-#: src/Config.php:124
-msgid "General options"
-msgstr "Options générales"
-
-#: src/Config.php:126
-msgid "Repository path:"
-msgstr "Chemin du dépôt des pages incluses :"
-
-#: src/Config.php:134
-msgid "Advanced options"
-msgstr "Options avancées"
-
-#: src/Config.php:136
-msgid "URL prefix:"
-msgstr "Préfixe d'URL :"
-
-#: src/Config.php:140
-msgid "This prefix will be used to generate the pages URLs. Do not use any existing prefix such as post, category or page."
-msgstr "Ce préfixe sera utilisé pour générer les URLs des pages. N'utilisez pas un préfixe existant tel que post, category ou page."
-
-#: src/FilterPages.php:143
-msgid "In widget:"
-msgstr "Dans le widget"
-
-#: src/Install.php:40
-msgid "Directory for related files repository needs to allow read and write access."
-msgstr "Le répertoire des pages connexes doit être accessible en lecture et écriture."
-
-#: src/ListingRelatedPages.php:70
-#: src/ManagePage.php:411
 msgid "In widget"
 msgstr "Dans le widget"
 
-#: src/ListingRelatedPages.php:117
-msgid "included page"
-msgstr "page incluse"
+msgid "Directory \"%s\" for related files repository needs to allow read and write access."
+msgstr "Le répertoire \"%s\" pour le dépôt des fichiers liés nécessite un accès en lecture et écriture."
 
-#: src/ListingRelatedPages.php:117
-msgid "post as page"
-msgstr "page d'après un billet"
+msgid "Configuration has been updated."
+msgstr "La configuration a été mise à jour."
 
-#: src/ManagePage.php:234
+msgid "Enable Related plugin"
+msgstr "Activer le plugin pages connexes"
+
+msgid "General options"
+msgstr "Options générales"
+
+msgid "Repository path:"
+msgstr "Chemin du dépôt des pages incluses :"
+
+msgid "Advanced options"
+msgstr "Options avancées"
+
+msgid "URL prefix:"
+msgstr "Préfixe d'URL :"
+
+msgid "This prefix will be used to generate the pages URLs. Do not use any existing prefix such as post, category or page."
+msgstr "Ce préfixe sera utilisé pour générer les URLs des pages. N'utilisez pas un préfixe existant tel que post, category ou page."
+
+msgid "In widget:"
+msgstr "Dans le widget :"
+
+msgid "Directory for related files repository needs to allow read and write access."
+msgstr "Le répertoire des pages connexes doit être accessible en lecture et écriture."
+
 msgid "Missing file."
 msgstr "Fichier manquant."
 
-#: src/ManagePage.php:261
 msgid "Page has been updated."
 msgstr "La page a été mise à jour."
 
-#: src/ManagePage.php:300
 msgid "Page has been created."
 msgstr "La page a été créée."
 
-#: src/ManagePage.php:311
 msgid "Page has been deleted."
 msgstr "La page a été supprimée."
 
-#: src/ManagePage.php:405
 msgid "Convert to XHTML"
 msgstr "Convertir en XHTML"
 
-#: src/ManagePage.php:452
 msgid "Included file:"
 msgstr "Fichier inclus :"
 
-#: src/ManagePage.php:454
 msgid "Pick up a local file in your related pages repository"
 msgstr "Choisissez un fichier local dans votre dépôt de pages connexes"
 
-#: src/ManagePage.php:458
 msgid "or upload a new file"
 msgstr "ou téléchargez un nouveau fichier"
 
-#: src/ManagePage.php:475
 msgid "Go to this related page on the site"
 msgstr "Voir cette page connexe sur le site"
 
-#: src/ManageRelatedPages.php:91
+msgid "Pages limit:"
+msgstr "Limite du nombre de pages :"
+
+msgid "Back to related page list"
+msgstr "Retour à la liste des pages"
+
+msgid "No page selected"
+msgstr "Aucune page sélectionnée"
+
+msgid "included page"
+msgstr "page incluse"
+
+msgid "post as page"
+msgstr "page d'après un billet"
+
 msgid "Pages list has been sorted."
 msgstr "La liste des pages connexes a été réordonnée."
 
-#: src/ManageRelatedPages.php:129
 msgid "Manage pages"
 msgstr "Gérer les pages"
 
-#: src/ManageRelatedPages.php:133
 msgid "New post as page"
 msgstr "Nouvelle page d'après un billet"
 
-#: src/ManageRelatedPages.php:134
 msgid "New included page"
 msgstr "Nouvelle page incluse"
 
-#: src/ManageRelatedPages.php:160
 msgid "Arrange public list"
 msgstr "Ordonner la liste publique"
 
-#: src/ManageRelatedPages.php:169
 msgid "Visible page in widget"
 msgstr "Page visible dans le widget"
-
-#: src/Widgets.php:33
-msgid "Pages limit:"
-msgstr "Limite du nombre de pages :"
 

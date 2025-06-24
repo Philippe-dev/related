@@ -1,19 +1,14 @@
 <?php
-/**
- * @brief related, a plugin for Dotclear 2
- *
- * @package Dotclear
- * @subpackage Plugins
- *
- * @author Pep, Nicolas Roudaire and contributors
- *
- * @copyright GPL-2.0 [https://www.gnu.org/licenses/gpl-2.0.html]
- */
 
+/**
+ * @package     Dotclear
+ *
+ * @copyright   Olivier Meunier & Association Dotclear
+ * @copyright   AGPL-3.0
+ */
 declare(strict_types=1);
 
 namespace Dotclear\Plugin\related;
-
 
 use ArrayObject;
 use Dotclear\App;
@@ -42,7 +37,7 @@ use Dotclear\Helper\Html\Html;
  * @brief   The module backend pages listing.
  * @ingroup pages
  */
-class ListingRelatedPages extends Listing
+class BackendList extends Listing
 {
     /**
      * Display a list of pages.
@@ -181,7 +176,7 @@ class ListingRelatedPages extends Listing
                             $fmt(__('Scheduled'), 'scheduled.svg', 'scheduled') . ' - ' .
                             $fmt(__('Pending'), 'pending.svg', 'pending') . ' - ' .
                             $fmt(__('Protected'), 'locker.svg', 'locked') . ' - ' .
-                            $fmt(__('Hidden'), 'hidden.svg', 'hidden') . ' - ' .
+                            $fmt(__('In widget'), 'selected.svg', 'selected') . ' - ' .
                             $fmt(__('Attachments'), 'attach.svg', 'attach')
                         )),
                     ]),
@@ -242,7 +237,7 @@ class ListingRelatedPages extends Listing
 
         $selected = '';
         if ($this->rs->post_selected) {
-            $selected = sprintf($img, __('Selected'), 'selected.svg', 'selected');
+            $selected = sprintf($img, __('In widget'), 'selected.svg', 'selected');
         }
 
         $attach   = '';

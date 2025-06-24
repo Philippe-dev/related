@@ -77,13 +77,13 @@ class ManageRelatedPages extends Process
             $pages   = App::blog()->getPosts($params);
             $counter = App::blog()->getPosts($params, true);
 
-            App::backend()->post_list = new ListingRelatedPages($pages, $counter->f(0));
+            App::backend()->post_list = new BackendList($pages, $counter->f(0));
         } catch (Exception $e) {
             App::error()->add($e->getMessage());
         }
 
         // Actions combo box
-        App::backend()->pages_actions_page          = new ActionsRelatedPages(App::backend()->url()->get('admin.plugin'), ['p' => 'pages']);
+        App::backend()->pages_actions_page          = new BackendActions(App::backend()->url()->get('admin.plugin'), ['p' => 'pages']);
         App::backend()->pages_actions_page_rendered = null;
         if (App::backend()->pages_actions_page->process()) {
             App::backend()->pages_actions_page_rendered = true;
@@ -131,7 +131,7 @@ class ManageRelatedPages extends Process
         } elseif (!empty($_GET['del'])) {
             Notices::success(__('Selected pages have been successfully deleted.'));
         } elseif (!empty($_GET['reo'])) {
-            Notices::success(__('Selected pages have been successfully reordered.'));
+            Notices::success(__('Pages have been successfully reordered.'));
         }
 
         echo (new Para())

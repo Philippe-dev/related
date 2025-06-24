@@ -1,33 +1,34 @@
 <?php
-/**
- * @brief related, a plugin for Dotclear 2
- *
- * @package Dotclear
- * @subpackage Plugins
- *
- * @author Pep, Nicolas Roudaire and contributors
- *
- * @copyright GPL-2.0 [https://www.gnu.org/licenses/gpl-2.0.html]
- */
 
+/**
+ * @package     Dotclear
+ *
+ * @copyright   Olivier Meunier & Association Dotclear
+ * @copyright   AGPL-3.0
+ */
 declare(strict_types=1);
 
 namespace Dotclear\Plugin\related;
 
+use Dotclear\App;
 use Dotclear\Core\Backend\Action\ActionsPosts;
 use Dotclear\Core\Backend\Action\ActionsPostsDefault;
 use Dotclear\Core\Backend\Page;
-use Dotclear\App;
-use Dotclear\Core\Backend\Notices;
-use Dotclear\Plugin\pages\BackendActions;
+use Dotclear\Helper\Html\Form\Link;
+use Dotclear\Helper\Html\Form\Para;
+use Dotclear\Helper\Html\Html;
 use Exception;
 
-class ActionsRelatedPages extends ActionsPosts
+/**
+ * @brief   The module backend pages actions.
+ * @ingroup pages
+ */
+class BackendActions extends ActionsPosts
 {
     public const ADD_TO_WIDGET_ACTION      = 'selected';
     public const REMOVE_FROM_WIDGET_ACTION = 'unselected';
     protected bool $use_render             = true;
-
+    
     public function __construct(?string $uri, array $redirect_args = [])
     {
         parent::__construct($uri, $redirect_args);
@@ -69,14 +70,39 @@ class ActionsRelatedPages extends ActionsPosts
         );
     }
 
-    protected function loadDefaults(): void
+    public function error(Exception $e): void
     {
+        App::error()->add($e->getMessage());
+        $this->beginPage(
+            Page::breadcrumb(
+                [
+                    Html::escapeHTML(App::blog()->name()) => '',
+                    __('Pages')                           => $this->getRedirection(true),
+                    __('Pages actions')                   => '',
+                ]
+            )
+        );
+        $this->endPage();
     }
 
     public function beginPage(string $breadcrumb = '', string $head = ''): void
     {
-        Page::openModule(__('Related pages'), Page::jsLoad('js/_posts_actions.js') . $head);
-        echo $breadcrumb, '<p><a class="back" href="' . $this->getRedirection(true) . '">' . __('Back to related page list') . '</a></p>';
+        Page::openModule(
+            __('Pages'),
+            Page::jsLoad('js/_posts_actions.js') .
+            $head
+        );
+        echo
+        $breadcrumb;
+
+        echo (new Para())
+            ->items([
+                (new Link())
+                    ->class('back')
+                    ->href($this->getRedirection(true))
+                    ->text(__('Back to pages list')),
+            ])
+        ->render();
     }
 
     public function endPage(): void
@@ -84,47 +110,25 @@ class ActionsRelatedPages extends ActionsPosts
         Page::closeModule();
     }
 
+    /**
+     * Set pages actions.
+     */
+    public function loadDefaults(): void
+    {
+        // We could have added a behavior here, but we want default action to be setup first
+        BackendDefaultActions::adminPagesActionsPage($this);
+        # --BEHAVIOR-- adminPagesActions -- Actions
+        App::behavior()->callBehavior('adminPagesActions', $this);
+    }
+
     public function process()
     {
+        // fake action for pages reordering
+        if (!empty($this->from['reorder'])) {
+            $this->from['action'] = 'reorder';
+        }
         $this->from['post_type'] = 'related';
 
         return parent::process();
-    }
-
-    /**
-     * Does a delete post.
-     *
-     * @param      BackendActions  $ap
-     *
-     * @throws     Exception
-     */
-    public static function doDeletePost(BackendActions $ap)
-    {
-        $ids = $ap->getIDs();
-        if (empty($ids)) {
-            throw new Exception(__('No page selected'));
-        }
-        // Backward compatibility
-        foreach ($ids as $id) {
-            // --BEHAVIOR-- adminBeforePostDelete -- int
-            App::behavior()->callBehavior('adminBeforePostDelete', (int) $id);
-        }
-
-        // --BEHAVIOR-- adminBeforePostsDelete -- array<int,string>
-        App::behavior()->callBehavior('adminBeforePostsDelete', $ids);
-
-        App::blog()->delPosts($ids);
-        Notices::addSuccessNotice(
-            sprintf(
-                __(
-                    '%d page has been successfully deleted',
-                    '%d pages have been successfully deleted',
-                    count($ids)
-                ),
-                count($ids)
-            )
-        );
-
-        $ap->redirect(false);
     }
 }

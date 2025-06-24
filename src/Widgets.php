@@ -54,24 +54,23 @@ class Widgets
         }
 
         $params['post_type']     = 'related';
+        $params['limit']         = abs((int) $w->get('limit'));
         $params['no_content']    = true;
         $params['post_selected'] = true;
-        $params['limit']         = abs((int) $w->limit);
-        $rs                      = App::blog()->getPosts($params);
-        $rs->extend(RsRelated::class);
+        $params['order']         = 'post_position ASC, post_title ASC';
+
+        $rs = App::blog()->getPosts($params);
 
         if ($rs->isEmpty()) {
             return;
         }
 
         $res = ($w->title ? $w->renderTitle(Html::escapeHTML($w->title)) : '');
+
         $res .= '<ul>';
-
-        $pages_list = PagesHelper::getPublicList($rs);
-        foreach ($pages_list as $page) {
-            $res .= '<li><a href="' . $page['url'] . '">' . Html::escapeHTML($page['title']) . '</a></li>';
+        while ($rs->fetch()) {
+            $res .= '<li><a href="' . $rs->getURL() . '">' . Html::escapeHTML($rs->post_title) . '</a></li>';
         }
-
         $res .= '</ul>';
 
         return $w->renderDiv((bool) $w->content_only, 'related-pages-widget ' . $w->class, '', $res);
