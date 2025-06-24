@@ -150,8 +150,7 @@ class BackendList extends Listing
                             $fmt(__('Scheduled'), 'scheduled.svg', 'scheduled') . ' - ' .
                             $fmt(__('Pending'), 'pending.svg', 'pending') . ' - ' .
                             $fmt(__('Protected'), 'locker.svg', 'locked') . ' - ' .
-                            $fmt(__('In widget'), 'selected.svg', 'selected') . ' - ' .
-                            $fmt(__('Attachments'), 'attach.svg', 'attach')
+                            $fmt(__('In widget'), 'selected.svg', 'selected')
                         )),
                     ]),
             ])
