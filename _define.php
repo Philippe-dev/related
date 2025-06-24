@@ -7,20 +7,19 @@
  *
  * @author Pep, Nicolas Roudaire and contributors
  *
- * @copyright GPL-2.0 [https://www.gnu.org/licenses/gpl-2.0.html]
+ * @copyright AGPL-3.0
  */
-
- $this->registerModule(
-    'Related pages', // Name
-    'Serve pages & scripts', // Description
-    'Pep, Nicolas Roudaire and contributors', // Author
-    '2.8', // Version
+$this->registerModule(
+    'Related pages',
+    'Serve pages & scripts',
+    'Pep, Nicolas Roudaire and contributors',
+    '3.0',
     [
-        'date'     => '2025-03-16T00:00:17+0100',
+        'date'        => '2025-03-16T00:00:17+0100',
         'permissions' => 'My',
         'type'        => 'plugin',
-        'dc_min'      => '2.33',
-        'requires'    => [['core', '2.33']],
+        'dc_min'      => '2.34',
+        'requires'    => [['core', '2.34']],
         'repository'  => 'https://github.com/Philippe-dev/related',
         'support'     => 'http://forum.dotclear.net/viewtopic.php?id=48205',
         'details'     => 'http://plugins.dotaddict.org/dc2/details/related',

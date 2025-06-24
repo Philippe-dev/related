@@ -1,10 +1,13 @@
 <?php
-
 /**
- * @package     Dotclear
+ * @brief related, a plugin for Dotclear 2
  *
- * @copyright   Olivier Meunier & Association Dotclear
- * @copyright   AGPL-3.0
+ * @package Dotclear
+ * @subpackage Plugins
+ *
+ * @author Pep, Nicolas Roudaire and contributors
+ *
+ * @copyright AGPL-3.0
  */
 declare(strict_types=1);
 
