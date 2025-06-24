@@ -432,8 +432,21 @@ class ManagePage extends Process
                 try {
                     # --BEHAVIOR-- adminBeforePageUpdate -- Cursor, int
                     App::behavior()->callBehavior('adminBeforePageUpdate', $cur, App::backend()->post_id);
-
+                    
+                    App::con()->begin();
                     App::blog()->updPost(App::backend()->post_id, $cur);
+                    if ($pageIsFile) {
+                        try {
+                            App::meta()->delPostMeta(App::backend()->post_id, 'related_file');
+                            App::meta()->setPostMeta(App::backend()->post_id, 'related_file', $page_related_file);
+                        } catch (Exception $e) {
+                            App::con()->rollback();
+
+                            throw $e;
+                        }
+                    }
+                    App::con()->commit();
+
 
                     # --BEHAVIOR-- adminAfterPageUpdate -- Cursor, int
                     App::behavior()->callBehavior('adminAfterPageUpdate', $cur, App::backend()->post_id);
@@ -684,7 +697,7 @@ class ManagePage extends Process
                                 ->items([
                                     (new Link('convert-xhtml'))
                                         ->class(['button', App::backend()->post_id && App::backend()->post_format === 'xhtml' ? 'hide' : ''])
-                                        ->href(My::manageUrl(['act' => 'page', 'id' => App::backend()->post_id, 'xconv' => '1']))
+                                        ->href(My::manageUrl(['part' => 'page', 'id' => App::backend()->post_id, 'xconv' => '1']))
                                         ->text(__('Convert to HTML')),
                                 ]),
                         ])
@@ -1039,7 +1052,7 @@ class ManagePage extends Process
                 $buttons[] = (new Button(['back'], __('Back')))->class(['go-back','reset','hidden-if-no-js']);
             } else {
                 $buttons[] = (new Link('post-cancel'))
-                    ->href(My::manageUrl(['act' => 'list']))
+                    ->href(My::manageUrl(['part' => 'list']))
                     ->class('button')
                     ->accesskey('c')
                     ->text(__('Cancel') . ' (c)');
@@ -1064,7 +1077,7 @@ class ManagePage extends Process
                 ->items([
                     (new Form('entry-form'))
                         ->method('post')
-                        ->action(My::manageUrl(['act' => 'page']))
+                        ->action(My::manageUrl(['part' => 'page']))
                         ->fields([
                             (new Div())
                                 ->id('entry-wrapper')
