@@ -33,8 +33,8 @@ class Backend extends Process
 
         My::addBackendMenuItem(Menus::MENU_BLOG);
 
-        App::behavior()->addBehavior('adminDashboardFavoritesV2', AdminBehaviors::dashboardFavorites(...));
-        App::behavior()->addBehavior('adminDashboardFavsIconV2', AdminBehaviors::dashboardFavsIcon(...));
+        App::behavior()->addBehavior('adminDashboardFavoritesV2', BackendBehaviors::dashboardFavorites(...));
+        App::behavior()->addBehavior('adminDashboardFavsIconV2', BackendBehaviors::dashboardFavsIcon(...));
 
         App::behavior()->addBehavior('initWidgets', Widgets::init(...));
         App::behavior()->addBehavior('initDefaultWidgets', Widgets::initDefaultWidgets(...));

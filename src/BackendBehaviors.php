@@ -19,7 +19,7 @@ use Dotclear\Core\Backend\Favorites;
 use Dotclear\Core\Backend\Page;
 use Dotclear\App;
 
-class AdminBehaviors
+class BackendBehaviors
 {
     public static function dashboardFavorites(Favorites $favorites)
     {

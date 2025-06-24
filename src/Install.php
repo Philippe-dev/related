@@ -57,7 +57,7 @@ class Install extends Process
             $files_path = My::settings()->files_path;
         }
 
-        My::settings()->put('active', false, 'boolean', 'Enable myGmaps plugin', false, true);
+        My::settings()->put('active', false, 'boolean', 'Enable plugin', false, true);
         My::settings()->put('url_prefix', 'static', 'string', 'Prefix used by the URLHandler', false, true);
         My::settings()->put('files_path', $files_path, 'string', 'Related files repository', false, true);
 
