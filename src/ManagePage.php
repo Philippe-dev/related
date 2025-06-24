@@ -332,7 +332,7 @@ class ManagePage extends Process
             // Magic tweak :)
             App::blog()->settings()->system->post_url_format = '{t}';
 
-            $cur->post_type          = 'page';
+            $cur->post_type          = 'related';
             $cur->post_dt            = App::backend()->post_dt ? date('Y-m-d H:i:00', (int) strtotime((string) App::backend()->post_dt)) : '';
             $cur->post_format        = App::backend()->post_format;
             $cur->post_password      = App::backend()->post_password;
@@ -368,7 +368,8 @@ class ManagePage extends Process
                     # --BEHAVIOR-- adminAfterPageUpdate -- Cursor, int
                     App::behavior()->callBehavior('adminAfterPageUpdate', $cur, App::backend()->post_id);
 
-                    My::redirect(['act' => 'page', 'id' => App::backend()->post_id, 'upd' => '1']);
+                    Notices::addSuccessNotice(__('Page has been updated.'));
+                    My::redirect(['part' => 'page', 'id' => $post_id]);
                 } catch (Exception $e) {
                     App::error()->add($e->getMessage());
                 }
@@ -379,12 +380,24 @@ class ManagePage extends Process
                     # --BEHAVIOR-- adminBeforePageCreate -- Cursor
                     App::behavior()->callBehavior('adminBeforePageCreate', $cur);
 
+                    App::con()->begin();
                     $return_id = App::blog()->addPost($cur);
+                    if ($pageIsFile) {
+                        try {
+                            App::meta()->setPostMeta($return_id, 'related_file', $page_related_file);
+                        } catch (Exception $e) {
+                            App::con()->rollback();
+
+                            throw $e;
+                        }
+                    }
+                    App::con()->commit();
 
                     # --BEHAVIOR-- adminAfterPageCreate -- Cursor, int
                     App::behavior()->callBehavior('adminAfterPageCreate', $cur, $return_id);
 
-                    My::redirect(['act' => 'page', 'id' => $return_id, 'crea' => '1']);
+                    Notices::addSuccessNotice(__('Page has been created.'));
+                    My::redirect(['part' => 'page', 'id' => $return_id]);
                 } catch (Exception $e) {
                     App::error()->add($e->getMessage());
                 }
@@ -866,7 +879,7 @@ class ManagePage extends Process
                         ])
                         ->render(),
 
-                        'is_file' => (new Label(__('Content:'),Label::OUTSIDE_TEXT_BEFORE))
+                        'is_file' => (new Label(__('Content:'), Label::OUTSIDE_TEXT_BEFORE))
                             ->class(['bold'])->render(),
                         (new Fieldset())->class('area')->id('is_file-area')
                             ->items([
@@ -883,9 +896,10 @@ class ManagePage extends Process
                                     (new Hidden(['MAX_FILE_SIZE'], (string) DC_MAX_UPLOAD_SIZE)),
                                     (new Hidden(['part'], 'page')),
                                     (new Hidden(['type'], 'file')),
+                                    (new Hidden(['id'], 'id')),
                                 ]),
                             ])
-                            
+
                         ->render(),
 
                         'post_notes' => (new Para())->class('area')->id('notes-area')->items([
