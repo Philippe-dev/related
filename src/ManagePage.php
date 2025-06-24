@@ -99,7 +99,7 @@ class ManagePage extends Process
             $params['post_type'] = self::POST_TYPE;
 
             $dcPost = App::blog()->getPosts($params, false);
-            $dcPost->extend('RsRelated');
+            $dcPost->extend('FrontendRecordset');
 
             if ($dcPost->isEmpty()) {
                 Notices::addErrorNotice(__('This page does not exist.'));

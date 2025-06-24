@@ -57,6 +57,6 @@ class FrontendBehaviors
 
     public static function coreBlogGetPosts($rs)
     {
-        $rs->extend(RsRelated::class);
+        $rs->extend(FrontendRecordset::class);
     }
 }

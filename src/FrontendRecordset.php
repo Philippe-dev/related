@@ -16,7 +16,7 @@ use Dotclear\Core\Auth;
 use Dotclear\Plugin\pages\Pages;
 use Dotclear\App;
 
-class RsRelated
+class FrontendRecordset
 {
     public static function isEditable($rs): bool
     {
