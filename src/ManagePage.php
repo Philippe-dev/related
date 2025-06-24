@@ -54,6 +54,7 @@ use Dotclear\Helper\Html\Form\Thead;
 use Dotclear\Helper\Html\Form\Tr;
 use Dotclear\Helper\Html\Html;
 use Dotclear\Helper\Network\Http;
+use Dotclear\Plugin\related\Entity\Post;
 use Exception;
 
 /**
@@ -80,6 +81,11 @@ class ManagePage extends Process
         if (!self::status()) {
             return false;
         }
+
+        $pageIsFile = (!empty($_REQUEST['type']) && $_REQUEST['type'] === 'file');
+        
+        $post = new Post();
+
 
         $params = [];
         Page::check(App::auth()->makePermissions([
@@ -311,6 +317,64 @@ class ManagePage extends Process
             ] = [
                 $post_excerpt, $post_excerpt_xhtml, $post_content, $post_content_xhtml,
             ];
+
+            if ($pageIsFile) {
+                $post_content = '/** external content **/';
+                $post_content_xhtml = '/** external content **/';
+
+                App::blog()->setPostContent(
+                    (int) App::backend()->post_id,
+                    App::backend()->post_format,
+                    App::backend()->post_lang,
+                    $post_excerpt,
+                    $post_excerpt_xhtml,
+                    $post_content,
+                    $post_content_xhtml
+                );
+
+                $dir          = @dir((string) App::blog()->settings()->related->files_path);
+                $allowed_exts = ['php', 'html', 'xml', 'txt'];
+
+                if ($dir) {
+                    while (($entry = $dir->read()) !== false) {
+                        $entry_path = $dir->path . '/' . $entry;
+                        if (in_array(Files::getExtension($entry), $allowed_exts)) {
+                            if (is_file($entry_path) && is_readable($entry_path)) {
+                                $related_pages_files[$entry] = $entry;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if ($pageIsFile) {
+                $related_upl = null;
+                if (!empty($_FILES['up_file']['name'])) {
+                    $related_upl = true;
+                } elseif (!empty($_POST['repository_file']) && in_array($_POST['repository_file'], $related_pages_files)) {
+                    $related_upl = false;
+                }
+
+                if (!is_null($related_upl)) {
+                    try {
+                        if ($related_upl) {
+                            Files::uploadStatus($_FILES['up_file']);
+                            $src_file = $_FILES['up_file']['tmp_name'];
+                            $trg_file = App::blog()->settings()->related->files_path . '/' . $_FILES['up_file']['name'];
+                            if (move_uploaded_file($src_file, $trg_file)) {
+                                $page_related_file = $_FILES['up_file']['name'];
+                            }
+                        } else {
+                            $page_related_file = $_POST['repository_file'];
+                        }
+                    } catch (Exception $e) {
+                        Notices::addErrorNotice($e->getMessage());
+                    }
+                }
+            }
+
+            $cur = App::con()->openCursor(App::con()->prefix() . 'post');
+            $post->setCursor($cur);
         }
 
         if (!empty($_POST['delete']) && App::backend()->can_delete) {
@@ -352,6 +416,10 @@ class ManagePage extends Process
             $cur->post_selected      = (int) App::backend()->post_selected;
 
             if (isset($_POST['post_url'])) {
+                $cur->post_url = App::backend()->post_url;
+            }
+
+            if (isset($_POST['repository_file'])) {
                 $cur->post_url = App::backend()->post_url;
             }
 
