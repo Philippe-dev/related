@@ -111,7 +111,7 @@ class ManagePages extends Process
         }
 
         Page::openModule(
-            __('Pages'),
+            __('Related pages'),
             $head .
             Page::jsJson('pages_list', ['confirm_delete_posts' => __('Are you sure you want to delete selected pages?')]) .
             My::jsLoad('list')
