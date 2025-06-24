@@ -866,12 +866,9 @@ class ManagePage extends Process
                         ])
                         ->render(),
 
-                        'is_file' => (new Label(
-                             __('Content:'),
-                            Label::OUTSIDE_TEXT_BEFORE
-                        ))
-                        ->class(['bold'])->render(),
-                        (new Div())->class('fieldset')->id('is_file-area')
+                        'is_file' => (new Label(__('Content:'),Label::OUTSIDE_TEXT_BEFORE))
+                            ->class(['bold'])->render(),
+                        (new Fieldset())->class('area')->id('is_file-area')
                             ->items([
                                 (new Para())->items([
                                     (new Select('repository_file'))
@@ -879,24 +876,17 @@ class ManagePage extends Process
                                         ->default($page_related_file)
                                         ->label(new Label(__('Pick up a local file in your related pages repository'), Label::OUTSIDE_LABEL_BEFORE)),
                                 ]),
+                                (new Para())->items([
+                                    (new Input('up_file'))
+                                        ->type('file')
+                                        ->label(new Label(__('or upload a new file'), Label::OUTSIDE_LABEL_BEFORE)),
+                                    (new Hidden(['MAX_FILE_SIZE'], (string) DC_MAX_UPLOAD_SIZE)),
+                                    (new Hidden(['part'], 'page')),
+                                    (new Hidden(['type'], 'file')),
+                                ]),
                             ])
                             
                         ->render(),
-
-                        /*$main_items['is_file'] = '<p class="col"><label class="required no-margin bold" title="' . __('Required field') . '" ' .
-                        'for="repository_file"><abbr title="' . __('Required field') . '">*</abbr> ' . __('Included file:') . '</label></p>' .
-                        '<div class="fieldset">' .
-                        '<p><label>' . __('Pick up a local file in your related pages repository') . ' ' .
-                        form::combo('repository_file', self::$related_pages_files, self::$page_related_file) .
-                        '</label></p>' .
-                        form::hidden(['MAX_FILE_SIZE'], DC_MAX_UPLOAD_SIZE) .
-                        '<p><label>' . __('or upload a new file') . ' ' .
-                        '<input type="file" page_relid="up_file" name="up_file">' .
-                        '</label></p>' .
-                        '</div>' .
-                        form::hidden('part', 'page') .
-                        App::nonce()->getFormNonce() .
-                        form::hidden('type', 'file');*/
 
                         'post_notes' => (new Para())->class('area')->id('notes-area')->items([
                             (new Textarea('post_notes'))
@@ -942,7 +932,7 @@ class ManagePage extends Process
             if (App::backend()->post_id) {
                 $preview_url = App::blog()->url() .
                     App::url()->getURLFor(
-                        'pagespreview',
+                        'relatedpreview',
                         App::auth()->userID() . '/' .
                         Http::browserUID(App::config()->masterKey() . App::auth()->userID() . App::auth()->cryptLegacy((string) App::auth()->userID())) .
                         '/' . App::backend()->post->post_url
