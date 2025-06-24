@@ -91,7 +91,7 @@ class BackendActions extends ActionsPosts
     public function beginPage(string $breadcrumb = '', string $head = ''): void
     {
         Page::openModule(
-            __('Pages'),
+            __('Related pages'),
             Page::jsLoad('js/_posts_actions.js') .
             $head
         );
