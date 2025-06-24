@@ -866,7 +866,11 @@ class ManagePage extends Process
                         ])
                         ->render(),
 
-                        'is_file' => 
+                        'is_file' => (new Label(
+                             __('Content:'),
+                            Label::OUTSIDE_TEXT_BEFORE
+                        ))
+                        ->class(['bold'])->render(),
                         (new Div())->class('fieldset')->id('is_file-area')
                             ->items([
                                 (new Para())->items([
