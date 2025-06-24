@@ -112,8 +112,8 @@ msgstr "Gérer les pages"
 msgid "New post as page"
 msgstr "Nouvelle page d'après un billet"
 
-msgid "New included page"
-msgstr "Nouvelle page incluse"
+msgid "New related page"
+msgstr "Nouvelle page connexe"
 
 msgid "Arrange public list"
 msgstr "Ordonner la liste publique"

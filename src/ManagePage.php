@@ -79,7 +79,7 @@ class ManagePage extends Process
             self::$post->setPostStatus((int) $user_post_status);
         }
 
-        self::$page_title  = __('New page');
+        self::$page_title  = __('New related page');
         self::$post_editor = App::auth()->getOption('editor');
 
         Page::check(App::auth()->makePermissions([Pages::PERMISSION_PAGES, Auth::PERMISSION_CONTENT_ADMIN]));
@@ -475,7 +475,7 @@ class ManagePage extends Process
                 echo __('Go to this related page on the site'), ' <img src="images/outgoing-link.svg" alt=""></a></p>';
             }
 
-            echo '<div class="multi-part" title="' . (self::$post->getPostId() ? __('Edit page') : __('New page')) . '" id="edit-entry">';
+            echo '<div class="multi-part" title="' . (self::$post->getPostId() ? __('Edit page') : __('New related page')) . '" id="edit-entry">';
             echo '<form action="', My::manageUrl(), '" method="post" id="entry-form" enctype="multipart/form-data">';
             echo '<div id="entry-wrapper">';
             echo '<div id="entry-content"><div class="constrained">';

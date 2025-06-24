@@ -82,32 +82,6 @@ class BackendList extends Listing
                 ->scope('col')
                 ->text(__('Author'))
             ->render(),
-            'comments' => (new Th())
-                ->scope('col')
-                ->items([
-                    (new Img('images/comments.svg'))
-                        ->class('light-only')
-                        ->alt(__('Comments')),
-                    (new Img('images/comments-dark.svg'))
-                        ->class('dark-only')
-                        ->alt(__('Comments')),
-                    (new Span(__('Comments')))
-                        ->class('hidden'),
-                ])
-            ->render(),
-            'trackbacks' => (new Th())
-                ->scope('col')
-                ->items([
-                    (new Img('images/trackbacks.svg'))
-                        ->class('light-only')
-                        ->alt(__('Trackbacks')),
-                    (new Img('images/trackbacks-dark.svg'))
-                        ->class('dark-only')
-                        ->alt(__('Trackbacks')),
-                    (new Span(__('Trackbacks')))
-                        ->class('hidden'),
-                ])
-            ->render(),
             'status' => (new Th())
                 ->scope('col')
                 ->text(__('Status'))
@@ -288,14 +262,6 @@ class BackendList extends Listing
             'author' => (new Td())
                 ->class('nowrap')
                 ->text($this->rs->user_id)
-            ->render(),
-            'comments' => (new Td())
-                ->class(['nowrap', 'count'])
-                ->text($this->rs->nb_comment)
-            ->render(),
-            'trackbacks' => (new Td())
-                ->class(['nowrap', 'count'])
-                ->text($this->rs->nb_trackback)
             ->render(),
             'status' => (new Td())
                 ->class(['nowrap', 'status'])

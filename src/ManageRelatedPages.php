@@ -140,7 +140,7 @@ class ManageRelatedPages extends Process
                 (new Link())
                     ->class(['button', 'add'])
                     ->href(My::manageUrl(['part' => 'page', 'type' => 'file']))
-                    ->text(__('New page')),
+                    ->text(__('New related page')),
             ])
         ->render();
 
@@ -186,8 +186,8 @@ class ManageRelatedPages extends Process
                 ->render()
             );
         }
-        Page::helpBlock(My::id());
 
+        Page::helpBlock('related_pages');
         Page::closeModule();
     }
 }
