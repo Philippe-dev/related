@@ -160,6 +160,8 @@ class ManagePage extends Process
         // Validation flag
         App::backend()->bad_dt = false;
 
+        $pageIsFile = (!empty($_REQUEST['type']) && $_REQUEST['type'] === 'file');
+
         // Get page informations
 
         App::backend()->post = null;
@@ -369,7 +371,7 @@ class ManagePage extends Process
                     App::behavior()->callBehavior('adminAfterPageUpdate', $cur, App::backend()->post_id);
 
                     Notices::addSuccessNotice(__('Page has been updated.'));
-                    My::redirect(['part' => 'page', 'id' => $post_id]);
+                    My::redirect(['part' => 'page', 'id' => App::backend()->post_id]);
                 } catch (Exception $e) {
                     App::error()->add($e->getMessage());
                 }
