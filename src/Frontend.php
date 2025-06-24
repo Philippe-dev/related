@@ -30,11 +30,14 @@ class Frontend extends Process
             return false;
         }
 
-        App::behavior()->addBehavior('coreBlogGetPosts', PublicBehaviors::coreBlogGetPosts(...));
-        App::behavior()->addBehavior('publicBeforeDocument', PublicBehaviors::publicBeforeDocument(...));
-        App::behavior()->addBehavior('templateBeforeBlock', PublicBehaviors::templateBeforeBlock(...));
+        
+        App::behavior()->addBehavior('publicBreadcrumb', FrontendBehaviors::publicBreadcrumb(...));
 
-        App::frontend()->template()->addValue('EntryContent', Templates::PageContent(...));
+        App::behavior()->addBehavior('coreBlogGetPosts', FrontendBehaviors::coreBlogGetPosts(...));
+        App::behavior()->addBehavior('publicBeforeDocument', FrontendBehaviors::publicBeforeDocument(...));
+        App::behavior()->addBehavior('templateBeforeBlock', FrontendBehaviors::templateBeforeBlock(...));
+
+        App::frontend()->template()->addValue('EntryContent', FrontendTemplates::PageContent(...));
 
         App::behavior()->addBehavior('initWidgets', Widgets::init(...));
         App::behavior()->addBehavior('initDefaultWidgets', Widgets::initDefaultWidgets(...));

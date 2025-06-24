@@ -16,7 +16,7 @@ namespace Dotclear\Plugin\related;
 
 use Dotclear\App;
 
-class Templates
+class FrontendTemplates
 {
     public static function PageContent($attr)
     {

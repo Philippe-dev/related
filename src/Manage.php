@@ -29,7 +29,7 @@ class Manage extends Process
             App::backend()->related_default_tab = self::$active_part;
 
             if (self::$active_part === 'pages') {
-                self::status(ManageRelatedPages::init());
+                self::status(ManagePages::init());
             } elseif (self::$active_part === 'page') {
                 self::status(ManagePage::init());
             } else {
@@ -47,7 +47,7 @@ class Manage extends Process
         }
 
         if (self::$active_part === 'pages') {
-            self::status(ManageRelatedPages::process());
+            self::status(ManagePages::process());
         } elseif (self::$active_part === 'page') {
             self::status(ManagePage::process());
         }
@@ -62,7 +62,7 @@ class Manage extends Process
         }
 
         if (self::$active_part === 'pages') {
-            ManageRelatedPages::render();
+            ManagePages::render();
         } elseif (self::$active_part === 'page') {
             ManagePage::render();
         }

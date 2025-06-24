@@ -16,8 +16,15 @@ namespace Dotclear\Plugin\related;
 
 use Dotclear\App;
 
-class PublicBehaviors
+class FrontendBehaviors
 {
+    public static function publicBreadcrumb($context, $separator)
+    {
+        if ($context == 'related') {
+            return App::frontend()->context()->posts->post_title;
+        }
+    }
+    
     public static function publicBeforeDocument()
     {
         $tplset = App::themes()->moduleInfo(App::blog()->settings()->system->theme, 'tplset');

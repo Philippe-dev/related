@@ -34,7 +34,7 @@ use Dotclear\Helper\Html\Form\Text;
 use Dotclear\Helper\Html\Html;
 use Exception;
 
-class ManageRelatedPages extends Process
+class ManagePages extends Process
 {
     private static string $default_tab = 'pages_compose';
 
