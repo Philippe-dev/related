@@ -23,11 +23,13 @@ use Dotclear\Core\Backend\Page;
 use Dotclear\Core\Process;
 use Dotclear\Database\MetaRecord;
 use Dotclear\Helper\Date;
+use Dotclear\Helper\File\Files;
 use Dotclear\Helper\Html\Form\Button;
 use Dotclear\Helper\Html\Form\Capture;
 use Dotclear\Helper\Html\Form\Checkbox;
 use Dotclear\Helper\Html\Form\Datetime;
 use Dotclear\Helper\Html\Form\Div;
+use Dotclear\Helper\Html\Form\Fieldset;
 use Dotclear\Helper\Html\Form\Form;
 use Dotclear\Helper\Html\Form\Hidden;
 use Dotclear\Helper\Html\Form\Img;
@@ -60,7 +62,9 @@ use Exception;
  */
 class ManagePage extends Process
 {
-    private static bool $pageIsFile = true;
+    private static bool $pageIsFile           = true;
+    private static string $page_related_file  = '';
+    private static array $related_pages_files = ['-' => ''];
 
     public static function init(): bool
     {
@@ -119,15 +123,6 @@ class ManagePage extends Process
             App::auth()::PERMISSION_CONTENT_ADMIN,
         ]), App::blog()->id());
         App::backend()->can_delete = false;
-
-        try {
-            $post_metas = App::meta()->getMetaRecordset(App::backend()->post_meta, 'related_file');
-            if (!$post_metas->isEmpty()) {
-                
-                $pageIsFile        = true;
-            }
-        } catch (Exception) {
-        }
 
         $post_headlink = '<link rel="%s" title="%s" href="' . My::manageUrl(['part' => 'page', 'id' => '%s'], parametric: true) . '">';
 
@@ -195,6 +190,7 @@ class ManagePage extends Process
                 App::backend()->post_open_comment  = (bool) App::backend()->post->post_open_comment;
                 App::backend()->post_open_tb       = (bool) App::backend()->post->post_open_tb;
                 App::backend()->post_selected      = (bool) App::backend()->post->post_selected;
+                App::backend()->post_meta          = App::backend()->post->post_meta;
 
                 App::backend()->page_title = __('Edit related page');
 
@@ -704,7 +700,21 @@ class ManagePage extends Process
                 ],
             ]);
 
-            if (!self::$pageIsFile) {
+            try {
+                $post_metas = App::meta()->getMetaRecordset(App::backend()->post_meta, 'related_file');
+                if (!$post_metas->isEmpty()) {
+                    $page_related_file = $post_metas->meta_id;
+                    $pageIsFile        = true;
+                } elseif (empty($_REQUEST['id'])) {
+                    $page_related_file = '';
+                    $pageIsFile        = true;
+                } else {
+                    $pageIsFile = false;
+                }
+            } catch (Exception) {
+            }
+
+            if (!$pageIsFile) {
                 $main_items = new ArrayObject(
                     [
                         'post_title' => (new Para())->items([
@@ -730,59 +740,73 @@ class ManagePage extends Process
 
                         'post_excerpt' => (new Para())->class('area')->id('excerpt-area')->items([
                             (new Textarea('post_excerpt'))
-                                    ->value(Html::escapeHTML(App::backend()->post_excerpt))
-                                    ->cols(50)
-                                    ->rows(5)
-                                    ->lang(App::backend()->post_lang)
-                                    ->spellcheck(true)
-                                    ->label(
-                                        (new Label(
-                                            __('Excerpt:') . ' ' . (new Span(__('Introduction to the page.')))->class('form-note')->render(),
-                                            Label::OUTSIDE_TEXT_BEFORE
-                                        ))
-                                        ->class('bold')
-                                    ),
+                                ->value(Html::escapeHTML(App::backend()->post_excerpt))
+                                ->cols(50)
+                                ->rows(5)
+                                ->lang(App::backend()->post_lang)
+                                ->spellcheck(true)
+                                ->label(
+                                    (new Label(
+                                        __('Excerpt:') . ' ' . (new Span(__('Introduction to the page.')))->class('form-note')->render(),
+                                        Label::OUTSIDE_TEXT_BEFORE
+                                    ))
+                                    ->class('bold')
+                                ),
                         ])
                         ->render(),
 
                         'post_content' => (new Para())->class('area')->id('content-area')->items([
                             (new Textarea('post_content'))
-                                    ->value(Html::escapeHTML(App::backend()->post_content))
-                                    ->cols(50)
-                                    ->rows(App::auth()->getOption('edit_size'))
-                                    ->required(true)
-                                    ->lang(App::backend()->post_lang)
-                                    ->spellcheck(true)
-                                    ->placeholder(__('Content'))
-                                    ->label(
-                                        (new Label(
-                                            (new Span('*'))->render() . __('Content:'),
-                                            Label::OUTSIDE_TEXT_BEFORE
-                                        ))
-                                        ->class(['required', 'bold'])
-                                    ),
+                                ->value(Html::escapeHTML(App::backend()->post_content))
+                                ->cols(50)
+                                ->rows(App::auth()->getOption('edit_size'))
+                                ->required(true)
+                                ->lang(App::backend()->post_lang)
+                                ->spellcheck(true)
+                                ->placeholder(__('Content'))
+                                ->label(
+                                    (new Label(
+                                        (new Span('*'))->render() . __('Content:'),
+                                        Label::OUTSIDE_TEXT_BEFORE
+                                    ))
+                                    ->class(['required', 'bold'])
+                                ),
                         ])
                         ->render(),
 
                         'post_notes' => (new Para())->class('area')->id('notes-area')->items([
                             (new Textarea('post_notes'))
-                                    ->value(Html::escapeHTML(App::backend()->post_notes))
-                                    ->cols(50)
-                                    ->rows(5)
-                                    ->lang(App::backend()->post_lang)
-                                    ->spellcheck(true)
-                                    ->label(
-                                        (new Label(
-                                            __('Personal notes:') . ' ' . (new Span(__('Unpublished notes.')))->class('form-note')->render(),
-                                            Label::OUTSIDE_TEXT_BEFORE
-                                        ))
-                                        ->class('bold')
-                                    ),
+                                ->value(Html::escapeHTML(App::backend()->post_notes))
+                                ->cols(50)
+                                ->rows(5)
+                                ->lang(App::backend()->post_lang)
+                                ->spellcheck(true)
+                                ->label(
+                                    (new Label(
+                                        __('Personal notes:') . ' ' . (new Span(__('Unpublished notes.')))->class('form-note')->render(),
+                                        Label::OUTSIDE_TEXT_BEFORE
+                                    ))
+                                    ->class('bold')
+                                ),
                         ])
                         ->render(),
                     ]
                 );
             } else {
+                $dir          = @dir((string) App::blog()->settings()->related->files_path);
+                $allowed_exts = ['php', 'html', 'xml', 'txt'];
+
+                if ($dir) {
+                    while (($entry = $dir->read()) !== false) {
+                        $entry_path = $dir->path . '/' . $entry;
+                        if (in_array(Files::getExtension($entry), $allowed_exts)) {
+                            if (is_file($entry_path) && is_readable($entry_path)) {
+                                $related_pages_files[$entry] = $entry;
+                            }
+                        }
+                    }
+                }
+
                 $main_items = new ArrayObject(
                     [
                         'post_title' => (new Para())->items([
@@ -808,54 +832,82 @@ class ManagePage extends Process
 
                         'post_excerpt' => (new Para())->class('area')->id('excerpt-area')->items([
                             (new Textarea('post_excerpt'))
-                                                    ->value(Html::escapeHTML(App::backend()->post_excerpt))
-                                                    ->cols(50)
-                                                    ->rows(5)
-                                                    ->lang(App::backend()->post_lang)
-                                                    ->spellcheck(true)
-                                                    ->label(
-                                                        (new Label(
-                                                            __('Excerpt:') . ' ' . (new Span(__('Introduction to the page.')))->class('form-note')->render(),
-                                                            Label::OUTSIDE_TEXT_BEFORE
-                                                        ))
-                                                        ->class('bold')
-                                                    ),
+                                ->value(Html::escapeHTML(App::backend()->post_excerpt))
+                                ->cols(50)
+                                ->rows(5)
+                                ->lang(App::backend()->post_lang)
+                                ->spellcheck(true)
+                                ->label(
+                                    (new Label(
+                                        __('Excerpt:') . ' ' . (new Span(__('Introduction to the page.')))->class('form-note')->render(),
+                                        Label::OUTSIDE_TEXT_BEFORE
+                                    ))
+                                    ->class('bold')
+                                ),
                         ])
                         ->render(),
 
-                        /*'post_content' => (new Para())->class('area')->id('content-area')->items([
+                        'post_content' => (new Para())->class('hidden')->id('content-area')->items([
                             (new Textarea('post_content'))
-                                                    ->value(Html::escapeHTML(App::backend()->post_content))
-                                                    ->cols(50)
-                                                    ->rows(App::auth()->getOption('edit_size'))
-                                                    ->required(true)
-                                                    ->lang(App::backend()->post_lang)
-                                                    ->spellcheck(true)
-                                                    ->placeholder(__('Content'))
-                                                    ->label(
-                                                        (new Label(
-                                                            (new Span('*'))->render() . __('Content:'),
-                                                            Label::OUTSIDE_TEXT_BEFORE
-                                                        ))
-                                                        ->class(['required', 'bold'])
-                                                    ),
+                                ->value(Html::escapeHTML(App::backend()->post_content))
+                                ->cols(50)
+                                ->rows(App::auth()->getOption('edit_size'))
+                                ->required(true)
+                                ->lang(App::backend()->post_lang)
+                                ->spellcheck(true)
+                                ->placeholder(__('Content'))
+                                ->label(
+                                    (new Label(
+                                        (new Span('*'))->render() . __('Content:'),
+                                        Label::OUTSIDE_TEXT_BEFORE
+                                    ))
+                                    ->class(['required', 'bold'])
+                                ),
                         ])
-                        ->render(),*/
+                        ->render(),
+
+                        'is_file' => 
+                        (new Div())->class('fieldset')->id('is_file-area')
+                            ->items([
+                                (new Para())->items([
+                                    (new Select('repository_file'))
+                                        ->items($related_pages_files)
+                                        ->default($page_related_file)
+                                        ->label(new Label(__('Pick up a local file in your related pages repository'), Label::OUTSIDE_LABEL_BEFORE)),
+                                ]),
+                            ])
+                            
+                        ->render(),
+
+                        /*$main_items['is_file'] = '<p class="col"><label class="required no-margin bold" title="' . __('Required field') . '" ' .
+                        'for="repository_file"><abbr title="' . __('Required field') . '">*</abbr> ' . __('Included file:') . '</label></p>' .
+                        '<div class="fieldset">' .
+                        '<p><label>' . __('Pick up a local file in your related pages repository') . ' ' .
+                        form::combo('repository_file', self::$related_pages_files, self::$page_related_file) .
+                        '</label></p>' .
+                        form::hidden(['MAX_FILE_SIZE'], DC_MAX_UPLOAD_SIZE) .
+                        '<p><label>' . __('or upload a new file') . ' ' .
+                        '<input type="file" page_relid="up_file" name="up_file">' .
+                        '</label></p>' .
+                        '</div>' .
+                        form::hidden('part', 'page') .
+                        App::nonce()->getFormNonce() .
+                        form::hidden('type', 'file');*/
 
                         'post_notes' => (new Para())->class('area')->id('notes-area')->items([
                             (new Textarea('post_notes'))
-                                                    ->value(Html::escapeHTML(App::backend()->post_notes))
-                                                    ->cols(50)
-                                                    ->rows(5)
-                                                    ->lang(App::backend()->post_lang)
-                                                    ->spellcheck(true)
-                                                    ->label(
-                                                        (new Label(
-                                                            __('Personal notes:') . ' ' . (new Span(__('Unpublished notes.')))->class('form-note')->render(),
-                                                            Label::OUTSIDE_TEXT_BEFORE
-                                                        ))
-                                                        ->class('bold')
-                                                    ),
+                                ->value(Html::escapeHTML(App::backend()->post_notes))
+                                ->cols(50)
+                                ->rows(5)
+                                ->lang(App::backend()->post_lang)
+                                ->spellcheck(true)
+                                ->label(
+                                    (new Label(
+                                        __('Personal notes:') . ' ' . (new Span(__('Unpublished notes.')))->class('form-note')->render(),
+                                        Label::OUTSIDE_TEXT_BEFORE
+                                    ))
+                                    ->class('bold')
+                                ),
                         ])
                         ->render(),
                     ]
