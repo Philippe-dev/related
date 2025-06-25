@@ -83,9 +83,8 @@ class ManagePage extends Process
         }
 
         $pageIsFile = (!empty($_REQUEST['type']) && $_REQUEST['type'] === 'file');
-        
-        $post = new Post();
 
+        $post = new Post();
 
         $params = [];
         Page::check(App::auth()->makePermissions([
@@ -319,7 +318,7 @@ class ManagePage extends Process
             ];
 
             if ($pageIsFile) {
-                $post_content = '/** external content **/';
+                $post_content       = '/** external content **/';
                 $post_content_xhtml = '/** external content **/';
 
                 App::blog()->setPostContent(
@@ -355,7 +354,7 @@ class ManagePage extends Process
                     $related_upl = false;
                 }
 
-                if (!is_null($related_upl)) {
+                if ($related_upl) {
                     try {
                         if ($related_upl) {
                             Files::uploadStatus($_FILES['up_file']);
@@ -432,7 +431,7 @@ class ManagePage extends Process
                 try {
                     # --BEHAVIOR-- adminBeforePageUpdate -- Cursor, int
                     App::behavior()->callBehavior('adminBeforePageUpdate', $cur, App::backend()->post_id);
-                    
+
                     App::con()->begin();
                     App::blog()->updPost(App::backend()->post_id, $cur);
                     if ($pageIsFile) {
@@ -446,7 +445,6 @@ class ManagePage extends Process
                         }
                     }
                     App::con()->commit();
-
 
                     # --BEHAVIOR-- adminAfterPageUpdate -- Cursor, int
                     App::behavior()->callBehavior('adminAfterPageUpdate', $cur, App::backend()->post_id);
@@ -463,11 +461,16 @@ class ManagePage extends Process
                     # --BEHAVIOR-- adminBeforePageCreate -- Cursor
                     App::behavior()->callBehavior('adminBeforePageCreate', $cur);
 
-                    App::con()->begin();
                     $return_id = App::blog()->addPost($cur);
+
+                    # --BEHAVIOR-- adminAfterPageCreate -- Cursor, int
+                    App::behavior()->callBehavior('adminAfterPageCreate', $cur, $return_id);
+
+                    App::con()->begin();
                     if ($pageIsFile) {
                         try {
-                            App::meta()->setPostMeta($return_id, 'related_file', $page_related_file);
+                            App::meta()->delPostMeta(App::backend()->post_id, 'related_file');
+                            App::meta()->setPostMeta(App::backend()->post_id, 'related_file', $page_related_file);
                         } catch (Exception $e) {
                             App::con()->rollback();
 
@@ -476,11 +479,8 @@ class ManagePage extends Process
                     }
                     App::con()->commit();
 
-                    # --BEHAVIOR-- adminAfterPageCreate -- Cursor, int
-                    App::behavior()->callBehavior('adminAfterPageCreate', $cur, $return_id);
-
                     Notices::addSuccessNotice(__('Page has been created.'));
-                    My::redirect(['part' => 'page', 'id' => $return_id]);
+                    My::redirect(['part' => 'page', 'id' => $return_id, 'crea' => '1']);
                 } catch (Exception $e) {
                     App::error()->add($e->getMessage());
                 }
