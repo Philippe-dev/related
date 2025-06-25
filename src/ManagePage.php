@@ -367,7 +367,7 @@ class ManagePage extends Process
                     } catch (Exception $e) {
                         Notices::addErrorNotice($e->getMessage());
                     }
-                    $related_pages_files  = $_POST['repository_file']  
+                    $related_pages_files  = $_POST['repository_file'];  
                 
             }
 
