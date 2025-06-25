@@ -314,21 +314,25 @@ class ManagePage extends Process
             ] = [
                 $post_excerpt, $post_excerpt_xhtml, $post_content, $post_content_xhtml,
             ];
+        }
+
+        if (!empty($_POST['delete']) && App::backend()->can_delete) {
+            // Delete page
+
+            try {
+                # --BEHAVIOR-- adminBeforePageDelete -- int
+                App::behavior()->callBehavior('adminBeforePageDelete', App::backend()->post_id);
+                App::blog()->delPost((int) App::backend()->post_id);
+                My::redirect();
+            } catch (Exception $e) {
+                App::error()->add($e->getMessage());
+            }
+        }
+
+        if ($_POST !== [] && !empty($_POST['save']) && App::backend()->can_edit_page && !App::backend()->bad_dt) {
+            // Create or update page
 
             if ($pageIsFile) {
-                $post_content       = '/** external content **/';
-                $post_content_xhtml = '/** external content **/';
-
-                App::blog()->setPostContent(
-                    (int) App::backend()->post_id,
-                    App::backend()->post_format,
-                    App::backend()->post_lang,
-                    $post_excerpt,
-                    $post_excerpt_xhtml,
-                    $post_content,
-                    $post_content_xhtml
-                );
-
                 $dir          = @dir((string) App::blog()->settings()->related->files_path);
                 $allowed_exts = ['php', 'html', 'xml', 'txt'];
 
@@ -366,23 +370,6 @@ class ManagePage extends Process
                 }
                 $related_pages_files = $_POST['repository_file'];
             }
-        }
-
-        if (!empty($_POST['delete']) && App::backend()->can_delete) {
-            // Delete page
-
-            try {
-                # --BEHAVIOR-- adminBeforePageDelete -- int
-                App::behavior()->callBehavior('adminBeforePageDelete', App::backend()->post_id);
-                App::blog()->delPost((int) App::backend()->post_id);
-                My::redirect();
-            } catch (Exception $e) {
-                App::error()->add($e->getMessage());
-            }
-        }
-
-        if ($_POST !== [] && !empty($_POST['save']) && App::backend()->can_edit_page && !App::backend()->bad_dt) {
-            // Create or update page
 
             $cur = App::blog()->openPostCursor();
 
@@ -410,9 +397,9 @@ class ManagePage extends Process
                 $cur->post_url = App::backend()->post_url;
             }
 
-            if (isset($_POST['repository_file'])) {
+            /*if (isset($_POST['repository_file'])) {
                 $cur->post_url = App::backend()->post_url;
-            }
+            }*/
 
             // Back to UTC in order to keep UTC datetime for creadt/upddt
             Date::setTZ('UTC');
@@ -424,8 +411,9 @@ class ManagePage extends Process
                     # --BEHAVIOR-- adminBeforePageUpdate -- Cursor, int
                     App::behavior()->callBehavior('adminBeforePageUpdate', $cur, App::backend()->post_id);
 
-                    App::con()->begin();
                     App::blog()->updPost(App::backend()->post_id, $cur);
+
+                    App::con()->begin();
                     if ($pageIsFile) {
                         try {
                             App::meta()->delPostMeta(App::backend()->post_id, 'related_file');
@@ -453,10 +441,10 @@ class ManagePage extends Process
                     # --BEHAVIOR-- adminBeforePageCreate -- Cursor
                     App::behavior()->callBehavior('adminBeforePageCreate', $cur);
 
-                    $return_id = App::blog()->addPost($cur);
-
                     # --BEHAVIOR-- adminAfterPageCreate -- Cursor, int
                     App::behavior()->callBehavior('adminAfterPageCreate', $cur, $return_id);
+
+                    $return_id = App::blog()->addPost($cur);
 
                     App::con()->begin();
                     if ($pageIsFile) {
