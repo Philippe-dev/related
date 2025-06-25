@@ -354,19 +354,23 @@ class ManagePage extends Process
                 } elseif (!empty($_POST['repository_file']) && in_array($_POST['repository_file'], $related_pages_files)) {
                     $related_upl = false;
                 }
-
+                
                 try {
                     if ($related_upl) {
                         Files::uploadStatus($_FILES['up_file']);
-                        App::media()->uploadFile($_FILES['up_file']['name'], App::blog()->settings()->related->files_path . '/', true, null, false);
-                        $page_related_file = $_FILES['up_file']['name'];
+                        $src_file = $_FILES['up_file']['tmp_name'];
+                        $trg_file = App::blog()->settings()->related->files_path . '/' . $_FILES['up_file']['name'];
+                        if (move_uploaded_file($src_file, $trg_file)) {
+                            $page_related_file = $_FILES['up_file']['name'];
+                        }
                     } else {
                         $page_related_file = $_POST['repository_file'];
                     }
                 } catch (Exception $e) {
                     Notices::addErrorNotice($e->getMessage());
                 }
-                $related_pages_files = $_POST['repository_file'];
+                $related_pages_files  = $_POST['repository_file'];  
+                
             }
 
             $cur = App::con()->openCursor(App::con()->prefix() . 'post');
@@ -973,10 +977,10 @@ class ManagePage extends Process
                                     (new FormFile('up_file'))
                                         ->size(35)
                                         ->label(new Label(__('Choose a file:') . ' (' . sprintf(__('Maximum size %s'), Files::size(App::config()->maxUploadSize())) . ')', Label::IL_TF)),
-                                    (new Hidden(['part'], 'page')),
-                                    (new Hidden(['type'], 'file')),
-                                    (new Hidden(['id'], 'id')),
-                                ]),
+                                            (new Hidden(['part'], 'page')),
+                                            (new Hidden(['type'], 'file')),
+                                            (new Hidden(['id'], 'id')),
+                                        ]),
                             ])
 
                         ->render(),
