@@ -31,6 +31,7 @@ use Dotclear\Helper\Html\Form\Datetime;
 use Dotclear\Helper\Html\Form\Div;
 use Dotclear\Helper\Html\Form\Fieldset;
 use Dotclear\Helper\Html\Form\Form;
+use Dotclear\Helper\Html\Form\File as FormFile;
 use Dotclear\Helper\Html\Form\Hidden;
 use Dotclear\Helper\Html\Form\Img;
 use Dotclear\Helper\Html\Form\Input;
@@ -353,22 +354,19 @@ class ManagePage extends Process
                 } elseif (!empty($_POST['repository_file']) && in_array($_POST['repository_file'], $related_pages_files)) {
                     $related_upl = false;
                 }
-                    try {
-                        if ($related_upl) {
-                            Files::uploadStatus($_FILES['up_file']);
-                            $src_file = $_FILES['up_file']['tmp_name'];
-                            $trg_file = App::blog()->settings()->related->files_path . '/' . $_FILES['up_file']['name'];
-                            if (move_uploaded_file($src_file, $trg_file)) {
-                                $page_related_file = $_FILES['up_file']['name'];
-                            }
-                        } else {
-                            $page_related_file = $_POST['repository_file'];
-                        }
-                    } catch (Exception $e) {
-                        Notices::addErrorNotice($e->getMessage());
+
+                try {
+                    if ($related_upl) {
+                        Files::uploadStatus($_FILES['up_file']);
+                        App::media()->uploadFile($_FILES['up_file']['name'], App::blog()->settings()->related->files_path . '/', true, null, false);
+                        $page_related_file = $_FILES['up_file']['name'];
+                    } else {
+                        $page_related_file = $_POST['repository_file'];
                     }
-                    $related_pages_files  = $_POST['repository_file'];  
-                
+                } catch (Exception $e) {
+                    Notices::addErrorNotice($e->getMessage());
+                }
+                $related_pages_files = $_POST['repository_file'];
             }
 
             $cur = App::con()->openCursor(App::con()->prefix() . 'post');
@@ -972,10 +970,9 @@ class ManagePage extends Process
                                         ->label(new Label(__('Pick up a local file in your related pages repository'), Label::OUTSIDE_LABEL_BEFORE)),
                                 ]),
                                 (new Para())->items([
-                                    (new Input('up_file'))
-                                        ->type('file')
-                                        ->label(new Label(__('or upload a new file'), Label::OUTSIDE_LABEL_BEFORE)),
-                                    (new Hidden(['MAX_FILE_SIZE'], (string) DC_MAX_UPLOAD_SIZE)),
+                                    (new FormFile('up_file'))
+                                        ->size(35)
+                                        ->label(new Label(__('Choose a file:') . ' (' . sprintf(__('Maximum size %s'), Files::size(App::config()->maxUploadSize())) . ')', Label::IL_TF)),
                                     (new Hidden(['part'], 'page')),
                                     (new Hidden(['type'], 'file')),
                                     (new Hidden(['id'], 'id')),
