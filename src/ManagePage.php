@@ -55,7 +55,6 @@ use Dotclear\Helper\Html\Form\Thead;
 use Dotclear\Helper\Html\Form\Tr;
 use Dotclear\Helper\Html\Html;
 use Dotclear\Helper\Network\Http;
-use Dotclear\Plugin\related\Entity\Post;
 use Exception;
 
 /**
@@ -84,8 +83,6 @@ class ManagePage extends Process
         }
 
         $pageIsFile = (!empty($_REQUEST['type']) && $_REQUEST['type'] === 'file');
-
-        $post = new Post();
 
         $params = [];
         Page::check(App::auth()->makePermissions([
@@ -345,16 +342,14 @@ class ManagePage extends Process
                         }
                     }
                 }
-            }
 
-            if ($pageIsFile) {
                 $related_upl = null;
                 if (!empty($_FILES['up_file']['name'])) {
                     $related_upl = true;
                 } elseif (!empty($_POST['repository_file']) && in_array($_POST['repository_file'], $related_pages_files)) {
                     $related_upl = false;
                 }
-                
+
                 try {
                     if ($related_upl) {
                         Files::uploadStatus($_FILES['up_file']);
@@ -369,12 +364,8 @@ class ManagePage extends Process
                 } catch (Exception $e) {
                     Notices::addErrorNotice($e->getMessage());
                 }
-                $related_pages_files  = $_POST['repository_file'];  
-                
+                $related_pages_files = $_POST['repository_file'];
             }
-
-            $cur = App::con()->openCursor(App::con()->prefix() . 'post');
-            $post->setCursor($cur);
         }
 
         if (!empty($_POST['delete']) && App::backend()->can_delete) {
@@ -977,10 +968,10 @@ class ManagePage extends Process
                                     (new FormFile('up_file'))
                                         ->size(35)
                                         ->label(new Label(__('Choose a file:') . ' (' . sprintf(__('Maximum size %s'), Files::size(App::config()->maxUploadSize())) . ')', Label::IL_TF)),
-                                            (new Hidden(['part'], 'page')),
-                                            (new Hidden(['type'], 'file')),
-                                            (new Hidden(['id'], 'id')),
-                                        ]),
+                                    (new Hidden(['part'], 'page')),
+                                    (new Hidden(['type'], 'file')),
+                                    (new Hidden(['id'], 'id')),
+                                ]),
                             ])
 
                         ->render(),
