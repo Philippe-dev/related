@@ -353,8 +353,6 @@ class ManagePage extends Process
                 } elseif (!empty($_POST['repository_file']) && in_array($_POST['repository_file'], $related_pages_files)) {
                     $related_upl = false;
                 }
-
-                if ($related_upl) {
                     try {
                         if ($related_upl) {
                             Files::uploadStatus($_FILES['up_file']);
@@ -369,7 +367,8 @@ class ManagePage extends Process
                     } catch (Exception $e) {
                         Notices::addErrorNotice($e->getMessage());
                     }
-                }
+                    $related_pages_files  = $_POST['repository_file']  
+                
             }
 
             $cur = App::con()->openCursor(App::con()->prefix() . 'post');
