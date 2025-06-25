@@ -447,16 +447,14 @@ class ManagePage extends Process
                     $return_id = App::blog()->addPost($cur);
 
                     App::con()->begin();
-                    if ($pageIsFile) {
-                        try {
-                            App::meta()->delPostMeta(App::backend()->post_id, 'related_file');
-                            App::meta()->setPostMeta(App::backend()->post_id, 'related_file', $page_related_file);
-                        } catch (Exception $e) {
-                            App::con()->rollback();
-
-                            throw $e;
-                        }
+                    
+                    try {
+                        App::meta()->setPostMeta(App::backend()->post_id, 'related_file', $page_related_file);
+                    } catch (Exception $e) {
+                        App::con()->rollback();
+                        throw $e;
                     }
+                    
                     App::con()->commit();
 
                     Notices::addSuccessNotice(__('Page has been created.'));
