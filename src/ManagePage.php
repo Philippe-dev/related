@@ -899,7 +899,8 @@ class ManagePage extends Process
                                         ->label(new Label(__('Pick up a local file in your related pages repository'), Label::OUTSIDE_LABEL_BEFORE)),
                                 ]),
                                 (new Para())->items([
-                                    (new FormFile('up_file'))
+                                    (new Input('up_file'))
+                                        ->type('file')
                                         ->size(35)
                                         ->label(new Label(__('Choose a file:') . ' (' . sprintf(__('Maximum size %s'), Files::size(App::config()->maxUploadSize())) . ')', Label::IL_TF)),
                                     (new Hidden(['part'], 'page')),
