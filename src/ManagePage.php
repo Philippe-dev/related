@@ -453,7 +453,6 @@ class ManagePage extends Process
                     }
                     App::con()->commit();
 
-                    //Notices::addSuccessNotice(__('Page has been created.'));
                     My::redirect(['part' => 'page', 'id' => $return_id, 'crea' => '1']);
                 } catch (Exception $e) {
                     App::error()->add($e->getMessage());
