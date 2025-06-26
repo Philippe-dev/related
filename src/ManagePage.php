@@ -443,15 +443,17 @@ class ManagePage extends Process
                     $return_id = App::blog()->addPost($cur);
 
                     App::con()->begin();
+
                     try {
-                        App::meta()->setPostMeta(App::backend()->post_id, 'related_file', $page_related_file);
+                        App::meta()->setPostMeta($return_id, 'related_file', $page_related_file);
                     } catch (Exception $e) {
                         App::con()->rollback();
+
                         throw $e;
                     }
                     App::con()->commit();
 
-                    Notices::addSuccessNotice(__('Page has been created.'));
+                    //Notices::addSuccessNotice(__('Page has been created.'));
                     My::redirect(['part' => 'page', 'id' => $return_id, 'crea' => '1']);
                 } catch (Exception $e) {
                     App::error()->add($e->getMessage());
@@ -1069,7 +1071,9 @@ class ManagePage extends Process
                                                     (new Para())
                                                         ->class(['border-top', 'form-buttons'])
                                                         ->items([
-                                                            ...My::hiddenFields(),
+                                                            ...My::hiddenFields([
+                                                                'part' => 'page',
+                                                                'id'   => '']),
                                                             ...$buttons,
                                                         ]),
                                                     (new Capture(App::behavior()->callBehavior(...), ['adminPageAfterButtons', App::backend()->post ?? null])),
