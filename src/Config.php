@@ -126,7 +126,7 @@ class Config extends Process
                     (new Para())->items([
                         (new Label(__('Included files repository path:'), Label::OUTSIDE_LABEL_AFTER))->for('related_files_path')->class('classic'),
                         (new Span('&nbsp;')),
-                        (new Input('related_files_path', (string) $settings->files_path))->size(80)->max(255)->value($settings->files_path),
+                        (new Input('related_files_path', (string) $settings->files_path))->size(50)->max(255)->value($settings->files_path),
                     ]),
                 ]),
             ])->render();
@@ -137,7 +137,7 @@ class Config extends Process
                     (new Para())->items([
                         (new Label(__('URL prefix:'), Label::OUTSIDE_LABEL_AFTER))->for('related_url_prefix')->class('classic'),
                         (new Span('&nbsp;')),
-                        (new Input('related_url_prefix', (string) $settings->url_prefix))->size(80)->max(255)->value($settings->url_prefix),
+                        (new Input('related_url_prefix', (string) $settings->url_prefix))->size(20)->max(255)->value($settings->url_prefix),
                         (new Note())
                             ->class(['form-note', 'warning'])
                             ->text(__('This prefix will be used to generate the pages URLs. Do not use any existing prefix such as post, category or page.')),
