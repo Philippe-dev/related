@@ -279,7 +279,7 @@ class ManagePage extends Process
             App::backend()->post_selected     = !empty($_POST['post_selected']);
             App::backend()->post_lang         = $_POST['post_lang'];
             App::backend()->post_password     = empty($_POST['post_password']) ? null : $_POST['post_password'];
-            App::backend()->post_position     = (int) $_POST['post_position'];
+            //App::backend()->post_position     = (int) $_POST['post_position'];
 
             App::backend()->post_notes = $_POST['post_notes'];
 
