@@ -327,6 +327,8 @@ class ManagePage extends Process
                 $dir          = @dir((string) App::blog()->settings()->related->files_path);
                 $allowed_exts = ['php', 'html', 'xml', 'txt'];
 
+                $related_pages_files = ['-' => ''];
+
                 if ($dir) {
                     while (($entry = $dir->read()) !== false) {
                         $entry_path = $dir->path . '/' . $entry;
@@ -809,6 +811,8 @@ class ManagePage extends Process
             } else {
                 $dir          = @dir((string) App::blog()->settings()->related->files_path);
                 $allowed_exts = ['php', 'html', 'xml', 'txt'];
+
+                $related_pages_files = ['-' => ''];
 
                 if ($dir) {
                     while (($entry = $dir->read()) !== false) {
