@@ -36,8 +36,7 @@ class Backend extends Process
         App::behavior()->addBehavior('adminDashboardFavoritesV2', BackendBehaviors::dashboardFavorites(...));
         App::behavior()->addBehavior('adminDashboardFavsIconV2', BackendBehaviors::dashboardFavsIcon(...));
 
-        App::behavior()->addBehavior('initWidgets', Widgets::init(...));
-        App::behavior()->addBehavior('initDefaultWidgets', Widgets::initDefaultWidgets(...));
+        App::behavior()->addBehavior('initWidgets', Widgets::initWidgets(...));
 
         return true;
     }

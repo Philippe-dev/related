@@ -39,8 +39,7 @@ class Frontend extends Process
 
         App::frontend()->template()->addValue('EntryContent', FrontendTemplates::PageContent(...));
 
-        App::behavior()->addBehavior('initWidgets', Widgets::init(...));
-        App::behavior()->addBehavior('initDefaultWidgets', Widgets::initDefaultWidgets(...));
+        App::behavior()->addBehavior('initWidgets', Widgets::initWidgets(...));
 
         return true;
     }

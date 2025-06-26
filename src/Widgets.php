@@ -21,40 +21,45 @@ use Dotclear\Plugin\widgets\WidgetsStack;
 
 class Widgets
 {
-    public static function initDefaultWidgets(WidgetsStack $w, array $d)
+    /**
+     * Initializes the pages widget.
+     *
+     * @param   WidgetsStack    $widgets    The widgets
+     */
+    public static function initWidgets(WidgetsStack $widgets): void
     {
-        $d['extra']->append($w->related);
-    }
-
-    public static function init(WidgetsStack $w)
-    {
-        $w->create('related', __('Related pages'), self::pagesList(...));
-        $w->related->setting('title', __('Title (optional)') . ' :', __('Related pages'));
-        $w->related->setting('limit', __('Pages limit:'), 10);
-        $w->related->setting(
+        $widgets->create('related', __('Related pages'), self::pagesList(...));
+        $widgets->related->setting('title', __('Title (optional)') . ' :', __('Related pages'));
+        $widgets->related->setting('limit', __('Pages limit:'), 10);
+        $widgets->related->setting(
             'homeonly',
             __('Display on:'),
             0,
             'combo',
             [__('All pages') => 0, __('Home page only') => 1, __('Except on home page') => 2]
         );
-        $w->related->setting('content_only', __('Content only'), 0, 'check');
-        $w->related->setting('class', __('CSS class:'), '');
-        $w->related->setting('offline', __('Offline'), 0, 'check');
+        $widgets->related->setting('content_only', __('Content only'), 0, 'check');
+        $widgets->related->setting('class', __('CSS class:'), '');
+        $widgets->related->setting('offline', __('Offline'), 0, 'check');
     }
 
-    public static function pagesList(WidgetsElement $w)
+    /*
+     * Widget public rendering helper.
+     *
+     * @param   WidgetsElement  $widgets     The widget
+     */
+    public static function pagesList(WidgetsElement $widgets)
     {
-        if ($w->offline) {
+        if ($widgets->offline) {
             return;
         }
 
-        if (($w->homeonly == 1 && App::url()->getType() != 'default') || ($w->homeonly == 2 && App::url()->getType() == 'default')) {
+        if (($widgets->homeonly == 1 && App::url()->getType() != 'default') || ($widgets->homeonly == 2 && App::url()->getType() == 'default')) {
             return;
         }
 
         $params['post_type']     = 'related';
-        $params['limit']         = abs((int) $w->get('limit'));
+        $params['limit']         = abs((int) $widgets->get('limit'));
         $params['no_content']    = true;
         $params['post_selected'] = true;
         $params['order']         = 'post_position ASC, post_title ASC';
@@ -65,7 +70,7 @@ class Widgets
             return;
         }
 
-        $res = ($w->title ? $w->renderTitle(Html::escapeHTML($w->title)) : '');
+        $res = ($widgets->title ? $widgets->renderTitle(Html::escapeHTML($widgets->title)) : '');
 
         $res .= '<ul>';
         while ($rs->fetch()) {
@@ -73,6 +78,6 @@ class Widgets
         }
         $res .= '</ul>';
 
-        return $w->renderDiv((bool) $w->content_only, 'related-pages-widget ' . $w->class, '', $res);
+        return $widgets->renderDiv((bool) $widgets->content_only, 'related-pages-widget ' . $widgets->class, '', $res);
     }
 }
