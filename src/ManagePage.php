@@ -995,6 +995,7 @@ class ManagePage extends Process
                 ->items([
                     (new Form('entry-form'))
                         ->method('post')
+                        ->enctype('multipart/form-data')
                         ->action(My::manageUrl(['part' => 'page']))
                         ->fields([
                             (new Div())
