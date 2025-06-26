@@ -397,10 +397,6 @@ class ManagePage extends Process
                 $cur->post_url = App::backend()->post_url;
             }
 
-            /*if (isset($_POST['repository_file'])) {
-                $cur->post_url = App::backend()->post_url;
-            }*/
-
             // Back to UTC in order to keep UTC datetime for creadt/upddt
             Date::setTZ('UTC');
 
@@ -447,14 +443,12 @@ class ManagePage extends Process
                     $return_id = App::blog()->addPost($cur);
 
                     App::con()->begin();
-                    
                     try {
                         App::meta()->setPostMeta(App::backend()->post_id, 'related_file', $page_related_file);
                     } catch (Exception $e) {
                         App::con()->rollback();
                         throw $e;
                     }
-                    
                     App::con()->commit();
 
                     Notices::addSuccessNotice(__('Page has been created.'));
@@ -923,7 +917,7 @@ class ManagePage extends Process
 
                         'post_content' => (new Para())->class('hidden')->id('content-area')->items([
                             (new Textarea('post_content'))
-                                ->value('/** external content **/'))
+                                ->value('/** external content **/')
                                 ->cols(50)
                                 ->rows(App::auth()->getOption('edit_size'))
                                 ->required(true)
