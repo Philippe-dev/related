@@ -16,7 +16,6 @@ namespace Dotclear\Plugin\related;
 
 use ArrayObject;
 use Dotclear\App;
-use Dotclear\Plugin\pages\Pages;
 use Dotclear\Core\Backend\Combos;
 use Dotclear\Core\Backend\Notices;
 use Dotclear\Core\Backend\Page;
@@ -46,6 +45,7 @@ use Dotclear\Helper\Html\Form\Text;
 use Dotclear\Helper\Html\Form\Textarea;
 use Dotclear\Helper\Html\Html;
 use Dotclear\Helper\Network\Http;
+use Dotclear\Plugin\pages\Pages;
 use Exception;
 
 /**
