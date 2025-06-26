@@ -431,11 +431,11 @@ class ManagePage extends Process
                 try {
                     # --BEHAVIOR-- adminBeforePageCreate -- Cursor
                     App::behavior()->callBehavior('adminBeforePageCreate', $cur);
+                    
+                    $return_id = App::blog()->addPost($cur);
 
                     # --BEHAVIOR-- adminAfterPageCreate -- Cursor, int
                     App::behavior()->callBehavior('adminAfterPageCreate', $cur, $return_id);
-
-                    $return_id = App::blog()->addPost($cur);
 
                     App::con()->begin();
 
