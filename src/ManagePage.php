@@ -923,7 +923,7 @@ class ManagePage extends Process
 
                         'post_content' => (new Para())->class('hidden')->id('content-area')->items([
                             (new Textarea('post_content'))
-                                ->value(Html::escapeHTML(App::backend()->post_content))
+                                ->value('/** external content **/'))
                                 ->cols(50)
                                 ->rows(App::auth()->getOption('edit_size'))
                                 ->required(true)
