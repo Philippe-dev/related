@@ -31,28 +31,19 @@ use Dotclear\Helper\Html\Form\Datetime;
 use Dotclear\Helper\Html\Form\Div;
 use Dotclear\Helper\Html\Form\Fieldset;
 use Dotclear\Helper\Html\Form\Form;
-use Dotclear\Helper\Html\Form\File as FormFile;
 use Dotclear\Helper\Html\Form\Hidden;
 use Dotclear\Helper\Html\Form\Img;
 use Dotclear\Helper\Html\Form\Input;
 use Dotclear\Helper\Html\Form\Label;
 use Dotclear\Helper\Html\Form\Link;
-use Dotclear\Helper\Html\Form\None;
 use Dotclear\Helper\Html\Form\Note;
-use Dotclear\Helper\Html\Form\Number;
 use Dotclear\Helper\Html\Form\Para;
 use Dotclear\Helper\Html\Form\Password;
 use Dotclear\Helper\Html\Form\Select;
 use Dotclear\Helper\Html\Form\Span;
 use Dotclear\Helper\Html\Form\Submit;
-use Dotclear\Helper\Html\Form\Table;
-use Dotclear\Helper\Html\Form\Tbody;
-use Dotclear\Helper\Html\Form\Td;
 use Dotclear\Helper\Html\Form\Text;
 use Dotclear\Helper\Html\Form\Textarea;
-use Dotclear\Helper\Html\Form\Th;
-use Dotclear\Helper\Html\Form\Thead;
-use Dotclear\Helper\Html\Form\Tr;
 use Dotclear\Helper\Html\Html;
 use Dotclear\Helper\Network\Http;
 use Exception;
@@ -354,21 +345,22 @@ class ManagePage extends Process
                     $related_upl = false;
                 }
 
-                try {
-                    if ($related_upl) {
-                        Files::uploadStatus($_FILES['up_file']);
-                        $src_file = $_FILES['up_file']['tmp_name'];
-                        $trg_file = App::blog()->settings()->related->files_path . '/' . $_FILES['up_file']['name'];
-                        if (move_uploaded_file($src_file, $trg_file)) {
-                            $page_related_file = $_FILES['up_file']['name'];
+                if (!is_null($related_upl)) {
+                    try {
+                        if ($related_upl) {
+                            Files::uploadStatus($_FILES['up_file']);
+                            $src_file = $_FILES['up_file']['tmp_name'];
+                            $trg_file = App::blog()->settings()->related->files_path . '/' . $_FILES['up_file']['name'];
+                            if (move_uploaded_file($src_file, $trg_file)) {
+                                $page_related_file = $_FILES['up_file']['name'];
+                            }
+                        } else {
+                            $page_related_file = $_POST['repository_file'];
                         }
-                    } else {
-                        $page_related_file = $_POST['repository_file'];
+                    } catch (Exception $e) {
+                        Notices::addErrorNotice($e->getMessage());
                     }
-                } catch (Exception $e) {
-                    Notices::addErrorNotice($e->getMessage());
                 }
-                $related_pages_files = $_POST['repository_file'];
             }
 
             $cur = App::blog()->openPostCursor();
