@@ -18,3 +18,4 @@ use Dotclear\App;
 
 App::backend()->resources()->set('help', 'related_pages', __DIR__ . '/help/related_pages.html');
 App::backend()->resources()->set('help', 'related_pages_edit', __DIR__ . '/help/related_pages_edit.html');
+App::backend()->resources()->set('help', 'related_pages_config', __DIR__ . '/help/related_pages_config.html');

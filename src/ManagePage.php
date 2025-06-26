@@ -681,11 +681,10 @@ class ManagePage extends Process
                 'metas-box' => [
                     'title' => __('Filing'),
                     'items' => [
-                        'post_position' => (new Para())->items([
-                            (new Number('post_position'))
-                                ->value(App::backend()->post_position)
-                                ->min(0)
-                                ->label(new Label(__('Page position'), Label::INSIDE_LABEL_BEFORE)),
+                        'post_selected' => (new Para())->items([
+                            (new Checkbox('post_selected', App::backend()->post_selected))
+                                ->value(1)
+                                ->label(new Label(__('In widget'), Label::INSIDE_TEXT_AFTER)),
                         ])
                         ->render(),
                     ],
@@ -694,52 +693,6 @@ class ManagePage extends Process
                 'options-box' => [
                     'title' => __('Options'),
                     'items' => [
-                        'post_open_comment_tb' => (new Div())->items([
-                            (new Text('h5'))->id('label_comment_tb')->text(__('Comments and trackbacks list')),
-                            (new Para())->items([
-                                (new Checkbox('post_open_comment', App::backend()->post_open_comment))
-                                    ->value(1)
-                                    ->label((new Label(__('Accept comments'), Label::INSIDE_TEXT_AFTER))),
-                            ]),
-                            App::blog()->settings()->system->allow_comments ?
-                                (
-                                    self::isContributionAllowed(App::backend()->post_id, strtotime(App::backend()->post_dt), true) ?
-                                    (new None())
-                                    :
-                                    (new Note())
-                                        ->class(['form-note', 'warn'])
-                                        ->text(__('Warning: Comments are no longer accepted for this entry.'))
-                                ) :
-                                (new Note())
-                                    ->class(['form-note', 'warn'])
-                                    ->text(__('Comments are not accepted on this blog so far.')),
-                            (new Para())->items([
-                                (new Checkbox('post_open_tb', App::backend()->post_open_tb))
-                                    ->value(1)
-                                    ->label((new Label(__('Accept trackbacks'), Label::INSIDE_TEXT_AFTER))),
-                            ]),
-                            App::blog()->settings()->system->allow_trackbacks ?
-                                (
-                                    self::isContributionAllowed(App::backend()->post_id, strtotime(App::backend()->post_dt), true) ?
-                                    (new None())
-                                    :
-                                    (new Note())
-                                        ->class(['form-note', 'warn'])
-                                        ->text(__('Warning: Trackbacks are no longer accepted for this entry.'))
-                                ) :
-                                (new Note())
-                                    ->class(['form-note', 'warn'])
-                                    ->text(__('Trackbacks are not accepted on this blog so far.')),
-                        ])
-                        ->render(),
-
-                        'post_hide' => (new Para())->items([
-                            (new Checkbox('post_selected', App::backend()->post_selected))
-                                ->value(1)
-                                ->label((new Label(__('Hide in widget Pages'), Label::INSIDE_TEXT_AFTER))),
-                        ])
-                        ->render(),
-
                         'post_password' => (new Para())->items([
                             (new Password('post_password'))
                                 ->autocomplete('new-password')
@@ -1106,132 +1059,8 @@ class ManagePage extends Process
             }
         }
 
-        Page::helpBlock('page', 'core_wiki');
+        Page::helpBlock('related_pages_edit', 'core_wiki');
 
         Page::closeModule();
-    }
-
-    # Controls comments or trakbacks capabilities
-
-    /**
-     * Determines if contribution is allowed.
-     *
-     * @param   mixed   $id     The identifier
-     * @param   mixed   $dt     The date
-     * @param   bool    $com    It is comment?
-     *
-     * @return  bool    True if contribution allowed, False otherwise.
-     */
-    protected static function isContributionAllowed($id, $dt, bool $com = true): bool
-    {
-        if (!$id) {
-            return true;
-        }
-        if ($com) {
-            if ((App::blog()->settings()->system->comments_ttl == 0) || (time() - App::blog()->settings()->system->comments_ttl * 86400 < $dt)) {
-                return true;
-            }
-        } elseif ((App::blog()->settings()->system->trackbacks_ttl == 0) || (time() - App::blog()->settings()->system->trackbacks_ttl * 86400 < $dt)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Shows the comments or trackbacks.
-     *
-     * @param   Metarecord  $rs             Recordset
-     * @param   bool        $has_action     Indicates if action is available
-     */
-    protected static function showComments(MetaRecord $rs, bool $has_action): string
-    {
-        // IP are available only for super-admin and admin
-        $show_ip = App::auth()->check(
-            App::auth()->makePermissions([
-                App::auth()::PERMISSION_CONTENT_ADMIN,
-            ]),
-            App::blog()->id()
-        );
-
-        $rows = [];
-        while ($rs->fetch()) {
-            $cols        = [];
-            $comment_url = App::backend()->url()->get('admin.comment', ['id' => $rs->comment_id]);
-            $sts_class   = App::status()->comment()->id((int) $rs->comment_status);
-
-            $cols[] = (new Td())
-                ->class('nowrap')
-                ->items([
-                    $has_action ?
-                    (new Checkbox(['comments[]']))
-                        ->value($rs->comment_id)
-                        ->title(__('Select this comment')) :
-                    (new None()),
-                ]);
-
-            $cols[] = (new Td())
-                ->class('maximal')
-                ->text($rs->comment_author);
-
-            $cols[] = (new Td())
-                ->class('nowrap')
-                ->text(Date::dt2str(__('%Y-%m-%d %H:%M'), $rs->comment_dt));
-
-            if ($show_ip) {
-                $cols[] = (new Td())
-                    ->class('nowrap')
-                    ->items([
-                        (new Link())
-                            ->href(App::backend()->url()->get('admin.comment', ['ip' => $rs->comment_ip]))
-                            ->text($rs->comment_ip),
-                    ]);
-            }
-
-            $cols[] = (new Td())
-                ->class(['nowrap', 'status'])
-                ->text(App::status()->comment()->image((int) $rs->comment_status)->render());
-
-            $cols[] = (new Td())
-                ->class(['nowrap', 'status'])
-                ->items([
-                    (new Link())
-                        ->href($comment_url)
-                        ->title(__('Edit this comment'))
-                        ->items([
-                            (new Img('images/edit.svg'))->class(['mark', 'mark-edit', 'light-only'])->alt(''),
-                            (new Img('images/edit-dark.svg'))->class(['mark', 'mark-edit', 'dark-only'])->alt(''),
-                            (new Text(null, ' ' . __('Edit'))),
-                        ]),
-                ]);
-
-            $rows[] = (new Tr())
-                ->class(array_filter(['line', App::status()->comment()->isRestricted($rs->comment_status) ? '' : 'offline ', $sts_class]))
-                ->id('c' . $rs->comment_id)
-                ->cols($cols);
-        }
-
-        $cols   = [];
-        $cols[] = (new Th())
-            ->class(['nowrap', 'first'])
-            ->colspan(2)
-            ->text(__('Author'));
-        $cols[] = (new Th())
-            ->text(__('Date'));
-        if ($show_ip) {
-            $cols[] = (new Th())
-                ->class('nowrap')
-                ->text(__('IP address'));
-        }
-        $cols[] = (new Th())
-            ->text(__('Status'));
-        $cols[] = (new Th())
-            ->text(__('Edit'));
-
-        return (new Table())
-            ->class('comments-list')
-            ->thead((new Thead())->rows([(new Tr())->cols($cols)]))
-            ->tbody((new Tbody())->rows($rows))
-        ->render();
     }
 }

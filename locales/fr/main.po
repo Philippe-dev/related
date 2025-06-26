@@ -43,8 +43,8 @@ msgstr "Activer le plugin pages connexes"
 msgid "General options"
 msgstr "Options générales"
 
-msgid "Repository path:"
-msgstr "Chemin du dépôt des pages incluses :"
+msgid "Included files repository path:"
+msgstr "Chemin du dépôt des fichiers inclus :"
 
 msgid "Advanced options"
 msgstr "Options avancées"
