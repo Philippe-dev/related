@@ -420,6 +420,7 @@ class ManagePage extends Process
                     App::behavior()->callBehavior('adminAfterPageUpdate', $cur, App::backend()->post_id);
 
                     Notices::addSuccessNotice(__('Page has been updated.'));
+
                     My::redirect(['part' => 'page', 'id' => App::backend()->post_id]);
                 } catch (Exception $e) {
                     App::error()->add($e->getMessage());
@@ -446,6 +447,8 @@ class ManagePage extends Process
                         throw $e;
                     }
                     App::con()->commit();
+
+                    Notices::addSuccessNotice(__('Page has been created.'));
 
                     My::redirect(['part' => 'page', 'id' => $return_id, 'crea' => '1']);
                 } catch (Exception $e) {
@@ -565,15 +568,7 @@ class ManagePage extends Process
             ]
         );
 
-        if (!empty($_GET['upd'])) {
-            Notices::success(__('Page has been successfully updated.'));
-        } elseif (!empty($_GET['crea'])) {
-            Notices::success(__('Page has been successfully created.'));
-        } elseif (!empty($_GET['attached'])) {
-            Notices::success(__('File has been successfully attached.'));
-        } elseif (!empty($_GET['rmattach'])) {
-            Notices::success(__('Attachment has been successfully removed.'));
-        }
+        echo Notices::GetNotices();
 
         # HTML conversion
         if (!empty($_GET['xconv'])) {
