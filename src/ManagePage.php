@@ -440,7 +440,9 @@ class ManagePage extends Process
                     App::con()->begin();
 
                     try {
-                        App::meta()->setPostMeta($return_id, 'related_file', $page_related_file);
+                        if (isset($page_related_file)) {
+                            App::meta()->setPostMeta($return_id, 'related_file', $page_related_file);
+                        }
                     } catch (Exception $e) {
                         App::con()->rollback();
 
