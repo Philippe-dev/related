@@ -119,9 +119,9 @@ class BackendActions extends ActionsPosts
     public function loadDefaults(): void
     {
         // We could have added a behavior here, but we want default action to be setup first
-        BackendDefaultActions::adminPagesActionsPage($this);
+        BackendDefaultActions::adminRelatedPagesActionsPage($this);
         # --BEHAVIOR-- adminPagesActions -- Actions
-        App::behavior()->callBehavior('adminPagesActions', $this);
+        App::behavior()->callBehavior('adminRelatedPagesActions', $this);
     }
 
     public function process()

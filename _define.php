@@ -13,7 +13,7 @@ $this->registerModule(
     'Related pages',
     'Serve pages & scripts',
     'Pep, Nicolas Roudaire and contributors',
-    '3.1',
+    '3.2',
     [
         'date'        => '2025-06-27T00:00:17+0100',
         'permissions' => 'My',
