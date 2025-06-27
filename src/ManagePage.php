@@ -154,7 +154,6 @@ class ManagePage extends Process
         // Validation flag
         App::backend()->bad_dt = false;
 
-
         // Get page informations
 
         App::backend()->post = null;
@@ -717,8 +716,9 @@ class ManagePage extends Process
                     $pageIsFile        = true;
                 } elseif (empty($_REQUEST['id'])) {
                     $page_related_file = '';
-                    $pageIsFile = (!empty($_REQUEST['type']) && $_REQUEST['type'] === 'file');
+                    $pageIsFile        = (!empty($_REQUEST['type']) && $_REQUEST['type'] === 'file');
                 } else {
+                    $page_related_file = '';
                     $pageIsFile = false;
                 }
             } catch (Exception) {
