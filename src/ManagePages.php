@@ -146,7 +146,7 @@ class ManagePages extends Process
                 (new Link())
                     ->class(['button', 'add'])
                     ->href(My::manageUrl(['part' => 'page', 'type' => 'post']))
-                    ->text(__('New post')),
+                    ->text(__('New post as page')),
             ])
         ->render();
 
