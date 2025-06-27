@@ -438,7 +438,9 @@ class ManagePage extends Process
                     App::con()->begin();
 
                     try {
-                        if (isset($page_related_file)) { App::meta()->setPostMeta($return_id, 'related_file', $page_related_file);}
+                        if (isset($page_related_file)) {
+                            App::meta()->setPostMeta($return_id, 'related_file', $page_related_file);
+                        }
                     } catch (Exception $e) {
                         App::con()->rollback();
 
@@ -719,7 +721,7 @@ class ManagePage extends Process
                     $pageIsFile        = (!empty($_REQUEST['type']) && $_REQUEST['type'] === 'file');
                 } else {
                     $page_related_file = '';
-                    $pageIsFile = false;
+                    $pageIsFile        = false;
                 }
             } catch (Exception) {
             }
