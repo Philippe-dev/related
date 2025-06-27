@@ -54,7 +54,7 @@ use Exception;
  */
 class ManagePage extends Process
 {
-    private static bool $pageIsFile           = true;
+    //private static bool $pageIsFile           = true;
     private static string $page_related_file  = '';
     private static array $related_pages_files = ['-' => ''];
 
@@ -154,7 +154,6 @@ class ManagePage extends Process
         // Validation flag
         App::backend()->bad_dt = false;
 
-        $pageIsFile = (!empty($_REQUEST['type']) && $_REQUEST['type'] === 'file');
 
         // Get page informations
 
@@ -718,7 +717,7 @@ class ManagePage extends Process
                     $pageIsFile        = true;
                 } elseif (empty($_REQUEST['id'])) {
                     $page_related_file = '';
-                    $pageIsFile        = true;
+                    $pageIsFile = (!empty($_REQUEST['type']) && $_REQUEST['type'] === 'file');
                 } else {
                     $pageIsFile = false;
                 }

@@ -29,6 +29,7 @@ use Dotclear\Helper\Html\Form\Link;
 use Dotclear\Helper\Html\Form\Note;
 use Dotclear\Helper\Html\Form\Para;
 use Dotclear\Helper\Html\Form\Select;
+use Dotclear\Helper\Html\Form\Span;
 use Dotclear\Helper\Html\Form\Submit;
 use Dotclear\Helper\Html\Form\Text;
 use Dotclear\Helper\Html\Html;
@@ -141,6 +142,11 @@ class ManagePages extends Process
                     ->class(['button', 'add'])
                     ->href(My::manageUrl(['part' => 'page', 'type' => 'file']))
                     ->text(__('New related page')),
+                (new Span('&nbsp;')),
+                (new Link())
+                    ->class(['button', 'add'])
+                    ->href(My::manageUrl(['part' => 'page', 'type' => 'post']))
+                    ->text(__('New post')),
             ])
         ->render();
 
