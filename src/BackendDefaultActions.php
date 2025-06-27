@@ -31,7 +31,7 @@ class BackendDefaultActions
      *
      * @param   BackendActions  $ap     Admin actions instance
      */
-    public static function adminPagesActionsPage(BackendActions $ap): void
+    public static function adminRelatedPagesActionsPage(BackendActions $ap): void
     {
         if (App::auth()->check(App::auth()->makePermissions([
             App::auth()::PERMISSION_PUBLISH,
