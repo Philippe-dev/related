@@ -431,7 +431,7 @@ class ManagePage extends Process
                 try {
                     # --BEHAVIOR-- adminBeforePageCreate -- Cursor
                     App::behavior()->callBehavior('adminBeforePageCreate', $cur);
-                    
+
                     $return_id = App::blog()->addPost($cur);
 
                     # --BEHAVIOR-- adminAfterPageCreate -- Cursor, int
@@ -879,9 +879,13 @@ class ManagePage extends Process
                         ])
                         ->render(),
 
-                        'is_file' => (new Label(__('Content:'), Label::OUTSIDE_TEXT_BEFORE))
-                            ->class(['bold'])->render(),
-                        (new Fieldset())->class('area')->id('is_file-area')
+                        'is_file' => (new Label(
+                            (new Span('*'))->render() . __('Included file:'),
+                            Label::OUTSIDE_TEXT_BEFORE
+                        ))
+                            ->class(['bold','required'])
+                            ->render(),
+                        (new Fieldset())->class(['area','related','no-margin'])->id('is_file-area')
                             ->items([
                                 (new Para())->items([
                                     (new Select('repository_file'))
