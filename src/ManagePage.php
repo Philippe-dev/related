@@ -720,7 +720,7 @@ class ManagePage extends Process
                     $pageIsFile        = true;
                 } elseif (empty($_REQUEST['id'])) {
                     $page_related_file = '';
-                    $pageIsFile        = true;
+                    $pageIsFile        = (!empty($_REQUEST['type']) && $_REQUEST['type'] === 'file');
                 } else {
                     $pageIsFile = false;
                 }
