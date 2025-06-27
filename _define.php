@@ -13,9 +13,9 @@ $this->registerModule(
     'Related pages',
     'Serve pages & scripts',
     'Pep, Nicolas Roudaire and contributors',
-    '3.0',
+    '3.1',
     [
-        'date'        => '2025-06-26T00:00:17+0100',
+        'date'        => '2025-06-27T00:00:17+0100',
         'permissions' => 'My',
         'type'        => 'plugin',
         'dc_min'      => '2.34',
