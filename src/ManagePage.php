@@ -891,13 +891,14 @@ class ManagePage extends Process
                             ->items([
                                 (new Para())->items([
                                     (new Select('repository_file'))
-                                        ->required((App::backend()->post_id) ? true : false)
+                                        ->required(true)
                                         ->items($related_pages_files)
                                         ->default($page_related_file)
                                         ->label(new Label(__('Pick up a local file in your related pages repository'), Label::OUTSIDE_LABEL_BEFORE)),
                                 ]),
                                 (new Para())->items([
                                     (new Input('up_file'))
+                                        ->required(true)
                                         ->type('file')
                                         ->size(35)
                                         ->label(new Label(__('Choose a file:') . ' (' . sprintf(__('Maximum size %s'), Files::size(App::config()->maxUploadSize())) . ')', Label::IL_TF)),
