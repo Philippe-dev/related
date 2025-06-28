@@ -891,6 +891,7 @@ class ManagePage extends Process
                             ->items([
                                 (new Para())->items([
                                     (new Select('repository_file'))
+                                        ->required(true)
                                         ->items($related_pages_files)
                                         ->default($page_related_file)
                                         ->label(new Label(__('Pick up a local file in your related pages repository'), Label::OUTSIDE_LABEL_BEFORE)),
