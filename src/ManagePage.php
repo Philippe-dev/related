@@ -188,7 +188,7 @@ class ManagePage extends Process
                 App::backend()->post_selected      = (bool) App::backend()->post->post_selected;
                 App::backend()->post_meta          = App::backend()->post->post_meta;
 
-                App::backend()->page_title = __('Edit related page');
+                App::backend()->page_title = __('Edit page');
 
                 App::backend()->can_edit_page = App::backend()->post->isEditable();
                 App::backend()->can_delete    = App::backend()->post->isDeletable();
