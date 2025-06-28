@@ -1,1 +1,15 @@
-'use strict';dotclear.ready(()=>{Object.assign(dotclear.msg,dotclear.getData('pages_page'));document.getElementById('comments')?.addEventListener('onetabload',()=>{dotclear.expandContent({line:document.querySelector('#part-comments .comments-list tr:not(.line)'),lines:document.querySelectorAll('#part-comments .comments-list tr.line'),callback:dotclear.viewCommentContent,});});});
+'use strict';
+dotclear.ready(() => {
+    document.getElementById('repository_file').addEventListener('change', function () {
+        const up_file = document.getElementById('up_file');
+        if (this.value) {
+            up_file.required = false;
+        }
+    });
+    document.getElementById('up_file').addEventListener('change', function () {
+        const repository_file = document.getElementById('repository_file');
+        if (this.value) {
+            repository_file.required = false;
+        }
+    });
+})

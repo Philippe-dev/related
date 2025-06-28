@@ -897,6 +897,7 @@ class ManagePage extends Process
                                 ]),
                                 (new Para())->items([
                                     (new Input('up_file'))
+                                        ->required(true)
                                         ->type('file')
                                         ->size(35)
                                         ->label(new Label(__('Choose a file:') . ' (' . sprintf(__('Maximum size %s'), Files::size(App::config()->maxUploadSize())) . ')', Label::IL_TF)),
