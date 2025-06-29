@@ -343,7 +343,7 @@ class ManagePage extends Process
                 $related_upl = null;
                 if (!empty($_FILES['up_file']['name'])) {
                     $related_upl = true;
-                } elseif (!empty($_POST['repository_file']) && in_array($_POST['repository_file'], $files_list)) {
+                } elseif (!empty($_POST['files_dir']) && in_array($_POST['files_dir'], $files_list)) {
                     $related_upl = false;
                 }
 
@@ -357,7 +357,7 @@ class ManagePage extends Process
                                 $file_name = $_FILES['up_file']['name'];
                             }
                         } else {
-                            $file_name = $_POST['repository_file'];
+                            $file_name = $_POST['files_dir'];
                         }
                     } catch (Exception $e) {
                         Notices::addErrorNotice($e->getMessage());
@@ -890,7 +890,7 @@ class ManagePage extends Process
                         (new Fieldset())->class(['area','related','no-margin'])->id('is_file-area')
                             ->items([
                                 (new Para())->items([
-                                    (new Select('repository_file'))
+                                    (new Select('files_dir'))
                                         ->items($files_list)
                                         ->default($file_name)
                                         ->label(new Label(__('Pick up a local file in your related pages repository'), Label::OUTSIDE_LABEL_BEFORE)),
