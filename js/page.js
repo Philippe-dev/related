@@ -2,15 +2,15 @@
 
 dotclear.ready(() => {
     const up_file = document.getElementById('up_file');
-    const repository_file = document.getElementById('files_dir');
+    const files_dir = document.getElementById('files_dir');
 
     function updateRequiredFields() {
-        up_file.required = !repository_file.value;
-        repository_file.required = !up_file.value;
+        up_file.required = !files_dir.value;
+        files_dir.required = !up_file.value;
     }
 
     updateRequiredFields();
 
-    repository_file.addEventListener('change', updateRequiredFields);
+    files_dir.addEventListener('change', updateRequiredFields);
     up_file.addEventListener('change', updateRequiredFields);
 });
