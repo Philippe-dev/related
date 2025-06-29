@@ -2,7 +2,7 @@
 
 dotclear.ready(() => {
     const up_file = document.getElementById('up_file');
-    const repository_file = document.getElementById('repository_file');
+    const repository_file = document.getElementById('files_dir');
 
     function updateRequiredFields() {
         up_file.required = !repository_file.value;
