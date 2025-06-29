@@ -55,8 +55,8 @@ use Exception;
 class ManagePage extends Process
 {
     private static bool $pageIsFile           = true;
-    private static string $page_related_file  = '';
-    private static array $related_pages_files = ['-' => ''];
+    private static string $file_name  = '';
+    private static array $files_list = ['-' => ''];
 
     public static function init(): bool
     {
@@ -327,14 +327,14 @@ class ManagePage extends Process
                 $dir          = @dir((string) App::blog()->settings()->related->files_path);
                 $allowed_exts = ['php', 'html', 'xml', 'txt'];
 
-                $related_pages_files = ['-' => ''];
+                $files_list = ['-' => ''];
 
                 if ($dir) {
                     while (($entry = $dir->read()) !== false) {
                         $entry_path = $dir->path . '/' . $entry;
                         if (in_array(Files::getExtension($entry), $allowed_exts)) {
                             if (is_file($entry_path) && is_readable($entry_path)) {
-                                $related_pages_files[$entry] = $entry;
+                                $files_list[$entry] = $entry;
                             }
                         }
                     }
@@ -343,7 +343,7 @@ class ManagePage extends Process
                 $related_upl = null;
                 if (!empty($_FILES['up_file']['name'])) {
                     $related_upl = true;
-                } elseif (!empty($_POST['repository_file']) && in_array($_POST['repository_file'], $related_pages_files)) {
+                } elseif (!empty($_POST['repository_file']) && in_array($_POST['repository_file'], $files_list)) {
                     $related_upl = false;
                 }
 
@@ -354,10 +354,10 @@ class ManagePage extends Process
                             $src_file = $_FILES['up_file']['tmp_name'];
                             $trg_file = App::blog()->settings()->related->files_path . '/' . $_FILES['up_file']['name'];
                             if (move_uploaded_file($src_file, $trg_file)) {
-                                $page_related_file = $_FILES['up_file']['name'];
+                                $file_name = $_FILES['up_file']['name'];
                             }
                         } else {
-                            $page_related_file = $_POST['repository_file'];
+                            $file_name = $_POST['repository_file'];
                         }
                     } catch (Exception $e) {
                         Notices::addErrorNotice($e->getMessage());
@@ -407,7 +407,7 @@ class ManagePage extends Process
                     if ($pageIsFile) {
                         try {
                             App::meta()->delPostMeta(App::backend()->post_id, 'related_file');
-                            App::meta()->setPostMeta(App::backend()->post_id, 'related_file', $page_related_file);
+                            App::meta()->setPostMeta(App::backend()->post_id, 'related_file', $file_name);
                         } catch (Exception $e) {
                             App::con()->rollback();
 
@@ -440,8 +440,8 @@ class ManagePage extends Process
                     App::con()->begin();
 
                     try {
-                        if (isset($page_related_file)) {
-                            App::meta()->setPostMeta($return_id, 'related_file', $page_related_file);
+                        if (isset($file_name)) {
+                            App::meta()->setPostMeta($return_id, 'related_file', $file_name);
                         }
                     } catch (Exception $e) {
                         App::con()->rollback();
@@ -716,10 +716,10 @@ class ManagePage extends Process
             try {
                 $post_metas = App::meta()->getMetaRecordset(App::backend()->post_meta, 'related_file');
                 if (!$post_metas->isEmpty()) {
-                    $page_related_file = $post_metas->meta_id;
+                    $file_name = $post_metas->meta_id;
                     $pageIsFile        = true;
                 } elseif (empty($_REQUEST['id'])) {
-                    $page_related_file = '';
+                    $file_name = '';
                     $pageIsFile        = (!empty($_REQUEST['type']) && $_REQUEST['type'] === 'file');
                 } else {
                     $pageIsFile = false;
@@ -809,14 +809,14 @@ class ManagePage extends Process
                 $dir          = @dir((string) App::blog()->settings()->related->files_path);
                 $allowed_exts = ['php', 'html', 'xml', 'txt'];
 
-                $related_pages_files = ['-' => ''];
+                $files_list = ['-' => ''];
 
                 if ($dir) {
                     while (($entry = $dir->read()) !== false) {
                         $entry_path = $dir->path . '/' . $entry;
                         if (in_array(Files::getExtension($entry), $allowed_exts)) {
                             if (is_file($entry_path) && is_readable($entry_path)) {
-                                $related_pages_files[$entry] = $entry;
+                                $files_list[$entry] = $entry;
                             }
                         }
                     }
@@ -891,8 +891,8 @@ class ManagePage extends Process
                             ->items([
                                 (new Para())->items([
                                     (new Select('repository_file'))
-                                        ->items($related_pages_files)
-                                        ->default($page_related_file)
+                                        ->items($files_list)
+                                        ->default($file_name)
                                         ->label(new Label(__('Pick up a local file in your related pages repository'), Label::OUTSIDE_LABEL_BEFORE)),
                                 ]),
                                 (new Para())->items([
