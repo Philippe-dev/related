@@ -54,9 +54,9 @@ use Exception;
  */
 class ManagePage extends Process
 {
-    private static bool $pageIsFile           = true;
-    private static string $page_related_file  = '';
-    private static array $related_pages_files = ['-' => ''];
+    private static bool $pageIsFile  = true;
+    private static string $file_name = '';
+    private static array $files_list = ['-' => ''];
 
     public static function init(): bool
     {
@@ -714,11 +714,11 @@ class ManagePage extends Process
             try {
                 $post_metas = App::meta()->getMetaRecordset(App::backend()->post_meta, 'related_file');
                 if (!$post_metas->isEmpty()) {
-                    $file_name = $post_metas->meta_id;
-                    $pageIsFile        = true;
+                    $file_name  = $post_metas->meta_id;
+                    $pageIsFile = true;
                 } elseif (empty($_REQUEST['id'])) {
-                    $file_name = '';
-                    $pageIsFile        = (!empty($_REQUEST['type']) && $_REQUEST['type'] === 'file');
+                    $file_name  = '';
+                    $pageIsFile = (!empty($_REQUEST['type']) && $_REQUEST['type'] === 'file');
                 } else {
                     $page_related_file = '';
                     $pageIsFile        = false;
