@@ -125,7 +125,6 @@ class ManagePages extends Process
         Page::openModule(
             __('Related pages'),
             $head .
-            Page::jsLoad('js/_posts_list.js') .
             Page::jsJson('pages_list', ['confirm_delete_posts' => __('Are you sure you want to delete selected pages?')]) .
             My::jsLoad('list') .
             App::backend()->post_filter->js(App::backend()->url()->get('admin.plugin', ['p' => My::id(), 'part' => 'pages'], '&'))
@@ -205,7 +204,8 @@ class ManagePages extends Process
                                 (new Button(['back'], __('Back')))->class(['go-back','reset','hidden-if-no-js']),
                             ]),
                     ])
-                ->render()
+                ->render(),
+                App::backend()->post_filter->show()
             );
         }
 

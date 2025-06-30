@@ -18,6 +18,7 @@ use Dotclear\App;
 use Dotclear\Core\Backend\Listing\Pager;
 use Dotclear\Core\Backend\Listing\Listing;
 use Dotclear\Helper\Date;
+use Dotclear\Helper\Html\Form\Caption;
 use Dotclear\Helper\Html\Form\Checkbox;
 use Dotclear\Helper\Html\Form\Div;
 use Dotclear\Helper\Html\Form\Img;
@@ -54,7 +55,7 @@ class BackendList extends Listing
         if ($this->rs->isEmpty()) {
             echo (new Para())
                 ->items([
-                    (new Text('strong', $filter ? __('No entry matches the filter') : __('No element'))),
+                    (new Text('strong', $filter ? __('No entry matches the filter') : __('No entry'))),
                 ])
             ->render();
 
@@ -108,12 +109,13 @@ class BackendList extends Listing
 
         // Prepare listing
         $lines = [];
-        $count = 0;
         $types = [];
+        $count = 0;
         while ($this->rs->fetch()) {
             $lines[] = $this->postLine($count, isset($entries[$this->rs->post_id]), $include_type);
             if (!in_array($this->rs->post_type, $types)) {
                 $types[] = $this->rs->post_type;
+                $count++;
             }
         }
 
@@ -124,13 +126,24 @@ class BackendList extends Listing
             );
         } elseif (count($types) === 1) {
             $stats = [
-                isset($_GET['id']) ? (new Text(null, sprintf(__('List of related pages (%s)'), $this->rs_count))) : (new Text(null, sprintf(__('List of map elements (%s)'), $this->rs_count))),
+                (new Text(null, sprintf((__('List of entries (%s)')), $this->rs_count))),
             ];
-
+            foreach (App::status()->post()->dump(false) as $status) {
+                $nb = (int) App::blog()->getPosts(['post_status' => $status->level()], true)->f(0);
+                if ($nb !== 0) {
+                    $stats[] = (new Set())
+                        ->separator(' ')
+                        ->items([
+                        ]);
+                }
+            }
             $caption = (new Set())
-                ->separator(', ')
+                ->separator('')
                 ->items($stats)
             ->render();
+        } else {
+            // Different types of entries
+            $caption = sprintf(__('List of entries (%s)'), $this->rs_count);
         }
 
         $fmt = fn ($title, $image, $class): string => sprintf(
@@ -148,6 +161,7 @@ class BackendList extends Listing
             ->items([
                 (new Table())
                     ->class(['maximal', 'dragable'])
+                    ->caption(new Caption($caption))
                     ->items([
                         (new Thead())
                             ->rows([
@@ -197,6 +211,7 @@ class BackendList extends Listing
             ->alt('%1$s')
             ->class(['mark', 'mark-%3$s'])
             ->render();
+
         $post_classes = ['line'];
         if (App::status()->post()->isRestricted((int) $this->rs->post_status)) {
             $post_classes[] = 'offline';

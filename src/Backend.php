@@ -57,10 +57,15 @@ class Backend extends Process
             $filters->append((new Filter('cat_id'))
                 ->param());
 
-            $filters->append((new Filter('map'))
-                ->param());
+            $filters->append((new Filter('selected'))
+                ->param('post_selected')
+                ->title(__('In widget:'))
+                ->options([
+                    '-'       => '',
+                    __('yes') => '1',
+                    __('no')  => '0',
+                ]));
 
-            
         }
     }
 }
