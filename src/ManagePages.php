@@ -63,22 +63,6 @@ class ManagePages extends Process
             App::backend()->nb_per_page = (int) $_GET['nb'];
         }
 
-        $params['limit']      = [((App::backend()->page - 1) * App::backend()->nb_per_page), App::backend()->nb_per_page];
-        $params['post_type']  = 'related';
-        $params['no_content'] = true;
-        $params['order']      = 'post_position ASC, post_title ASC';
-
-        App::backend()->post_list = null;
-
-        try {
-            $pages   = App::blog()->getPosts($params);
-            $counter = App::blog()->getPosts($params, true);
-
-            App::backend()->post_list = new BackendList($pages, $counter->f(0));
-        } catch (Exception $e) {
-            App::error()->add($e->getMessage());
-        }
-
         // Actions combo box
         App::backend()->pages_actions_page          = new BackendActions(App::backend()->url()->get('admin.plugin'), ['p' => 'pages']);
         App::backend()->pages_actions_page_rendered = null;
@@ -99,6 +83,22 @@ class ManagePages extends Process
         App::backend()->post_filter = new FilterPosts();
 
         $params = App::backend()->post_filter->params();
+
+        $params['limit']      = [((App::backend()->page - 1) * App::backend()->nb_per_page), App::backend()->nb_per_page];
+        $params['post_type']  = 'related';
+        $params['no_content'] = true;
+        $params['order']      = 'post_position ASC, post_title ASC';
+
+        App::backend()->post_list = null;
+
+        try {
+            $pages   = App::blog()->getPosts($params);
+            $counter = App::blog()->getPosts($params, true);
+
+            App::backend()->post_list = new BackendList($pages, $counter->f(0));
+        } catch (Exception $e) {
+            App::error()->add($e->getMessage());
+        }
 
         // lexical sort
         $sortby_lex = [

@@ -24,8 +24,7 @@ use Dotclear\Helper\Html\Form\Img;
 use Dotclear\Helper\Html\Form\Link;
 use Dotclear\Helper\Html\Form\Number;
 use Dotclear\Helper\Html\Form\Para;
-use Dotclear\Helper\Html\Form\Span;
-use Dotclear\Helper\Html\Form\Strong;
+use Dotclear\Helper\Html\Form\Set;
 use Dotclear\Helper\Html\Form\Table;
 use Dotclear\Helper\Html\Form\Tbody;
 use Dotclear\Helper\Html\Form\Td;
@@ -50,12 +49,12 @@ class BackendList extends Listing
      * @param   string  $enclose_block  The enclose block
      * @param   bool    $include_type   Include the post type column
      */
-    public function display(int $page, int $nb_per_page, string $enclose_block = '', bool $include_type = false): void
+    public function display(int $page, int $nb_per_page, string $enclose_block = '', bool $filter = false, bool $include_type = false): void
     {
         if ($this->rs->isEmpty()) {
             echo (new Para())
                 ->items([
-                    (new Strong(__('No page'))),
+                    (new Text('strong', $filter ? __('No entry matches the filter') : __('No element'))),
                 ])
             ->render();
 
@@ -110,9 +109,28 @@ class BackendList extends Listing
         // Prepare listing
         $lines = [];
         $count = 0;
+        $types = [];
         while ($this->rs->fetch()) {
             $lines[] = $this->postLine($count, isset($entries[$this->rs->post_id]), $include_type);
-            $count++;
+            if (!in_array($this->rs->post_type, $types)) {
+                $types[] = $this->rs->post_type;
+            }
+        }
+
+        if ($filter) {
+            $caption = sprintf(
+                __('List of %s entry matching the filter.', 'List of %s entries matching the filter.', $this->rs_count),
+                $this->rs_count
+            );
+        } elseif (count($types) === 1) {
+            $stats = [
+                isset($_GET['id']) ? (new Text(null, sprintf(__('List of related pages (%s)'), $this->rs_count))) : (new Text(null, sprintf(__('List of map elements (%s)'), $this->rs_count))),
+            ];
+
+            $caption = (new Set())
+                ->separator(', ')
+                ->items($stats)
+            ->render();
         }
 
         $fmt = fn ($title, $image, $class): string => sprintf(
@@ -289,7 +307,7 @@ class BackendList extends Listing
         App::behavior()->callBehavior('adminPagesListValueV2', $this->rs, $cols);
 
         // Cope with optional columns
-        $this->userColumns('pages', $cols);
+        $this->userColumns('posts', $cols);
 
         return (new Tr())
             ->id('p' . $this->rs->post_id)
