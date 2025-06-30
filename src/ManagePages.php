@@ -15,6 +15,7 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\related;
 
 use Dotclear\App;
+use Dotclear\Core\Backend\Filter\FilterPosts;
 use Dotclear\Core\Backend\Notices;
 use Dotclear\Core\Backend\Page;
 use Dotclear\Core\Process;
@@ -55,10 +56,6 @@ class ManagePages extends Process
             return false;
         }
 
-        $params = [
-            'post_type' => 'related',
-        ];
-
         App::backend()->page        = empty($_GET['page']) ? 1 : max(1, (int) $_GET['page']);
         App::backend()->nb_per_page = UserPref::getUserFilters('pages', 'nb');
 
@@ -66,8 +63,8 @@ class ManagePages extends Process
             App::backend()->nb_per_page = (int) $_GET['nb'];
         }
 
-        $params['limit'] = [((App::backend()->page - 1) * App::backend()->nb_per_page), App::backend()->nb_per_page];
-
+        $params['limit']      = [((App::backend()->page - 1) * App::backend()->nb_per_page), App::backend()->nb_per_page];
+        $params['post_type']  = 'related';
         $params['no_content'] = true;
         $params['order']      = 'post_position ASC, post_title ASC';
 
@@ -98,11 +95,26 @@ class ManagePages extends Process
             return;
         }
 
-        if (App::backend()->pages_actions_page_rendered) {
-            App::backend()->pages_actions_page->render();
+        // Filters
+        App::backend()->post_filter = new FilterPosts();
 
-            return;
-        }
+        $params = App::backend()->post_filter->params();
+
+        // lexical sort
+        $sortby_lex = [
+            // key in sorty_combo (see above) => field in SQL request
+            'post_title' => 'post_title',
+            'user_id'    => 'P.user_id', ];
+
+        # --BEHAVIOR-- adminPostsSortbyLexCombo -- array<int,array<string,string>>
+        App::behavior()->callBehavior('adminPostsSortbyLexCombo', [&$sortby_lex]);
+
+        $params['order'] = (array_key_exists(App::backend()->post_filter->sortby, $sortby_lex) ?
+            App::con()->lexFields($sortby_lex[App::backend()->post_filter->sortby]) :
+            App::backend()->post_filter->sortby) . ' ' . App::backend()->post_filter->order;
+
+        App::backend()->page        = !empty($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
+        App::backend()->nb_per_page = UserPref::getUserFilters('pages', 'nb');
 
         $head = '';
         if (!App::auth()->prefs()->accessibility->nodragdrop) {
@@ -113,8 +125,10 @@ class ManagePages extends Process
         Page::openModule(
             __('Related pages'),
             $head .
+            Page::jsLoad('js/_posts_list.js') .
             Page::jsJson('pages_list', ['confirm_delete_posts' => __('Are you sure you want to delete selected pages?')]) .
-            My::jsLoad('list')
+            My::jsLoad('list') .
+            App::backend()->post_filter->js(App::backend()->url()->get('admin.plugin', ['p' => My::id(), 'part' => 'pages'], '&'))
         );
 
         echo
@@ -144,11 +158,19 @@ class ManagePages extends Process
             ])
         ->render();
 
+        $hidden = (new Para())
+                    ->items([(new Hidden('part', 'pages')),
+                        (new Hidden('p', (string) My::id())),
+                    ])
+                ->render();
+
+        App::backend()->post_filter->display('admin.plugin.' . My::id(), $hidden);
+
         if (!App::error()->flag() && App::backend()->post_list) {
             // Show pages
             App::backend()->post_list->display(
-                App::backend()->page,
-                App::backend()->nb_per_page,
+                App::backend()->post_filter->page,
+                App::backend()->post_filter->nb,
                 (new Form('form-entries'))
                     ->method('post')
                     ->action(App::backend()->getPageURL())
