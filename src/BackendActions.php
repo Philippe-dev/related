@@ -31,7 +31,7 @@ class BackendActions extends ActionsPosts
     public const ADD_TO_WIDGET_ACTION      = 'selected';
     public const REMOVE_FROM_WIDGET_ACTION = 'unselected';
     protected bool $use_render             = true;
-    
+
     public function __construct(?string $uri, array $redirect_args = [])
     {
         parent::__construct($uri, $redirect_args);

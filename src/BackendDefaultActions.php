@@ -15,9 +15,25 @@ namespace Dotclear\Plugin\related;
 
 use ArrayObject;
 use Dotclear\App;
+use Dotclear\Core\Backend\Action\ActionsPosts;
 use Dotclear\Core\Backend\Action\ActionsPostsDefault;
+use Dotclear\Core\Backend\Combos;
 use Dotclear\Core\Backend\Notices;
+use Dotclear\Core\Backend\Page;
 use Dotclear\Database\Statement\UpdateStatement;
+use Dotclear\Helper\Html\Form\Div;
+use Dotclear\Helper\Html\Form\Form;
+use Dotclear\Helper\Html\Form\Hidden;
+use Dotclear\Helper\Html\Form\Input;
+use Dotclear\Helper\Html\Form\Label;
+use Dotclear\Helper\Html\Form\Link;
+use Dotclear\Helper\Html\Form\Para;
+use Dotclear\Helper\Html\Form\Select;
+use Dotclear\Helper\Html\Form\Submit;
+use Dotclear\Helper\Html\Form\Text;
+use Dotclear\Helper\Html\Html;
+use Dotclear\Helper\L10n;
+use Dotclear\Schema\Extension\User;
 use Exception;
 
 /**
@@ -54,15 +70,7 @@ class BackendDefaultActions
                 ActionsPostsDefault::doChangePostFirstPub(...)
             );
         }
-        if (App::auth()->check(App::auth()->makePermissions([
-            App::auth()::PERMISSION_ADMIN,
-        ]), App::blog()->id())) {
-            $ap->addAction(
-                [__('Change') => [
-                    __('Change author') => 'author', ]],
-                ActionsPostsDefault::doChangePostAuthor(...)
-            );
-        }
+
         if (App::auth()->check(App::auth()->makePermissions([
             App::auth()::PERMISSION_DELETE,
             App::auth()::PERMISSION_CONTENT_ADMIN,
@@ -73,6 +81,7 @@ class BackendDefaultActions
                 ActionsPostsDefault::doDeletePost(...)
             );
         }
+
         $ap->addAction(
             [__('Order') => [
                 __('Save order') => 'reorder', ]],
@@ -122,4 +131,6 @@ class BackendDefaultActions
         Notices::addSuccessNotice(__('Pages have been successfully reordered.'));
         $ap->redirect(false);
     }
+
+    
 }
