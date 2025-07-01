@@ -468,20 +468,6 @@ class ManagePage extends Process
             return;
         }
 
-        if (App::backend()->comments_actions_page_rendered) {
-            App::backend()->comments_actions_page->render();
-
-            return;
-        }
-
-        App::backend()->default_tab = 'edit-entry';
-        if (!App::backend()->can_edit_page) {
-            App::backend()->default_tab = '';
-        }
-        if (!empty($_GET['co'])) {
-            App::backend()->default_tab = 'comments';
-        }
-
         // 3rd party conversion
         if (!empty($_GET['convert']) && !empty($_GET['convert-format'])) {
             $params = new ArrayObject([

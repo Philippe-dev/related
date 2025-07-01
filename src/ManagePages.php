@@ -37,8 +37,6 @@ use Exception;
 
 class ManagePages extends Process
 {
-    private static string $default_tab = 'pages_compose';
-
     private static MetaRecord $pages;
 
     public static function init(): bool
