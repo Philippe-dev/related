@@ -52,6 +52,17 @@ class BackendDefaultActions
         }
 
         if (App::auth()->check(App::auth()->makePermissions([
+            App::auth()::PERMISSION_PUBLISH,
+            App::auth()::PERMISSION_CONTENT_ADMIN,
+        ]), App::blog()->id())) {
+            $ap->addAction(
+                [__('Change') => [
+                    __('Change author') => 'author', ]],
+                ActionsPostsDefault::doChangePostAuthor(...)
+            );
+        }
+
+        if (App::auth()->check(App::auth()->makePermissions([
             App::auth()::PERMISSION_DELETE,
             App::auth()::PERMISSION_CONTENT_ADMIN,
         ]), App::blog()->id())) {
