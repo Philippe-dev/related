@@ -536,7 +536,6 @@ class ManagePage extends Process
             Page::jsConfirmClose('entry-form', 'comment-form') .
             # --BEHAVIOR-- adminPageHeaders --
             App::behavior()->callBehavior('adminPageHeaders') .
-            Page::jsPageTabs(App::backend()->default_tab) .
             App::backend()->next_headlink . "\n" . App::backend()->prev_headlink
         );
 
