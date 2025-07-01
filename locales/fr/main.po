@@ -3,7 +3,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Project-Id-Version: related 3.8\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2025-06-30T20:34:23+00:00\n"
+"PO-Revision-Date: 2025-07-01T06:37:43+00:00\n"
 "Last-Translator: Philippe\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,6 +16,9 @@ msgstr "Dans le widget :"
 msgid "Included pages"
 msgstr "Pages incluses"
 
+msgid "Widget"
+msgstr "Widget"
+
 msgid "Add to widget"
 msgstr "Ajouter au widget"
 
@@ -25,16 +28,14 @@ msgstr "Enlever du widget"
 msgid "%d included pages"
 msgstr "%d pages incluses"
 
+msgid "%d included page"
+msgstr "%d page incluse"
+
+msgid "included pages"
+msgstr "pages incluses"
+
 msgid "Pages have been successfully reordered."
 msgstr "Les pages ont été ordonnées avec succès."
-
-msgid "%s page matching the filter."
-msgid_plural "%s pages matching the filter."
-msgstr[0] "% page correspondant au filtre"
-msgstr[1] "% pages correspondant au filtre"
-
-msgid "List of pages (%s)"
-msgstr "Liste des pages (%)"
 
 msgid "In widget"
 msgstr "Dans le widget"
@@ -76,18 +77,10 @@ msgid "Included file:"
 msgstr "Fichier inclus :"
 
 msgid "Pick up a local file in your Included pages repository"
-msgstr "Choisissez un fichier local dans votre dépôt de Pages incluses"
+msgstr "Choisissez un fichier local dans votre dépôt de pages incluses"
 
 msgid "Pages limit:"
 msgstr "Limite du nombre de pages :"
-
-msgid "Pages (%s)"
-msgstr "Pages (%)"
-
-msgid "List of %s page matching the filter."
-msgid_plural "List of %s pages matching the filter."
-msgstr[0] "% page correspondant au filtre"
-msgstr[1] "Liste des % pages correspondant au filtre"
 
 msgid "Missing file."
 msgstr "Fichier manquant."

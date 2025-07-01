@@ -32,7 +32,6 @@ use Dotclear\App;
 
 class Config extends Process
 {
-    private static string $default_tab = 'settings';
 
     public static function init(): bool
     {

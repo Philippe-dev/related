@@ -468,6 +468,8 @@ class ManagePage extends Process
             return;
         }
 
+        App::backend()->default_tab = 'edit-entry';
+
         // 3rd party conversion
         if (!empty($_GET['convert']) && !empty($_GET['convert-format'])) {
             $params = new ArrayObject([
@@ -536,6 +538,7 @@ class ManagePage extends Process
             Page::jsConfirmClose('entry-form', 'comment-form') .
             # --BEHAVIOR-- adminPageHeaders --
             App::behavior()->callBehavior('adminPageHeaders') .
+            Page::jsPageTabs(App::backend()->default_tab) .
             App::backend()->next_headlink . "\n" . App::backend()->prev_headlink
         );
 
