@@ -37,7 +37,7 @@ class BackendActions extends ActionsPosts
         parent::__construct($uri, $redirect_args);
 
         $this->redirect_fields = ['p', 'part'];
-        $this->caller_title    = __('Related pages');
+        $this->caller_title    = __('Included pages');
 
         if (App::auth()->check(App::auth()->makePermissions([
             App::auth()::PERMISSION_PUBLISH,
@@ -91,7 +91,7 @@ class BackendActions extends ActionsPosts
     public function beginPage(string $breadcrumb = '', string $head = ''): void
     {
         Page::openModule(
-            __('Related pages'),
+            __('Included pages'),
             Page::jsLoad('js/_posts_actions.js') .
             $head
         );

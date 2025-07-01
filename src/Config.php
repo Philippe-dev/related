@@ -36,7 +36,6 @@ class Config extends Process
 
     public static function init(): bool
     {
-        App::backend()->related_default_tab = self::$default_tab;
 
         return self::status(My::checkContext(My::CONFIG));
     }
@@ -114,7 +113,7 @@ class Config extends Process
             (new Fieldset())->class('fieldset')->legend((new Legend(__('Plugin activation'))))->fields([
                 (new Para())->items([
                     (new Checkbox('related_active', $settings->active))->value(1),
-                    (new Label(__('Enable Related plugin'), Label::OUTSIDE_LABEL_AFTER))->for('related_active')->class('classic'),
+                    (new Label(__('Enable plugin'), Label::OUTSIDE_LABEL_AFTER))->for('related_active')->class('classic'),
                 ]),
             ]),
         ])->render();
@@ -124,7 +123,7 @@ class Config extends Process
             (new Div())->items([
                 (new Fieldset())->class('fieldset')->legend((new Legend(__('General options'))))->fields([
                     (new Para())->items([
-                        (new Label(__('Included files repository path:'), Label::OUTSIDE_LABEL_AFTER))->for('related_files_path')->class('classic'),
+                        (new Label(__('Files repository path:'), Label::OUTSIDE_LABEL_AFTER))->for('related_files_path')->class('classic'),
                         (new Span('&nbsp;')),
                         (new Input('related_files_path', (string) $settings->files_path))->size(50)->max(255)->value($settings->files_path),
                     ]),

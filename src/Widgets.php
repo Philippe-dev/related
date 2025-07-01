@@ -28,8 +28,8 @@ class Widgets
      */
     public static function initWidgets(WidgetsStack $widgets): void
     {
-        $widgets->create('related', __('Related pages'), self::pagesList(...));
-        $widgets->related->setting('title', __('Title (optional)') . ' :', __('Related pages'));
+        $widgets->create('related', __('Included pages'), self::pagesList(...));
+        $widgets->related->setting('title', __('Title (optional)') . ' :', __('Included pages'));
         $widgets->related->setting('limit', __('Pages limit:'), 10);
         $widgets->related->setting(
             'homeonly',

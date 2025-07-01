@@ -24,7 +24,7 @@ class BackendBehaviors
     public static function dashboardFavorites(Favorites $favorites)
     {
         $favorites->register('related', [
-            'title'       => __('Related pages'),
+            'title'       => __('Included pages'),
             'url'         => My::manageUrl(),
             'small-icon'  => [Page::getPF('related/icon.svg'), Page::getPF('related/icon-dark.svg')],
             'large-icon'  => [Page::getPF('related/icon.svg'), Page::getPF('related/icon-dark.svg')],
@@ -41,10 +41,10 @@ class BackendBehaviors
             $params['post_type'] = 'related';
             $page_count          = App::blog()->getPosts($params, true)->f(0);
             if ($page_count > 0) {
-                $str_pages = ($page_count > 1) ? __('%d related pages') : __('%d related page');
+                $str_pages = ($page_count > 1) ? __('%d included pages') : __('%d included page');
                 $icon[0]   = sprintf($str_pages, $page_count);
             } else {
-                $icon[0] = __('Related pages');
+                $icon[0] = __('included pages');
             }
         }
     }
