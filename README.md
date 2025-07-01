@@ -1,6 +1,6 @@
-# Included pages
+# Related Pages
 
-Included pages is a plugin for dotclear. It aims to provide a simple way to serve HTML templates and PHP scripts.
+Related Pages is a plugin for dotclear. It aims to provide a simple way to serve HTML templates and PHP scripts.
 
 The main developement has been made by Pep - https://nrkn.fr/ and maintained over the years by nikrou - https://www.nikrou.net/
 

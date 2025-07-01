@@ -1,38 +1,29 @@
 msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
-"Project-Id-Version: related 3.8\n"
+"Project-Id-Version: related 2.8\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2025-07-01T06:37:43+00:00\n"
+"PO-Revision-Date: 2025-06-23T21:35:54+00:00\n"
 "Last-Translator: Philippe\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-msgid "In widget:"
-msgstr "Dans le widget :"
+msgid "Related pages"
+msgstr "Pages connexes"
 
-msgid "Included pages"
-msgstr "Pages incluses"
+msgid "%d related pages"
+msgstr "%d pages connexes"
 
-msgid "Widget"
-msgstr "Widget"
+msgid "%d related page"
+msgstr "%d pages connexe"
 
 msgid "Add to widget"
 msgstr "Ajouter au widget"
 
 msgid "Remove from widget"
 msgstr "Enlever du widget"
-
-msgid "%d included pages"
-msgstr "%d pages incluses"
-
-msgid "%d included page"
-msgstr "%d page incluse"
-
-msgid "included pages"
-msgstr "pages incluses"
 
 msgid "Pages have been successfully reordered."
 msgstr "Les pages ont été ordonnées avec succès."
@@ -46,13 +37,13 @@ msgstr "Le répertoire \"%s\" pour le dépôt des fichiers liés nécessite un a
 msgid "Configuration has been updated."
 msgstr "La configuration a été mise à jour."
 
-msgid "Enable plugin"
-msgstr "Activer le plugin"
+msgid "Enable Related plugin"
+msgstr "Activer le plugin pages connexes"
 
 msgid "General options"
 msgstr "Options générales"
 
-msgid "Files repository path:"
+msgid "Included files repository path:"
 msgstr "Chemin du dépôt des fichiers inclus :"
 
 msgid "Advanced options"
@@ -64,8 +55,14 @@ msgstr "Préfixe d'URL :"
 msgid "This prefix will be used to generate the pages URLs. Do not use any existing prefix such as post, category or page."
 msgstr "Ce préfixe sera utilisé pour générer les URLs des pages. N'utilisez pas un préfixe existant tel que post, category ou page."
 
+msgid "In widget:"
+msgstr "Dans le widget :"
+
 msgid "Directory for related files repository needs to allow read and write access."
-msgstr "Le répertoire des Pages incluses doit être accessible en lecture et écriture."
+msgstr "Le répertoire des pages connexes doit être accessible en lecture et écriture."
+
+msgid "Missing file."
+msgstr "Fichier manquant."
 
 msgid "Page has been updated."
 msgstr "La page a été mise à jour."
@@ -73,23 +70,26 @@ msgstr "La page a été mise à jour."
 msgid "Page has been created."
 msgstr "La page a été créée."
 
-msgid "Included file:"
-msgstr "Fichier inclus :"
-
-msgid "Pick up a local file in your Included pages repository"
-msgstr "Choisissez un fichier local dans votre dépôt de pages incluses"
-
-msgid "Pages limit:"
-msgstr "Limite du nombre de pages :"
-
-msgid "Missing file."
-msgstr "Fichier manquant."
-
 msgid "Page has been deleted."
 msgstr "La page a été supprimée."
 
 msgid "Convert to XHTML"
 msgstr "Convertir en XHTML"
+
+msgid "Included file:"
+msgstr "Fichier inclus :"
+
+msgid "Pick up a local file in your related pages repository"
+msgstr "Choisissez un fichier local dans votre dépôt de pages connexes"
+
+msgid "or upload a new file"
+msgstr "ou téléchargez un nouveau fichier"
+
+msgid "Go to this related page on the site"
+msgstr "Voir cette page connexe sur le site"
+
+msgid "Pages limit:"
+msgstr "Limite du nombre de pages :"
 
 msgid "Back to related page list"
 msgstr "Retour à la liste des pages"
@@ -104,11 +104,20 @@ msgid "post as page"
 msgstr "page d'après un billet"
 
 msgid "Pages list has been sorted."
-msgstr "La liste des pages a été réordonnée."
+msgstr "La liste des pages connexes a été réordonnée."
 
 msgid "Manage pages"
 msgstr "Gérer les pages"
 
 msgid "New post as page"
 msgstr "Nouvelle page d'après un billet"
+
+msgid "New related page"
+msgstr "Nouvelle page connexe"
+
+msgid "Arrange public list"
+msgstr "Ordonner la liste publique"
+
+msgid "Visible page in widget"
+msgstr "Page visible dans le widget"
 

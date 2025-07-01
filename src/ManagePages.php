@@ -37,6 +37,8 @@ use Exception;
 
 class ManagePages extends Process
 {
+    private static string $default_tab = 'pages_compose';
+
     private static MetaRecord $pages;
 
     public static function init(): bool
@@ -121,7 +123,7 @@ class ManagePages extends Process
         }
 
         Page::openModule(
-            __('Included pages'),
+            __('Related pages'),
             $head .
             Page::jsJson('pages_list', ['confirm_delete_posts' => __('Are you sure you want to delete selected pages?')]) .
             My::jsLoad('list') .
@@ -151,7 +153,7 @@ class ManagePages extends Process
                 (new Link())
                     ->class(['button', 'add'])
                     ->href(My::manageUrl(['part' => 'page', 'type' => 'file']))
-                    ->text(__('New page')),
+                    ->text(__('New related page')),
             ])
         ->render();
 

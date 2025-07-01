@@ -10,7 +10,7 @@
  * @copyright AGPL-3.0
  */
 $this->registerModule(
-    'Included pages',
+    'Related pages',
     'Serve pages & scripts',
     'Pep, Nicolas Roudaire and contributors',
     '3.8',

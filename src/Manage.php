@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\related;
 
+use Dotclear\App;
 use Dotclear\Core\Process;
 
 class Manage extends Process
@@ -23,8 +24,9 @@ class Manage extends Process
     public static function init(): bool
     {
         if (My::checkContext(My::MANAGE)) {
-            $default_part      = My::settings()->active ? 'pages' : 'order';
-            self::$active_part = $_REQUEST['part'] ?? $default_part;
+            $default_part                       = My::settings()->active ? 'pages' : 'order';
+            self::$active_part                  = $_REQUEST['part'] ?? $default_part;
+            App::backend()->related_default_tab = self::$active_part;
 
             if (self::$active_part === 'pages') {
                 self::status(ManagePages::init());

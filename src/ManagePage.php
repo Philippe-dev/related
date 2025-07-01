@@ -104,7 +104,7 @@ class ManagePage extends Process
 
         App::backend()->post_media = [];
 
-        App::backend()->page_title = __('New page');
+        App::backend()->page_title = __('New related page');
 
         App::backend()->can_view_page = true;
         App::backend()->can_edit_page = App::auth()->check(App::auth()->makePermissions([
@@ -468,7 +468,19 @@ class ManagePage extends Process
             return;
         }
 
+        if (App::backend()->comments_actions_page_rendered) {
+            App::backend()->comments_actions_page->render();
+
+            return;
+        }
+
         App::backend()->default_tab = 'edit-entry';
+        if (!App::backend()->can_edit_page) {
+            App::backend()->default_tab = '';
+        }
+        if (!empty($_GET['co'])) {
+            App::backend()->default_tab = 'comments';
+        }
 
         // 3rd party conversion
         if (!empty($_GET['convert']) && !empty($_GET['convert-format'])) {
@@ -881,7 +893,7 @@ class ManagePage extends Process
                                     (new Select('files_dir'))
                                         ->items($files_list)
                                         ->default($file_name)
-                                        ->label(new Label(__('Pick up a local file in your Included pages repository'), Label::OUTSIDE_LABEL_BEFORE)),
+                                        ->label(new Label(__('Pick up a local file in your related pages repository'), Label::OUTSIDE_LABEL_BEFORE)),
                                 ]),
                                 (new Para())->items([
                                     (new Input('up_file'))
