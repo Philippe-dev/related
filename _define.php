@@ -11,11 +11,11 @@
  */
 $this->registerModule(
     'Included pages',
-    'Serve pages & scripts',
+    'Serve HTML templates & PHP scripts',
     'Pep, Nicolas Roudaire and contributors',
-    '3.9',
+    '4.0',
     [
-        'date'        => '2025-06-30T00:00:17+0100',
+        'date'        => '2025-07-02T00:00:17+0100',
         'permissions' => 'My',
         'type'        => 'plugin',
         'dc_min'      => '2.34',
