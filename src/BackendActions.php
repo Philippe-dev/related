@@ -15,7 +15,6 @@ namespace Dotclear\Plugin\related;
 
 use Dotclear\App;
 use Dotclear\Core\Backend\Action\ActionsPosts;
-use Dotclear\Core\Backend\Action\ActionsPostsDefault;
 use Dotclear\Core\Backend\Page;
 use Dotclear\Helper\Html\Form\Link;
 use Dotclear\Helper\Html\Form\Para;
@@ -28,49 +27,23 @@ use Exception;
  */
 class BackendActions extends ActionsPosts
 {
-    public const ADD_TO_WIDGET_ACTION      = 'selected';
-    public const REMOVE_FROM_WIDGET_ACTION = 'unselected';
-    protected bool $use_render             = true;
-    
+    /**
+     * Use render method.
+     */
+    protected bool $use_render = true;
+
+    /**
+     * Constructs a new instance.
+     *
+     * @param      null|string              $uri            The uri
+     * @param      array<string, mixed>     $redirect_args  The redirect arguments
+     */
     public function __construct(?string $uri, array $redirect_args = [])
     {
         parent::__construct($uri, $redirect_args);
 
-        $this->redirect_fields = ['p', 'part'];
+        $this->redirect_fields = ['p', 'part', 'user_id'];
         $this->caller_title    = __('Related pages');
-
-        if (App::auth()->check(App::auth()->makePermissions([
-            App::auth()::PERMISSION_PUBLISH,
-            App::auth()::PERMISSION_CONTENT_ADMIN,
-        ]), App::blog()->id())) {
-            $actions = [];
-            foreach (App::status()->post()->dump(false) as $status) {
-                $actions[__($status->name())] = $status->id();
-            }
-            $this->addAction(
-                [__('Status') => $actions],
-                ActionsPostsDefault::doChangePostStatus(...)
-            );
-        }
-
-        if (App::auth()->check(App::auth()->makePermissions([
-            App::auth()::PERMISSION_DELETE,
-            App::auth()::PERMISSION_CONTENT_ADMIN,
-        ]), App::blog()->id())) {
-            $this->addAction(
-                [__('Delete') => [
-                    __('Delete') => 'delete', ]],
-                ActionsPostsDefault::doDeletePost(...)
-            );
-        }
-
-        $this->addAction(
-            [__('Widget') => [
-                __('Add to widget')      => self::ADD_TO_WIDGET_ACTION,
-                __('Remove from widget') => self::REMOVE_FROM_WIDGET_ACTION,
-            ]],
-            ActionsPostsDefault::doUpdateSelectedPost(...)
-        );
     }
 
     public function error(Exception $e): void
@@ -80,8 +53,8 @@ class BackendActions extends ActionsPosts
             Page::breadcrumb(
                 [
                     Html::escapeHTML(App::blog()->name()) => '',
-                    __('Pages')                           => $this->getRedirection(true),
-                    __('Pages actions')                   => '',
+                    __('Related pages')                   => $this->getRedirection(true),
+                    __('Related pages actions')           => '',
                 ]
             )
         );
@@ -90,13 +63,21 @@ class BackendActions extends ActionsPosts
 
     public function beginPage(string $breadcrumb = '', string $head = ''): void
     {
-        Page::openModule(
-            __('Related pages'),
-            Page::jsLoad('js/_posts_actions.js') .
-            $head
-        );
-        echo
-        $breadcrumb;
+        if ($this->in_plugin) {
+            Page::openModule(
+                __('Related pages'),
+                Page::jsLoad('js/_posts_actions.js') .
+                $head
+            );
+            echo $breadcrumb;
+        } else {
+            Page::open(
+                __('Related pages'),
+                Page::jsLoad('js/_posts_actions.js') .
+                $head,
+                $breadcrumb
+            );
+        }
 
         echo (new Para())
             ->items([
@@ -110,7 +91,11 @@ class BackendActions extends ActionsPosts
 
     public function endPage(): void
     {
-        Page::closeModule();
+        if ($this->in_plugin) {
+            Page::closeModule();
+        } else {
+            Page::close();
+        }
     }
 
     /**
