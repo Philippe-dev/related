@@ -20,7 +20,6 @@ use Dotclear\Core\Backend\Notices;
 use Dotclear\Core\Backend\Page;
 use Dotclear\Core\Process;
 use Dotclear\Core\Backend\UserPref;
-use Dotclear\Database\MetaRecord;
 use Dotclear\Helper\Html\Form\Button;
 use Dotclear\Helper\Html\Form\Div;
 use Dotclear\Helper\Html\Form\Form;
@@ -37,10 +36,6 @@ use Exception;
 
 class ManagePages extends Process
 {
-    private static string $default_tab = 'pages_compose';
-
-    private static MetaRecord $pages;
-
     public static function init(): bool
     {
         if (My::checkContext(My::MANAGE)) {
@@ -56,11 +51,31 @@ class ManagePages extends Process
             return false;
         }
 
+        $params = [
+            'post_type' => 'related',
+        ];
+
         App::backend()->page        = empty($_GET['page']) ? 1 : max(1, (int) $_GET['page']);
         App::backend()->nb_per_page = UserPref::getUserFilters('pages', 'nb');
 
         if (!empty($_GET['nb']) && (int) $_GET['nb'] > 0) {
             App::backend()->nb_per_page = (int) $_GET['nb'];
+        }
+
+        $params['limit'] = [((App::backend()->page - 1) * App::backend()->nb_per_page), App::backend()->nb_per_page];
+
+        $params['no_content'] = true;
+        $params['order']      = 'post_position ASC, post_title ASC';
+
+        App::backend()->post_list = null;
+
+        try {
+            $pages   = App::blog()->getPosts($params);
+            $counter = App::blog()->getPosts($params, true);
+
+            App::backend()->post_list = new BackendList($pages, $counter->f(0));
+        } catch (Exception $e) {
+            App::error()->add($e->getMessage());
         }
 
         // Actions combo box
@@ -115,6 +130,12 @@ class ManagePages extends Process
 
         App::backend()->page        = !empty($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
         App::backend()->nb_per_page = UserPref::getUserFilters('pages', 'nb');
+
+        if (App::backend()->pages_actions_page_rendered) {
+            App::backend()->pages_actions_page->render();
+
+            return;
+        }
 
         $head = '';
         if (!App::auth()->prefs()->accessibility->nodragdrop) {
