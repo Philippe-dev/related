@@ -28,7 +28,14 @@ class Widgets
      */
     public static function initWidgets(WidgetsStack $widgets): void
     {
-        $widgets->create('related', __('Included pages'), self::pagesList(...));
+        $widgets->create(
+            'related',
+            __('Included pages'),
+            self::pagesList(...),
+            null,
+            __('Serve HTML templates and PHP scripts')
+        );
+
         $widgets->related->setting('title', __('Title (optional)') . ' :', __('Included pages'));
         $widgets->related->setting('limit', __('Pages limit:'), 10);
         $widgets->related->setting(

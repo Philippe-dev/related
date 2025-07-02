@@ -1,6 +1,6 @@
 # Language: Français
 # Module: related - 4.0
-# Date: 2025-07-02 10:26:42
+# Date: 2025-07-02 13:12:37
 # Translated with translater 2025.03.03
 
 msgid ""
@@ -8,7 +8,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Project-Id-Version: related 4.0\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2025-07-02T10:26:42+00:00\n"
+"PO-Revision-Date: 2025-07-02T13:12:37+00:00\n"
 "Last-Translator: Philippe\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -22,7 +22,7 @@ msgstr "Dans le widget :"
 #: src/BackendActions.php:46
 #: src/BackendBehaviors.php:27
 #: src/ManagePages.php:147
-#: src/Widgets.php:31
+#: src/Widgets.php:33
 msgid "Included pages"
 msgstr "Pages incluses"
 
@@ -38,15 +38,15 @@ msgstr "%d pages incluses"
 msgid "%d included page"
 msgstr "%d pages connexe"
 
-#: src/BackendDefaultActions.php:102
+#: src/BackendDefaultActions.php:105
 msgid "Add to widget"
 msgstr "Ajouter au widget"
 
-#: src/BackendDefaultActions.php:103
+#: src/BackendDefaultActions.php:106
 msgid "Remove from widget"
 msgstr "Enlever du widget"
 
-#: src/BackendDefaultActions.php:148
+#: src/BackendDefaultActions.php:151
 #: src/ManagePages.php:168
 msgid "Pages have been successfully reordered."
 msgstr "Les pages ont été ordonnées avec succès."
@@ -113,6 +113,11 @@ msgstr "Fichier inclus :"
 msgid "Pick up a local file in your included pages repository"
 msgstr "Choisissez un fichier local dans votre dépôt de pages incluses"
 
-#: src/Widgets.php:33
+#: src/Widgets.php:36
+msgid "Serve HTML templates and PHP scripts"
+msgstr "Inclure des templates HTML et des scripts PHP"
+
+#: src/Widgets.php:40
 msgid "Pages limit:"
 msgstr "Limite du nombre de pages :"
+
