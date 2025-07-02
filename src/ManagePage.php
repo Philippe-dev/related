@@ -104,7 +104,7 @@ class ManagePage extends Process
 
         App::backend()->post_media = [];
 
-        App::backend()->page_title = __('New related page');
+        App::backend()->page_title = __('New included page');
 
         App::backend()->can_view_page = true;
         App::backend()->can_edit_page = App::auth()->check(App::auth()->makePermissions([
@@ -893,7 +893,7 @@ class ManagePage extends Process
                                     (new Select('files_dir'))
                                         ->items($files_list)
                                         ->default($file_name)
-                                        ->label(new Label(__('Pick up a local file in your related pages repository'), Label::OUTSIDE_LABEL_BEFORE)),
+                                        ->label(new Label(__('Pick up a local file in your included pages repository'), Label::OUTSIDE_LABEL_BEFORE)),
                                 ]),
                                 (new Para())->items([
                                     (new Input('up_file'))

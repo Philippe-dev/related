@@ -10,13 +10,13 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-msgid "Related pages"
-msgstr "Pages connexes"
+msgid "Included pages"
+msgstr "Pages incluses"
 
-msgid "%d related pages"
-msgstr "%d pages connexes"
+msgid "%d included pages"
+msgstr "%d pages incluses"
 
-msgid "%d related page"
+msgid "%d included page"
 msgstr "%d pages connexe"
 
 msgid "Add to widget"
@@ -38,7 +38,7 @@ msgid "Configuration has been updated."
 msgstr "La configuration a été mise à jour."
 
 msgid "Enable Related plugin"
-msgstr "Activer le plugin pages connexes"
+msgstr "Activer le plugin pages incluses"
 
 msgid "General options"
 msgstr "Options générales"
@@ -59,7 +59,7 @@ msgid "In widget:"
 msgstr "Dans le widget :"
 
 msgid "Directory for related files repository needs to allow read and write access."
-msgstr "Le répertoire des pages connexes doit être accessible en lecture et écriture."
+msgstr "Le répertoire des pages incluses doit être accessible en lecture et écriture."
 
 msgid "Missing file."
 msgstr "Fichier manquant."
@@ -79,19 +79,19 @@ msgstr "Convertir en XHTML"
 msgid "Included file:"
 msgstr "Fichier inclus :"
 
-msgid "Pick up a local file in your related pages repository"
-msgstr "Choisissez un fichier local dans votre dépôt de pages connexes"
+msgid "Pick up a local file in your included pages repository"
+msgstr "Choisissez un fichier local dans votre dépôt de pages incluses"
 
 msgid "or upload a new file"
 msgstr "ou téléchargez un nouveau fichier"
 
-msgid "Go to this related page on the site"
-msgstr "Voir cette page connexe sur le site"
+msgid "Go to this included page on the site"
+msgstr "Voir cette page incluse sur le site"
 
 msgid "Pages limit:"
 msgstr "Limite du nombre de pages :"
 
-msgid "Back to related page list"
+msgid "Back to included page list"
 msgstr "Retour à la liste des pages"
 
 msgid "No page selected"
@@ -104,7 +104,7 @@ msgid "post as page"
 msgstr "page d'après un billet"
 
 msgid "Pages list has been sorted."
-msgstr "La liste des pages connexes a été réordonnée."
+msgstr "La liste des pages incluses a été réordonnée."
 
 msgid "Manage pages"
 msgstr "Gérer les pages"
@@ -112,8 +112,8 @@ msgstr "Gérer les pages"
 msgid "New post as page"
 msgstr "Nouvelle page d'après un billet"
 
-msgid "New related page"
-msgstr "Nouvelle page connexe"
+msgid "New included page"
+msgstr "Nouvelle page incluse"
 
 msgid "Arrange public list"
 msgstr "Ordonner la liste publique"

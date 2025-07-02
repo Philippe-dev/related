@@ -43,7 +43,7 @@ class BackendActions extends ActionsPosts
         parent::__construct($uri, $redirect_args);
 
         $this->redirect_fields = ['p', 'part', 'user_id'];
-        $this->caller_title    = __('Related pages');
+        $this->caller_title    = __('Included pages');
     }
 
     public function error(Exception $e): void
@@ -53,8 +53,8 @@ class BackendActions extends ActionsPosts
             Page::breadcrumb(
                 [
                     Html::escapeHTML(App::blog()->name()) => '',
-                    __('Related pages')                   => $this->getRedirection(true),
-                    __('Related pages actions')           => '',
+                    __('Included pages')                   => $this->getRedirection(true),
+                    __('Included pages actions')           => '',
                 ]
             )
         );
@@ -65,14 +65,14 @@ class BackendActions extends ActionsPosts
     {
         if ($this->in_plugin) {
             Page::openModule(
-                __('Related pages'),
+                __('Included pages'),
                 Page::jsLoad('js/_posts_actions.js') .
                 $head
             );
             echo $breadcrumb;
         } else {
             Page::open(
-                __('Related pages'),
+                __('Included pages'),
                 Page::jsLoad('js/_posts_actions.js') .
                 $head,
                 $breadcrumb

@@ -144,7 +144,7 @@ class ManagePages extends Process
         }
 
         Page::openModule(
-            __('Related pages'),
+            __('Included pages'),
             $head .
             Page::jsJson('pages_list', ['confirm_delete_posts' => __('Are you sure you want to delete selected pages?')]) .
             My::jsLoad('list') .
@@ -174,7 +174,7 @@ class ManagePages extends Process
                 (new Link())
                     ->class(['button', 'add'])
                     ->href(My::manageUrl(['part' => 'page', 'type' => 'file']))
-                    ->text(__('New related page')),
+                    ->text(__('New included page')),
             ])
         ->render();
 
