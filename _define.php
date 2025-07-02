@@ -13,7 +13,7 @@ $this->registerModule(
     'Included pages',
     'Serve HTML templates & PHP scripts',
     'Pep, Nicolas Roudaire and contributors',
-    '4.0',
+    '4.1',
     [
         'date'        => '2025-07-02T00:00:17+0100',
         'permissions' => 'My',
