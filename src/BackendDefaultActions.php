@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\related;
 
-
-
 use ArrayObject;
 use Dotclear\App;
 use Dotclear\Core\Backend\Action\ActionsPostsDefault;
@@ -22,12 +20,10 @@ use Dotclear\Core\Backend\Combos;
 use Dotclear\Core\Backend\Notices;
 use Dotclear\Core\Backend\Page;
 use Dotclear\Database\Statement\UpdateStatement;
-use Dotclear\Helper\Html\Form\Div;
 use Dotclear\Helper\Html\Form\Form;
 use Dotclear\Helper\Html\Form\Hidden;
 use Dotclear\Helper\Html\Form\Input;
 use Dotclear\Helper\Html\Form\Label;
-use Dotclear\Helper\Html\Form\Note;
 use Dotclear\Helper\Html\Form\Para;
 use Dotclear\Helper\Html\Form\Select;
 use Dotclear\Helper\Html\Form\Submit;
@@ -35,7 +31,6 @@ use Dotclear\Helper\Html\Html;
 use Dotclear\Helper\L10n;
 use Dotclear\Schema\Extension\User;
 use Exception;
-
 
 /**
  * @brief   The module backend default pages actions.
@@ -80,6 +75,14 @@ class BackendDefaultActions
                 self::doChangePostAuthor(...)
             );
         }
+
+        $ap->addAction(
+            [__('Change') => [
+                __('Change language') => 'lang',
+            ]],
+            self::doChangePostLang(...)
+        );
+
         if (App::auth()->check(App::auth()->makePermissions([
             App::auth()::PERMISSION_DELETE,
             App::auth()::PERMISSION_CONTENT_ADMIN,
@@ -240,6 +243,90 @@ class BackendDefaultActions
                             App::nonce()->formNonce(),
                             ...$ap->hiddenFields(),
                             (new Hidden('action', 'author')),
+                            (new Submit('save'))
+                                ->value(__('Save')),
+
+                        ]),
+                ])
+                ->render();
+
+            $ap->endPage();
+        }
+    }
+
+    /**
+     * Does a change post language.
+     *
+     * @param   ActionsPosts                    $ap     The ActionsPosts instance
+     * @param   ArrayObject<string, mixed>      $post   The parameters ($_POST)
+     *
+     * @throws  Exception   If no entry selected
+     */
+    public static function doChangePostLang(BackendActions $ap, ArrayObject $post): void
+    {
+        $ids = $ap->getIDs();
+        if ($ids === []) {
+            throw new Exception(__('No entry selected'));
+        }
+        if (isset($post['new_lang'])) {
+            $new_lang       = $post['new_lang'];
+            $cur            = App::blog()->openPostCursor();
+            $cur->post_lang = $new_lang;
+
+            $sql = new UpdateStatement();
+            $sql
+                ->where('post_id ' . $sql->in($ids))
+                ->update($cur);
+
+            Notices::addSuccessNotice(
+                sprintf(
+                    __(
+                        '%d entry has been successfully set to language "%s"',
+                        '%d entries have been successfully set to language "%s"',
+                        count($ids)
+                    ),
+                    count($ids),
+                    Html::escapeHTML(L10n::getLanguageName($new_lang))
+                )
+            );
+            $ap->redirect(true);
+        } else {
+            $ap->beginPage(
+                Page::breadcrumb(
+                    [
+                        Html::escapeHTML(App::blog()->name())    => '',
+                        $ap->getCallerTitle()                    => $ap->getRedirection(true),
+                        __('Change language for this selection') => '',
+                    ]
+                )
+            );
+            // Prepare languages combo
+            $lang_combo = Combos::getLangsCombo(
+                App::blog()->getLangs([
+                    'order_by' => 'nb_post',
+                    'order'    => 'desc',
+                ]),
+                true    // Also show never used languages
+            );
+
+            echo (new Form('dochangepostlang'))
+                ->method('post')
+                ->action($ap->getURI())
+                ->fields([
+                    $ap->checkboxes(),
+                    (new Para())
+                        ->items([
+                            (new Label(__('Entry language:'), Label::OUTSIDE_LABEL_BEFORE))
+                                ->for('new_lang'),
+                            (new Select('new_lang'))
+                                ->items($lang_combo)
+                                ->default(''),
+                        ]),
+                    (new Para())
+                        ->items([
+                            App::nonce()->formNonce(),
+                            ...$ap->hiddenFields(),
+                            (new Hidden('action', 'lang')),
                             (new Submit('save'))
                                 ->value(__('Save')),
 
