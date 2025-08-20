@@ -209,6 +209,7 @@ class BackendList extends Listing
     {
         $img = (new Img('images/%2$s'))
             ->alt('%1$s')
+            ->title('%1$s')
             ->class(['mark', 'mark-%3$s'])
             ->render();
 
