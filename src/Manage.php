@@ -15,10 +15,12 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\related;
 
 use Dotclear\App;
-use Dotclear\Core\Process;
+use Dotclear\Helper\Process\TraitProcess;
 
-class Manage extends Process
+class Manage
 {
+    use TraitProcess;
+    
     private static $active_part = 'pages';
 
     public static function init(): bool

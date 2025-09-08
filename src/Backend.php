@@ -16,12 +16,14 @@ namespace Dotclear\Plugin\related;
 
 use ArrayObject;
 use Dotclear\Core\Backend\Menus;
-use Dotclear\Core\Process;
+use Dotclear\Helper\Process\TraitProcess;
 use Dotclear\Helper\Stack\Filter;
 use Dotclear\App;
 
-class Backend extends Process
+class Backend
 {
+    use TraitProcess;
+    
     public static function init(): bool
     {
         return self::status(My::checkContext(My::BACKEND));

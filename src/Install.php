@@ -14,12 +14,14 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\related;
 
-use Dotclear\Core\Process;
+use Dotclear\Helper\Process\TraitProcess;
 use Dotclear\App;
 use Dotclear\Helper\File\Files;
 
-class Install extends Process
+class Install
 {
+    use TraitProcess;
+    
     public static function init(): bool
     {
         return self::status(My::checkContext(My::INSTALL));
