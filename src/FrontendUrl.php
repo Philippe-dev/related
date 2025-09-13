@@ -15,7 +15,6 @@ namespace Dotclear\Plugin\related;
 
 use ArrayObject;
 use Dotclear\App;
-use Dotclear\Core\Url;
 use Dotclear\Core\Frontend\Utility;
 use Dotclear\Helper\File\Path;
 use Dotclear\Helper\Html\Html;
@@ -27,7 +26,7 @@ use Exception;
  * @brief   The module frontend URL.
  * @ingroup pages
  */
-class FrontendUrl extends Url
+class FrontendUrl
 {
     /**
      * Output the Page page.
@@ -38,7 +37,7 @@ class FrontendUrl extends Url
     {
         if ($args == '') {
             // No page was specified.
-            self::p404();
+            App::url()->p404();
         } else {
             App::blog()->withoutPassword(false);
 
@@ -55,7 +54,7 @@ class FrontendUrl extends Url
 
             if (App::frontend()->context()->posts->isEmpty()) {
                 # The specified page does not exist.
-                self::p404();
+                App::url()->p404();
             } else {
                 $post_id       = App::frontend()->context()->posts->post_id;
                 $post_password = App::frontend()->context()->posts->post_password;
@@ -93,7 +92,7 @@ class FrontendUrl extends Url
                 } else {
                     App::frontend()->template()->setPath(App::frontend()->template()->getPath(), $default_template . App::config()->defaultTplset());
                 }
-                self::serveDocument('external.html');
+                App::url()::serveDocument('external.html');
             }
         }
     }
@@ -107,14 +106,14 @@ class FrontendUrl extends Url
     {
         if (!preg_match('#^(.+?)/([0-9a-z]{40})/(.+?)$#', (string) $args, $m)) {
             # The specified Preview URL is malformed.
-            self::p404();
+            App::url()->p404();
         } else {
             $user_id  = $m[1];
             $user_key = $m[2];
             $post_url = $m[3];
             if (!App::auth()->checkUser($user_id, null, $user_key)) {
                 # The user has no access to the entry.
-                self::p404();
+                App::url()->p404();
             } else {
                 App::frontend()->context()->preview = true;
                 if (App::config()->adminUrl() !== '') {
