@@ -105,7 +105,7 @@ class BackendDefaultActions
                 __('Add to widget')      => 'selected',
                 __('Remove from widget') => 'unselected',
             ]],
-            ActionsPostsDefault::doUpdateSelectedPost(...)
+            self::doUpdateSelectedPost(...)
         );
     }
 
@@ -336,5 +336,47 @@ class BackendDefaultActions
 
             $ap->endPage();
         }
+    }
+
+    /**
+     * Does an update selected post.
+     *
+     * @param   ActionsPosts    $ap     The ActionsPosts instance
+     *
+     * @throws  Exception
+     */
+    public static function doUpdateSelectedPost(BackendActions $ap, ArrayObject $post): void
+    {
+        $ids = $ap->getIDs();
+        if ($ids === []) {
+            throw new Exception(__('No entry selected'));
+        }
+
+        $action = $ap->getAction();
+        App::blog()->updPostsSelected($ids, $action === 'selected');
+        if ($action == 'selected') {
+            Notices::addSuccessNotice(
+                sprintf(
+                    __(
+                        '%d entry has been successfully added to the widget.',
+                        '%d entries have been successfully added to the widget.',
+                        count($ids)
+                    ),
+                    count($ids)
+                )
+            );
+        } else {
+            Notices::addSuccessNotice(
+                sprintf(
+                    __(
+                        '%d entry has been successfully removed from the widget.',
+                        '%d entries have been successfully removed from the widget.',
+                        count($ids)
+                    ),
+                    count($ids)
+                )
+            );
+        }
+        $ap->redirect(true);
     }
 }

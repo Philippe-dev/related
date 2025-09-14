@@ -1,27 +1,27 @@
 # Language: Français
-# Module: related - 4.0
-# Date: 2025-07-02 13:12:37
-# Translated with translater 2025.03.03
+# Module: related - 4.5
+# Date: 2025-09-14 14:56:20
+# Translated with translater 2025.09.11
 
 msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
-"Project-Id-Version: related 4.0\n"
+"Project-Id-Version: related 4.5\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2025-07-02T13:12:37+00:00\n"
+"PO-Revision-Date: 2025-09-14T14:56:20+00:00\n"
 "Last-Translator: Philippe\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: src/Backend.php:62
+#: src/Backend.php:64
 msgid "In widget:"
 msgstr "Dans le widget :"
 
 #: src/BackendActions.php:46
 #: src/BackendBehaviors.php:27
-#: src/ManagePages.php:147
+#: src/ManagePages.php:149
 #: src/Widgets.php:33
 msgid "Included pages"
 msgstr "Pages incluses"
@@ -36,7 +36,7 @@ msgstr "%d pages incluses"
 
 #: src/BackendBehaviors.php:44
 msgid "%d included page"
-msgstr "%d pages connexe"
+msgstr "%d page incluse"
 
 #: src/BackendDefaultActions.php:105
 msgid "Add to widget"
@@ -47,69 +47,69 @@ msgid "Remove from widget"
 msgstr "Enlever du widget"
 
 #: src/BackendDefaultActions.php:151
-#: src/ManagePages.php:168
+#: src/ManagePages.php:170
 msgid "Pages have been successfully reordered."
 msgstr "Les pages ont été ordonnées avec succès."
 
-#: src/BackendList.php:189
-#: src/ManagePage.php:678
+#: src/BackendList.php:182
+#: src/ManagePage.php:680
 msgid "In widget"
 msgstr "Dans le widget"
 
-#: src/Config.php:84
+#: src/Config.php:86
 msgid "Directory \"%s\" for related files repository needs to allow read and write access."
 msgstr "Le répertoire \"%s\" pour le dépôt des fichiers liés nécessite un accès en lecture et écriture."
 
-#: src/Config.php:90
+#: src/Config.php:92
 msgid "Configuration has been updated."
 msgstr "La configuration a été mise à jour."
 
-#: src/Config.php:117
+#: src/Config.php:119
 msgid "Enable Related plugin"
 msgstr "Activer le plugin pages incluses"
 
-#: src/Config.php:125
+#: src/Config.php:127
 msgid "General options"
 msgstr "Options générales"
 
-#: src/Config.php:127
+#: src/Config.php:129
 msgid "Included files repository path:"
 msgstr "Chemin du dépôt des fichiers inclus :"
 
-#: src/Config.php:136
+#: src/Config.php:138
 msgid "Advanced options"
 msgstr "Options avancées"
 
-#: src/Config.php:138
+#: src/Config.php:140
 msgid "URL prefix:"
 msgstr "Préfixe d'URL :"
 
-#: src/Config.php:143
+#: src/Config.php:145
 msgid "This prefix will be used to generate the pages URLs. Do not use any existing prefix such as post, category or page."
 msgstr "Ce préfixe sera utilisé pour générer les URLs des pages. N'utilisez pas un préfixe existant tel que post, category ou page."
 
-#: src/Install.php:40
+#: src/Install.php:42
 msgid "Directory for related files repository needs to allow read and write access."
 msgstr "Le répertoire des pages incluses doit être accessible en lecture et écriture."
 
-#: src/ManagePage.php:107
-#: src/ManagePages.php:177
+#: src/ManagePage.php:109
+#: src/ManagePages.php:179
 msgid "New included page"
 msgstr "Nouvelle page incluse"
 
-#: src/ManagePage.php:422
+#: src/ManagePage.php:424
 msgid "Page has been updated."
 msgstr "La page a été mise à jour."
 
-#: src/ManagePage.php:453
+#: src/ManagePage.php:455
 msgid "Page has been created."
 msgstr "La page a été créée."
 
-#: src/ManagePage.php:885
+#: src/ManagePage.php:887
 msgid "Included file:"
 msgstr "Fichier inclus :"
 
-#: src/ManagePage.php:896
+#: src/ManagePage.php:898
 msgid "Pick up a local file in your included pages repository"
 msgstr "Choisissez un fichier local dans votre dépôt de pages incluses"
 
@@ -120,4 +120,16 @@ msgstr "Inclure des templates HTML et des scripts PHP"
 #: src/Widgets.php:40
 msgid "Pages limit:"
 msgstr "Limite du nombre de pages :"
+
+#: src/BackendDefaultActions.php:361-362
+msgid "%d entry has been successfully added to the widget."
+msgid_plural "%d entries have been successfully added to the widget."
+msgstr[0] "%d page a été ajoutée au widget avec succès."
+msgstr[1] "%d pages ont été ajoutées au widget avec succès."
+
+#: src/BackendDefaultActions.php:372-373
+msgid "%d entry has been successfully removed from the widget."
+msgid_plural "%d entries have been successfully removed from the widget."
+msgstr[0] "%d page a été enlevée du widget avec succès."
+msgstr[1] "%d pages ont été enlevées du widget avec succès."
 
