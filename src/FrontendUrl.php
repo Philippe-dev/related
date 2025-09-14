@@ -77,7 +77,7 @@ class FrontendUrl
                         $pwd_cookie['#' . $post_id] = $post_password;
                         setcookie('dc_passwd', json_encode($pwd_cookie, JSON_THROW_ON_ERROR), ['expires' => 0, 'path' => '/']);
                     } else {
-                        self::serveDocument('password-form.html', 'text/html', false);
+                        App::url()::serveDocument('password-form.html', 'text/html', false);
 
                         return;
                     }
