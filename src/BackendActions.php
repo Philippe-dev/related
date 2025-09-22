@@ -15,7 +15,6 @@ namespace Dotclear\Plugin\related;
 
 use Dotclear\App;
 use Dotclear\Core\Backend\Action\ActionsPosts;
-use Dotclear\Core\Backend\Page;
 use Dotclear\Helper\Html\Form\Link;
 use Dotclear\Helper\Html\Form\Para;
 use Dotclear\Helper\Html\Html;
@@ -50,7 +49,7 @@ class BackendActions extends ActionsPosts
     {
         App::error()->add($e->getMessage());
         $this->beginPage(
-            Page::breadcrumb(
+            App::backend()->page()->breadcrumb(
                 [
                     Html::escapeHTML(App::blog()->name()) => '',
                     __('Included pages')                   => $this->getRedirection(true),
@@ -64,16 +63,16 @@ class BackendActions extends ActionsPosts
     public function beginPage(string $breadcrumb = '', string $head = ''): void
     {
         if ($this->in_plugin) {
-            Page::openModule(
+            App::backend()->page()->openModule(
                 __('Included pages'),
-                Page::jsLoad('js/_posts_actions.js') .
+                App::backend()->page()->jsLoad('js/_posts_actions.js') .
                 $head
             );
             echo $breadcrumb;
         } else {
-            Page::open(
+            App::backend()->page()->open(
                 __('Included pages'),
-                Page::jsLoad('js/_posts_actions.js') .
+                App::backend()->page()->jsLoad('js/_posts_actions.js') .
                 $head,
                 $breadcrumb
             );
@@ -92,9 +91,9 @@ class BackendActions extends ActionsPosts
     public function endPage(): void
     {
         if ($this->in_plugin) {
-            Page::closeModule();
+            App::backend()->page()->closeModule();
         } else {
-            Page::close();
+            App::backend()->page()->close();
         }
     }
 

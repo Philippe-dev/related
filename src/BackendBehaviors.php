@@ -16,7 +16,6 @@ namespace Dotclear\Plugin\related;
 
 use Dotclear\Core\Auth;
 use Dotclear\Core\Backend\Favorites;
-use Dotclear\Core\Backend\Page;
 use Dotclear\App;
 
 class BackendBehaviors
@@ -26,8 +25,8 @@ class BackendBehaviors
         $favorites->register('related', [
             'title'       => __('Included pages'),
             'url'         => My::manageUrl(),
-            'small-icon'  => [Page::getPF('related/icon.svg'), Page::getPF('related/icon-dark.svg')],
-            'large-icon'  => [Page::getPF('related/icon.svg'), Page::getPF('related/icon-dark.svg')],
+            'small-icon'  => [App::backend()->page()->getPF('related/icon.svg'), App::backend()->page()->getPF('related/icon-dark.svg')],
+            'large-icon'  => [App::backend()->page()->getPF('related/icon.svg'), App::backend()->page()->getPF('related/icon-dark.svg')],
             'permissions' => App::auth()->makePermissions([
                 Auth::PERMISSION_USAGE, Auth::PERMISSION_CONTENT_ADMIN,
             ]),

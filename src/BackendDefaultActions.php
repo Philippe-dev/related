@@ -16,9 +16,6 @@ namespace Dotclear\Plugin\related;
 use ArrayObject;
 use Dotclear\App;
 use Dotclear\Core\Backend\Action\ActionsPostsDefault;
-use Dotclear\Core\Backend\Combos;
-use Dotclear\Core\Backend\Notices;
-use Dotclear\Core\Backend\Page;
 use Dotclear\Database\Statement\UpdateStatement;
 use Dotclear\Helper\Html\Form\Form;
 use Dotclear\Helper\Html\Form\Hidden;
@@ -148,7 +145,7 @@ class BackendDefaultActions
             App::blog()->triggerBlog();
         }
 
-        Notices::addSuccessNotice(__('Pages have been successfully reordered.'));
+        App::backend()->notices()->addSuccessNotice(__('Pages have been successfully reordered.'));
         $ap->redirect(false);
     }
 
@@ -182,7 +179,7 @@ class BackendDefaultActions
                 ->where('post_id ' . $sql->in($ids))
                 ->update($cur);
 
-            Notices::addSuccessNotice(
+            App::backend()->notices()->addSuccessNotice(
                 sprintf(
                     __(
                         '%d entry has been successfully set to user "%s"',
@@ -214,14 +211,14 @@ class BackendDefaultActions
                 }
             }
             $ap->beginPage(
-                Page::breadcrumb(
+                App::backend()->page()->breadcrumb(
                     [
                         Html::escapeHTML(App::blog()->name())  => '',
                         $ap->getCallerTitle()                  => $ap->getRedirection(true),
                         __('Change author for this selection') => '', ]
                 ),
-                Page::jsLoad('js/jquery/jquery.autocomplete.js') .
-                Page::jsJson('users_list', $usersList)
+                App::backend()->page()->jsLoad('js/jquery/jquery.autocomplete.js') .
+                App::backend()->page()->jsJson('users_list', $usersList)
             );
 
             echo (new Form('dochangepostauthor'))
@@ -278,7 +275,7 @@ class BackendDefaultActions
                 ->where('post_id ' . $sql->in($ids))
                 ->update($cur);
 
-            Notices::addSuccessNotice(
+            App::backend()->notices()->addSuccessNotice(
                 sprintf(
                     __(
                         '%d entry has been successfully set to language "%s"',
@@ -292,7 +289,7 @@ class BackendDefaultActions
             $ap->redirect(true);
         } else {
             $ap->beginPage(
-                Page::breadcrumb(
+                App::backend()->page()->breadcrumb(
                     [
                         Html::escapeHTML(App::blog()->name())    => '',
                         $ap->getCallerTitle()                    => $ap->getRedirection(true),
@@ -301,7 +298,7 @@ class BackendDefaultActions
                 )
             );
             // Prepare languages combo
-            $lang_combo = Combos::getLangsCombo(
+            $lang_combo = App::backend()->combos()->getLangsCombo(
                 App::blog()->getLangs([
                     'order_by' => 'nb_post',
                     'order'    => 'desc',
@@ -355,7 +352,7 @@ class BackendDefaultActions
         $action = $ap->getAction();
         App::blog()->updPostsSelected($ids, $action === 'selected');
         if ($action == 'selected') {
-            Notices::addSuccessNotice(
+            App::backend()->notices()->addSuccessNotice(
                 sprintf(
                     __(
                         '%d entry has been successfully added to the widget.',
@@ -366,7 +363,7 @@ class BackendDefaultActions
                 )
             );
         } else {
-            Notices::addSuccessNotice(
+            App::backend()->notices()->addSuccessNotice(
                 sprintf(
                     __(
                         '%d entry has been successfully removed from the widget.',

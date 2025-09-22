@@ -15,7 +15,6 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\related;
 
 use ArrayObject;
-use Dotclear\Core\Backend\Menus;
 use Dotclear\Helper\Process\TraitProcess;
 use Dotclear\Helper\Stack\Filter;
 use Dotclear\App;
@@ -34,8 +33,8 @@ class Backend
         if (!self::status()) {
             return false;
         }
-
-        My::addBackendMenuItem(Menus::MENU_BLOG);
+        
+        My::addBackendMenuItem(App::backend()->menus()::MENU_BLOG);
 
         App::behavior()->addBehavior('adminDashboardFavoritesV2', BackendBehaviors::dashboardFavorites(...));
         App::behavior()->addBehavior('adminDashboardFavsIconV2', BackendBehaviors::dashboardFavsIcon(...));

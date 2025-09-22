@@ -15,9 +15,7 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\related;
 
 use Exception;
-use Dotclear\Core\Backend\Notices;
 use Dotclear\Helper\Process\TraitProcess;
-use Dotclear\Core\Backend\Page;
 use Dotclear\Helper\Html\Form\Checkbox;
 use Dotclear\Helper\Html\Form\Div;
 use Dotclear\Helper\Html\Form\Fieldset;
@@ -89,7 +87,7 @@ class Config
                 }
             }
 
-            Notices::addSuccessNotice(__('Configuration has been updated.'));
+            App::backend()->notices()->addSuccessNotice(__('Configuration has been updated.'));
             App::blog()->triggerBlog();
 
             App::backend()->url()->redirect('admin.plugins', [
@@ -148,6 +146,6 @@ class Config
             ])->render();
         }
 
-        Page::helpBlock('related_pages_config');
+        App::backend()->page()->helpBlock('related_pages_config');
     }
 }

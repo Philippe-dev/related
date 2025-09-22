@@ -16,9 +16,6 @@ namespace Dotclear\Plugin\related;
 
 use ArrayObject;
 use Dotclear\App;
-use Dotclear\Core\Backend\Combos;
-use Dotclear\Core\Backend\Notices;
-use Dotclear\Core\Backend\Page;
 use Dotclear\Helper\Process\TraitProcess;
 use Dotclear\Database\MetaRecord;
 use Dotclear\Helper\Date;
@@ -78,7 +75,7 @@ class ManagePage
         $pageIsFile = (!empty($_REQUEST['type']) && $_REQUEST['type'] === 'file');
 
         $params = [];
-        Page::check(App::auth()->makePermissions([
+        App::backend()->page()->check(App::auth()->makePermissions([
             Pages::PERMISSION_PAGES,
             App::auth()::PERMISSION_CONTENT_ADMIN,
         ]));
@@ -145,7 +142,7 @@ class ManagePage
         App::backend()->available_formats = $available_formats;
 
         // Languages combo
-        App::backend()->lang_combo = Combos::getLangsCombo(
+        App::backend()->lang_combo = App::backend()->combos()->getLangsCombo(
             App::blog()->getLangs([
                 'order_by' => 'nb_post',
                 'order'    => 'desc',
@@ -168,7 +165,7 @@ class ManagePage
             App::backend()->post = App::blog()->getPosts($params);
 
             if (App::backend()->post->isEmpty()) {
-                Notices::addErrorNotice(__('This page does not exist.'));
+                App::backend()->notices()->addErrorNotice(__('This page does not exist.'));
                 My::redirect();
             } else {
                 App::backend()->post_id            = (int) App::backend()->post->post_id;
@@ -362,7 +359,7 @@ class ManagePage
                             $file_name = $_POST['files_dir'];
                         }
                     } catch (Exception $e) {
-                        Notices::addErrorNotice($e->getMessage());
+                        App::backend()->notices()->addErrorNotice($e->getMessage());
                     }
                 }
             }
@@ -421,7 +418,7 @@ class ManagePage
                     # --BEHAVIOR-- adminAfterPageUpdate -- Cursor, int
                     App::behavior()->callBehavior('adminAfterPageUpdate', $cur, App::backend()->post_id);
 
-                    Notices::addSuccessNotice(__('Page has been updated.'));
+                    App::backend()->notices()->addSuccessNotice(__('Page has been updated.'));
 
                     My::redirect(['part' => 'page', 'id' => App::backend()->post_id]);
                 } catch (Exception $e) {
@@ -452,7 +449,7 @@ class ManagePage
                     }
                     App::con()->commit();
 
-                    Notices::addSuccessNotice(__('Page has been created.'));
+                    App::backend()->notices()->addSuccessNotice(__('Page has been created.'));
 
                     My::redirect(['part' => 'page', 'id' => $return_id, 'crea' => '1']);
                 } catch (Exception $e) {
@@ -500,7 +497,7 @@ class ManagePage
                 App::backend()->post_content = $params['content'];
                 App::backend()->post_format  = $params['format'];
 
-                Notices::addMessageNotice($msg);
+                App::backend()->notices()->addMessageNotice($msg);
             }
         }
 
@@ -542,17 +539,17 @@ class ManagePage
             }
         }
 
-        Page::openModule(
+        App::backend()->page()->openModule(
             App::backend()->page_title . ' - ' . My::name(),
-            Page::jsModal() .
-            Page::jsJson('pages_page', ['confirm_delete_post' => __('Are you sure you want to delete this page?')]) .
-            Page::jsLoad('js/_post.js') .
+            App::backend()->page()->jsModal() .
+            App::backend()->page()->jsJson('pages_page', ['confirm_delete_post' => __('Are you sure you want to delete this page?')]) .
+            App::backend()->page()->jsLoad('js/_post.js') .
             My::jsLoad('page') .
             $admin_post_behavior .
-            Page::jsConfirmClose('entry-form', 'comment-form') .
+            App::backend()->page()->jsConfirmClose('entry-form', 'comment-form') .
             # --BEHAVIOR-- adminPageHeaders --
             App::behavior()->callBehavior('adminPageHeaders') .
-            Page::jsPageTabs(App::backend()->default_tab) .
+            App::backend()->page()->jsPageTabs(App::backend()->default_tab) .
             App::backend()->next_headlink . "\n" . App::backend()->prev_headlink
         );
 
@@ -564,7 +561,7 @@ class ManagePage
             $edit_entry_title = App::backend()->page_title;
         }
 
-        echo Page::breadcrumb(
+        echo App::backend()->page()->breadcrumb(
             [
                 Html::escapeHTML(App::blog()->name()) => '',
                 My::name()                            => App::backend()->getPageURL(),
@@ -572,7 +569,7 @@ class ManagePage
             ]
         );
 
-        echo Notices::GetNotices();
+        echo App::backend()->notices()->GetNotices();
 
         # HTML conversion
         if (!empty($_GET['xconv'])) {
@@ -580,7 +577,7 @@ class ManagePage
             App::backend()->post_content = App::backend()->post_content_xhtml;
             App::backend()->post_format  = 'xhtml';
 
-            Notices::message(__('Don\'t forget to validate your HTML conversion by saving your post.'));
+            App::backend()->notices()->message(__('Don\'t forget to validate your HTML conversion by saving your post.'));
         }
 
         if (App::backend()->post_id && !App::status()->post()->isRestricted((int) App::backend()->post->post_status)) {
@@ -615,7 +612,7 @@ class ManagePage
 
         # Exit if we cannot view page
         if (!App::backend()->can_view_page) {
-            Page::closeModule();
+            App::backend()->page()->closeModule();
 
             return;
         }
@@ -1060,8 +1057,8 @@ class ManagePage
             }
         }
 
-        Page::helpBlock('related_pages_edit', 'core_wiki');
+        App::backend()->page()->helpBlock('related_pages_edit', 'core_wiki');
 
-        Page::closeModule();
+        App::backend()->page()->closeModule();
     }
 }

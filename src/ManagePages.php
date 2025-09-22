@@ -16,8 +16,6 @@ namespace Dotclear\Plugin\related;
 
 use Dotclear\App;
 use Dotclear\Core\Backend\Filter\FilterPosts;
-use Dotclear\Core\Backend\Notices;
-use Dotclear\Core\Backend\Page;
 use Dotclear\Helper\Process\TraitProcess;
 use Dotclear\Core\Backend\UserPref;
 use Dotclear\Helper\Html\Form\Button;
@@ -141,33 +139,33 @@ class ManagePages
 
         $head = '';
         if (!App::auth()->prefs()->accessibility->nodragdrop) {
-            $head = Page::jsLoad('js/jquery/jquery-ui.custom.js') .
-            Page::jsLoad('js/jquery/jquery.ui.touch-punch.js');
+            $head = App::backend()->page()->jsLoad('js/jquery/jquery-ui.custom.js') .
+            App::backend()->page()->jsLoad('js/jquery/jquery.ui.touch-punch.js');
         }
 
-        Page::openModule(
+        App::backend()->page()->openModule(
             __('Included pages'),
             $head .
-            Page::jsJson('pages_list', ['confirm_delete_posts' => __('Are you sure you want to delete selected pages?')]) .
+            App::backend()->page()->jsJson('pages_list', ['confirm_delete_posts' => __('Are you sure you want to delete selected pages?')]) .
             My::jsLoad('list') .
             App::backend()->post_filter->js(App::backend()->url()->get('admin.plugin', ['p' => My::id(), 'part' => 'pages'], '&'))
         );
 
         echo
-        Page::breadcrumb(
+        App::backend()->page()->breadcrumb(
             [
                 Html::escapeHTML(App::blog()->name()) => '',
                 My::name()                            => '',
             ]
         ) .
-        Notices::getNotices();
+        App::backend()->notices()->getNotices();
 
         if (!empty($_GET['upd'])) {
-            Notices::success(__('Selected pages have been successfully updated.'));
+            App::backend()->notices()->success(__('Selected pages have been successfully updated.'));
         } elseif (!empty($_GET['del'])) {
-            Notices::success(__('Selected pages have been successfully deleted.'));
+            App::backend()->notices()->success(__('Selected pages have been successfully deleted.'));
         } elseif (!empty($_GET['reo'])) {
-            Notices::success(__('Pages have been successfully reordered.'));
+            App::backend()->notices()->success(__('Pages have been successfully reordered.'));
         }
 
         echo (new Para())
@@ -232,7 +230,7 @@ class ManagePages
             );
         }
 
-        Page::helpBlock('related_pages');
-        Page::closeModule();
+        App::backend()->page()->helpBlock('related_pages');
+        App::backend()->page()->closeModule();
     }
 }
