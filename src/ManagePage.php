@@ -402,18 +402,18 @@ class ManagePage
 
                     App::blog()->updPost(App::backend()->post_id, $cur);
 
-                    App::con()->begin();
+                    App::db()->con()->begin();
                     if ($pageIsFile) {
                         try {
                             App::meta()->delPostMeta(App::backend()->post_id, 'related_file');
                             App::meta()->setPostMeta(App::backend()->post_id, 'related_file', $file_name);
                         } catch (Exception $e) {
-                            App::con()->rollback();
+                            App::db()->con()->rollback();
 
                             throw $e;
                         }
                     }
-                    App::con()->commit();
+                    App::db()->con()->commit();
 
                     # --BEHAVIOR-- adminAfterPageUpdate -- Cursor, int
                     App::behavior()->callBehavior('adminAfterPageUpdate', $cur, App::backend()->post_id);
@@ -436,18 +436,18 @@ class ManagePage
                     # --BEHAVIOR-- adminAfterPageCreate -- Cursor, int
                     App::behavior()->callBehavior('adminAfterPageCreate', $cur, $return_id);
 
-                    App::con()->begin();
+                    App::db()->con()->begin();
 
                     try {
                         if (isset($file_name)) {
                             App::meta()->setPostMeta($return_id, 'related_file', $file_name);
                         }
                     } catch (Exception $e) {
-                        App::con()->rollback();
+                        App::db()->con()->rollback();
 
                         throw $e;
                     }
-                    App::con()->commit();
+                    App::db()->con()->commit();
 
                     App::backend()->notices()->addSuccessNotice(__('Page has been created.'));
 

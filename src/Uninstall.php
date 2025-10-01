@@ -42,7 +42,7 @@ class Uninstall
         // $var   = My::id(); // Var sub-folder
 
         // Database table name
-        // $table = App::con()->prefix() . 'related';
+        // $table = App::db()->con()->prefix() . 'related';
 
         $user_actions = [
 
