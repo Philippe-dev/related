@@ -25,7 +25,6 @@ use Dotclear\Helper\Html\Form\Para;
 use Dotclear\Helper\Html\Form\Select;
 use Dotclear\Helper\Html\Form\Submit;
 use Dotclear\Helper\Html\Html;
-use Dotclear\Helper\L10n;
 use Dotclear\Schema\Extension\User;
 use Exception;
 
@@ -283,7 +282,7 @@ class BackendDefaultActions
                         count($ids)
                     ),
                     count($ids),
-                    Html::escapeHTML(L10n::getLanguageName($new_lang))
+                    Html::escapeHTML(App::lang()->getLanguageName($new_lang))
                 )
             );
             $ap->redirect(true);
