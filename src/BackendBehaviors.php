@@ -25,8 +25,8 @@ class BackendBehaviors
         $favorites->register('related', [
             'title'       => __('Included pages'),
             'url'         => My::manageUrl(),
-            'small-icon'  => [App::backend()->page()->getPF('related/icon.svg'), App::backend()->page()->getPF('related/icon-dark.svg')],
-            'large-icon'  => [App::backend()->page()->getPF('related/icon.svg'), App::backend()->page()->getPF('related/icon-dark.svg')],
+            'small-icon'  => My::icons(),
+            'large-icon'  => My::icons(),
             'permissions' => App::auth()->makePermissions([
                 Auth::PERMISSION_USAGE, Auth::PERMISSION_CONTENT_ADMIN,
             ]),
