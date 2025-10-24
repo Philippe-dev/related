@@ -1,90 +1,90 @@
 # Language: Français
-# Module: related - 4.5
-# Date: 2025-09-14 14:56:20
+# Module: related - 5.0
+# Date: 2025-10-24 08:33:52
 # Translated with translater 2025.09.11
 
 msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
-"Project-Id-Version: related 4.5\n"
+"Project-Id-Version: related 5.0\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2025-09-14T14:56:20+00:00\n"
+"PO-Revision-Date: 2025-10-24T08:33:52+00:00\n"
 "Last-Translator: Philippe\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: src/Backend.php:64
+#: src/Backend.php:63
 msgid "In widget:"
 msgstr "Dans le widget :"
 
-#: src/BackendActions.php:46
-#: src/BackendBehaviors.php:27
-#: src/ManagePages.php:149
+#: src/BackendActions.php:45
+#: src/BackendBehaviors.php:26
+#: src/ManagePages.php:147
 #: src/Widgets.php:33
 msgid "Included pages"
 msgstr "Pages incluses"
 
-#: src/BackendActions.php:57
+#: src/BackendActions.php:56
 msgid "Included pages actions"
 msgstr "Actions sur le pages incluses"
 
-#: src/BackendBehaviors.php:44
+#: src/BackendBehaviors.php:43
 msgid "%d included pages"
 msgstr "%d pages incluses"
 
-#: src/BackendBehaviors.php:44
+#: src/BackendBehaviors.php:43
 msgid "%d included page"
 msgstr "%d page incluse"
 
-#: src/BackendDefaultActions.php:105
+#: src/BackendDefaultActions.php:101
 msgid "Add to widget"
 msgstr "Ajouter au widget"
 
-#: src/BackendDefaultActions.php:106
+#: src/BackendDefaultActions.php:102
 msgid "Remove from widget"
 msgstr "Enlever du widget"
 
-#: src/BackendDefaultActions.php:151
-#: src/ManagePages.php:170
+#: src/BackendDefaultActions.php:147
+#: src/ManagePages.php:168
 msgid "Pages have been successfully reordered."
 msgstr "Les pages ont été ordonnées avec succès."
 
 #: src/BackendList.php:182
-#: src/ManagePage.php:680
+#: src/ManagePage.php:677
 msgid "In widget"
 msgstr "Dans le widget"
 
-#: src/Config.php:86
+#: src/Config.php:84
 msgid "Directory \"%s\" for related files repository needs to allow read and write access."
 msgstr "Le répertoire \"%s\" pour le dépôt des fichiers liés nécessite un accès en lecture et écriture."
 
-#: src/Config.php:92
+#: src/Config.php:90
 msgid "Configuration has been updated."
 msgstr "La configuration a été mise à jour."
 
-#: src/Config.php:119
+#: src/Config.php:117
 msgid "Enable Related plugin"
 msgstr "Activer le plugin pages incluses"
 
-#: src/Config.php:127
+#: src/Config.php:125
 msgid "General options"
 msgstr "Options générales"
 
-#: src/Config.php:129
+#: src/Config.php:127
 msgid "Included files repository path:"
 msgstr "Chemin du dépôt des fichiers inclus :"
 
-#: src/Config.php:138
+#: src/Config.php:136
 msgid "Advanced options"
 msgstr "Options avancées"
 
-#: src/Config.php:140
+#: src/Config.php:138
 msgid "URL prefix:"
 msgstr "Préfixe d'URL :"
 
-#: src/Config.php:145
+#: src/Config.php:143
 msgid "This prefix will be used to generate the pages URLs. Do not use any existing prefix such as post, category or page."
 msgstr "Ce préfixe sera utilisé pour générer les URLs des pages. N'utilisez pas un préfixe existant tel que post, category ou page."
 
@@ -92,26 +92,30 @@ msgstr "Ce préfixe sera utilisé pour générer les URLs des pages. N'utilisez 
 msgid "Directory for related files repository needs to allow read and write access."
 msgstr "Le répertoire des pages incluses doit être accessible en lecture et écriture."
 
-#: src/ManagePage.php:109
-#: src/ManagePages.php:179
+#: src/ManagePage.php:106
+#: src/ManagePages.php:177
 msgid "New included page"
 msgstr "Nouvelle page incluse"
 
-#: src/ManagePage.php:424
+#: src/ManagePage.php:421
 msgid "Page has been updated."
 msgstr "La page a été mise à jour."
 
-#: src/ManagePage.php:455
+#: src/ManagePage.php:452
 msgid "Page has been created."
 msgstr "La page a été créée."
 
-#: src/ManagePage.php:887
+#: src/ManagePage.php:884
 msgid "Included file:"
 msgstr "Fichier inclus :"
 
-#: src/ManagePage.php:898
-msgid "Pick up a local file in your included pages repository"
-msgstr "Choisissez un fichier local dans votre dépôt de pages incluses"
+#: src/ManagePage.php:896
+msgid "Pick up a file in your repository:"
+msgstr "Choisir un fichier dans votre dépôt :"
+
+#: src/ManagePage.php:905
+msgid "Pick up a local file:"
+msgstr "Choisir un fichier local :"
 
 #: src/Widgets.php:36
 msgid "Serve HTML templates and PHP scripts"
@@ -121,13 +125,14 @@ msgstr "Inclure des templates HTML et des scripts PHP"
 msgid "Pages limit:"
 msgstr "Limite du nombre de pages :"
 
-#: src/BackendDefaultActions.php:361-362
+msgid "Pick up a local file in your included pages repository"
+msgstr "Choisissez un fichier local dans votre dépôt de pages incluses"
+
 msgid "%d entry has been successfully added to the widget."
 msgid_plural "%d entries have been successfully added to the widget."
 msgstr[0] "%d page a été ajoutée au widget avec succès."
 msgstr[1] "%d pages ont été ajoutées au widget avec succès."
 
-#: src/BackendDefaultActions.php:372-373
 msgid "%d entry has been successfully removed from the widget."
 msgid_plural "%d entries have been successfully removed from the widget."
 msgstr[0] "%d page a été enlevée du widget avec succès."

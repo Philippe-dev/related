@@ -52,7 +52,7 @@ use Exception;
 class ManagePage
 {
     use TraitProcess;
-    
+
     private static bool $pageIsFile  = true;
     private static string $file_name = '';
     private static array $files_list = ['-' => ''];
@@ -888,20 +888,29 @@ class ManagePage
                             ->render(),
                         (new Fieldset())->class(['area','related','no-margin'])->id('is_file-area')
                             ->items([
-                                (new Para())->items([
-                                    (new Select('files_dir'))
-                                        ->items($files_list)
-                                        ->default($file_name)
-                                        ->label(new Label(__('Pick up a local file in your included pages repository'), Label::OUTSIDE_LABEL_BEFORE)),
+                                (new Div())->class('three-boxes')->items([
+                                    (new Para())->items([
+                                        (new Select('files_dir'))
+                                            ->items($files_list)
+                                            ->default($file_name)
+                                            ->label(new Label(__('Pick up a file in your repository:'), Label::OUTSIDE_LABEL_BEFORE)),
+                                    ]),
                                 ]),
-                                (new Para())->items([
-                                    (new Input('up_file'))
-                                        ->type('file')
-                                        ->size(35)
-                                        ->label(new Label(__('Choose a file:') . ' (' . sprintf(__('Maximum size %s'), Files::size(App::config()->maxUploadSize())) . ')', Label::IL_TF)),
-                                    (new Hidden(['part'], 'page')),
-                                    (new Hidden(['type'], 'file')),
-                                    (new Hidden(['id'], 'id')),
+                                (new Div())->class(['form-note', 'maximal'])->items([
+                                    (new Para())->items([
+                                        (new Text('h5', __('or'))),
+                                    ]),
+                                ]),
+                                (new Div())->class('three-boxes')->items([
+                                    (new Para())->items([
+                                        (new Input('up_file'))
+                                            ->type('file')
+                                            ->size(35)
+                                            ->label(new Label(__('Pick up a local file:'), Label::OUTSIDE_LABEL_BEFORE)),
+                                        (new Hidden(['part'], 'page')),
+                                        (new Hidden(['type'], 'file')),
+                                        (new Hidden(['id'], 'id')),
+                                    ]),
                                 ]),
                             ])
 
