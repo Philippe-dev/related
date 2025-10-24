@@ -888,7 +888,7 @@ class ManagePage
                             ->render(),
                         (new Fieldset())->class(['area','related','no-margin'])->id('is_file-area')
                             ->items([
-                                (new Div())->class('three-boxes')->items([
+                                (new Div())->items([
                                     (new Para())->items([
                                         (new Select('files_dir'))
                                             ->items($files_list)
@@ -901,7 +901,7 @@ class ManagePage
                                         (new Text('h5', __('or'))),
                                     ]),
                                 ]),
-                                (new Div())->class('three-boxes')->items([
+                                (new Div())->items([
                                     (new Para())->items([
                                         (new Input('up_file'))
                                             ->type('file')
@@ -912,6 +912,7 @@ class ManagePage
                                         (new Hidden(['id'], 'id')),
                                     ]),
                                 ]),
+                                (new Note())->class(['form-note'])->text(__('Allowed file extensions : *.php, *.html, *.txt, *.xml')),
                             ])
 
                         ->render(),
