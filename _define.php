@@ -13,9 +13,9 @@ $this->registerModule(
     'Included pages',
     'Serve HTML templates & PHP scripts',
     'Pep, Nicolas Roudaire and contributors',
-    '5.0',
+    '5.1',
     [
-        'date'        => '2025-10-12T12:12:00+0100',
+        'date'        => '2025-10-24T12:12:00+0100',
         'requires'    => [['core', '2.36']],
         'permissions' => 'My',
         'type'        => 'plugin',
