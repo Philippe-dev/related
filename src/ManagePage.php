@@ -37,6 +37,7 @@ use Dotclear\Helper\Html\Form\Para;
 use Dotclear\Helper\Html\Form\Password;
 use Dotclear\Helper\Html\Form\Select;
 use Dotclear\Helper\Html\Form\Span;
+use Dotclear\Helper\Html\Form\Strong;
 use Dotclear\Helper\Html\Form\Submit;
 use Dotclear\Helper\Html\Form\Text;
 use Dotclear\Helper\Html\Form\Textarea;
@@ -897,8 +898,8 @@ class ManagePage
                                     ]),
                                 ]),
                                 (new Div())->class(['form-note', 'maximal'])->items([
-                                    (new Para())->class('bold')->items([
-                                        (new Text(null, __('or'))),
+                                    (new Para())->items([
+                                        (new Strong(__('or'))),
                                     ]),
                                 ]),
                                 (new Div())->items([
