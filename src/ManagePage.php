@@ -897,8 +897,8 @@ class ManagePage
                                     ]),
                                 ]),
                                 (new Div())->class(['form-note', 'maximal'])->items([
-                                    (new Para())->items([
-                                        (new Text('h5', __('or'))),
+                                    (new Para())->class('bold')->items([
+                                        (new Text(null, __('or'))),
                                     ]),
                                 ]),
                                 (new Div())->items([
