@@ -13,14 +13,13 @@ $this->registerModule(
     'Included pages',
     'Serve HTML templates & PHP scripts',
     'Pep, Nicolas Roudaire and contributors',
-    '5.3',
+    '5.4',
     [
-        'date'        => '2025-11-16T12:12:00+0100',
+        'date'        => '2025-11-23T12:12:00+0100',
         'requires'    => [['core', '2.36']],
         'permissions' => 'My',
         'type'        => 'plugin',
         'repository'  => 'https://github.com/Philippe-dev/related',
-        'support'     => 'http://forum.dotclear.net/viewtopic.php?id=48205',
-        'details'     => 'http://plugins.dotaddict.org/dc2/details/related',
+        'support'     => 'https://github.com/Philippe-dev/related/issues',
     ]
 );
