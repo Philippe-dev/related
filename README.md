@@ -4,11 +4,10 @@ Included pages is a plugin for dotclear. It aims to provide a simple way to serv
 
 It is possible to include a *.php file in a page, it will be executed on public side. It may be used for example to create a contact form. It is also possible to include any *.html ordinary file, or a *.html file with Dotclear's template tags, which will be executed on public page as well.
 
-# Installation
+## Installation
 
 You can install the plugin from your dotclear administration area.
 
-# Contributing
+## Contributing
 
-If you have ideas to improve that plugin, feel free to add an issue or even better send me a pull request.
-If you find a bug, fill an issue.
+If you have ideas to improve that plugin, feel free to add an issue or, even better, send me a pull request. If you find a bug, please fill an issue.
