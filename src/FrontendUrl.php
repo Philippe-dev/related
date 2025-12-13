@@ -17,10 +17,6 @@ use ArrayObject;
 use Dotclear\App;
 use Dotclear\Core\Frontend\Utility;
 use Dotclear\Helper\File\Path;
-use Dotclear\Helper\Html\Html;
-use Dotclear\Helper\Network\Http;
-use Dotclear\Helper\Text;
-use Exception;
 
 /**
  * @brief   The module frontend URL.
@@ -82,8 +78,6 @@ class FrontendUrl
                         return;
                     }
                 }
-
-                
 
                 $tplset           = App::themes()->moduleInfo(App::blog()->settings()->system->theme, 'tplset');
                 $default_template = Path::real(App::plugins()->moduleInfo('related', 'root')) . DIRECTORY_SEPARATOR . Utility::TPL_ROOT . DIRECTORY_SEPARATOR;

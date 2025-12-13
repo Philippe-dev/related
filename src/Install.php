@@ -21,7 +21,7 @@ use Dotclear\Helper\File\Files;
 class Install
 {
     use TraitProcess;
-    
+
     public static function init(): bool
     {
         return self::status(My::checkContext(My::INSTALL));

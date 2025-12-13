@@ -23,7 +23,7 @@ use Dotclear\App;
 class Backend
 {
     use TraitProcess;
-    
+
     public static function init(): bool
     {
         return self::status(My::checkContext(My::BACKEND));
@@ -34,7 +34,7 @@ class Backend
         if (!self::status()) {
             return false;
         }
-        
+
         My::addBackendMenuItem(Utility::MENU_BLOG);
 
         App::behavior()->addBehavior('adminDashboardFavoritesV2', BackendBehaviors::dashboardFavorites(...));
@@ -67,7 +67,6 @@ class Backend
                     __('yes') => '1',
                     __('no')  => '0',
                 ]));
-
         }
     }
 }

@@ -31,7 +31,7 @@ use Dotclear\App;
 class Config
 {
     use TraitProcess;
-    
+
     private static string $default_tab = 'settings';
 
     public static function init(): bool

@@ -20,7 +20,7 @@ use Dotclear\Helper\Process\TraitProcess;
 class Frontend
 {
     use TraitProcess;
-    
+
     public static function init(): bool
     {
         return self::status(My::checkContext(My::FRONTEND));
@@ -32,7 +32,6 @@ class Frontend
             return false;
         }
 
-        
         App::behavior()->addBehavior('publicBreadcrumb', FrontendBehaviors::publicBreadcrumb(...));
 
         App::behavior()->addBehavior('coreBlogGetPosts', FrontendBehaviors::coreBlogGetPosts(...));

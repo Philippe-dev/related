@@ -35,7 +35,7 @@ use Exception;
 class ManagePages
 {
     use TraitProcess;
-    
+
     public static function init(): bool
     {
         if (My::checkContext(My::MANAGE)) {
