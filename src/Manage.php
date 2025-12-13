@@ -26,7 +26,7 @@ class Manage
     public static function init(): bool
     {
         if (My::checkContext(My::MANAGE)) {
-            $default_part                       = My::settings()->active ? 'pages' : 'order';
+            $default_part                       = 'pages';
             self::$active_part                  = $_REQUEST['part'] ?? $default_part;
             App::backend()->related_default_tab = self::$active_part;
 
