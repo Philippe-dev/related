@@ -20,7 +20,7 @@ use Dotclear\Helper\Process\TraitProcess;
 class Manage
 {
     use TraitProcess;
-    
+
     private static $active_part = 'pages';
 
     public static function init(): bool
