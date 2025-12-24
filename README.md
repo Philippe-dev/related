@@ -6,7 +6,7 @@
 
 Ce plugin offre un moyen simple d'inclure des fichiers HTML ou des scripts PHP sur des pages publiques du blog. Vous pouvez :
 
-* inclure un fichier PHP, qui sera exécuté côté public. Cela peut servir par exemple à créer un formulaire de contact ou tout autre type d'interaction.
+* inclure un fichier PHP, qui sera exécuté côté public. Cela peut servir par exemple à créer un formulaire de contact.
 * inclure un fichier HTML, comprenant éventuellement des balises de template de Dotclear. Ce fichier sera alors rendu côté public.
 
 
