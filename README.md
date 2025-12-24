@@ -9,6 +9,7 @@ Ce plugin offre un moyen simple d'inclure des fichiers HTML ou des scripts PHP s
 * inclure un fichier PHP, qui sera exécuté côté public. Cela peut servir par exemple à créer un formulaire de contact.
 * inclure un fichier HTML, comprenant éventuellement des balises de template de Dotclear. Ce fichier sera alors rendu côté public.
 
+Un widget permet d'afficher des liens vers ces pages incluses dans votre menu de navigation.
 
 # *Included pages*
 
@@ -16,3 +17,5 @@ Ce plugin offre un moyen simple d'inclure des fichiers HTML ou des scripts PHP s
 
 * *a PHP file, which will be executed on public side. It may be used for example to create a contact form.*
 * *or any HTML file, even containing Dotclear's template tags, which will be executed on public page as well.*
+
+*A widget allows to display links to these included pages in your blog's navaigation menu*
