@@ -57,6 +57,26 @@ class FrontendBehaviors
 
     public static function coreBlogGetPosts($rs)
     {
-        $rs->extend(FrontendRecordset::class);
+        $rs->extend(self::class, 'getRelatedFilename');
+    }
+
+    public static function getRelatedFilename($rs)
+    {
+        if (is_null(App::blog()->settings()->related->files_path)) {
+            return false;
+        }
+
+        $meta_rs = App::meta()->getMetaRecordset($rs->post_meta, 'related_file');
+
+        if (!$meta_rs->isEmpty()) {
+            $filename = App::blog()->settings()->related->files_path . '/' . $meta_rs->meta_id;
+            if (is_readable($filename)) {
+                return $filename;
+            }
+
+            return false;
+        }
+
+        return false;
     }
 }
