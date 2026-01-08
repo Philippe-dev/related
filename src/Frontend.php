@@ -35,8 +35,8 @@ class Frontend
         App::behavior()->addBehavior('publicBreadcrumb', FrontendBehaviors::publicBreadcrumb(...));
 
         App::behavior()->addBehavior('coreBlogGetPosts', FrontendBehaviors::coreBlogGetPosts(...));
-        App::behavior()->addBehavior('publicBeforeDocument', FrontendBehaviors::publicBeforeDocument(...));
-        App::behavior()->addBehavior('templateBeforeBlock', FrontendBehaviors::templateBeforeBlock(...));
+        App::behavior()->addBehavior('publicBeforeDocumentV2', FrontendBehaviors::publicBeforeDocument(...));
+        App::behavior()->addBehavior('templateBeforeBlockV2', FrontendBehaviors::templateBeforeBlock(...));
 
         App::frontend()->template()->addValue('EntryContent', FrontendTemplates::PageContent(...));
 

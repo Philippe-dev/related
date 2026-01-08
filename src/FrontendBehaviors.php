@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\related;
 
+use ArrayObject;
 use Dotclear\App;
 
 class FrontendBehaviors
@@ -25,7 +26,7 @@ class FrontendBehaviors
         }
     }
 
-    public static function publicBeforeDocument()
+    public static function publicBeforeDocument(): void
     {
         $tplset = App::themes()->moduleInfo(App::blog()->settings()->system->theme, 'tplset');
         if (!empty($tplset) && is_dir(__DIR__ . '/../default-templates/' . $tplset)) {
@@ -35,24 +36,20 @@ class FrontendBehaviors
         }
     }
 
-    public static function templateBeforeBlock()
+    public static function templateBeforeBlock(string $block, ArrayObject $attr): string
     {
-        $args = func_get_args();
-        array_shift($args);
-
-        if ($args[0] === 'Entries') {
-            if (!empty($args[1])) {
-                $attrs = $args[1];
-                if (!empty($attrs['type']) && $attrs['type'] == 'related') {
-                    $p = "<?php \$params['post_type'] = 'related'; ?>\n";
-                    if (!empty($attrs['basename'])) {
-                        $p .= "<?php \$params['post_url'] = '" . $attrs['basename'] . "'; ?>\n";
-                    }
-
-                    return $p;
+        if ($block === 'Entries') {
+            if (!empty($attr['type']) && $attr['type'] == 'related') {
+                $p = "<?php \$params['post_type'] = 'related'; ?>\n";
+                if (!empty($attr['basename'])) {
+                    $p .= "<?php \$params['post_url'] = '" . $attr['basename'] . "'; ?>\n";
                 }
+
+                return $p;
             }
         }
+
+        return '';
     }
 
     public static function coreBlogGetPosts($rs)
