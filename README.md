@@ -4,10 +4,10 @@
 ![License AGPL 3.0](https://img.shields.io/badge/License-AGPL_3.0-a5cc52)
 ![Dotclear 2.36](https://img.shields.io/badge/Dotclear-2.36-137bbb)
 
-Ce plugin offre un moyen simple d'inclure des fichiers HTML ou des scripts PHP sur des pages publiques du blog. Vous pouvez :
+Ce plugin offre un moyen simple d'inclure des fichiers HTML ou des scripts PHP qui seront affichés sur des pages publiques du blog. Vous pouvez :
 
-* inclure un fichier PHP, qui sera exécuté côté public. Cela peut servir par exemple à créer un formulaire de contact.
-* inclure un fichier HTML, comprenant éventuellement des balises de template de Dotclear. Ce fichier sera alors rendu côté public.
+* inclure un fichier PHP. Cela peut servir par exemple à créer un formulaire.
+* inclure un fichier HTML. Celui-ci peut inclure des balises de template de Dotclear.
 
 Un widget permet d'afficher des liens vers ces pages incluses dans votre menu de navigation.
 
@@ -15,7 +15,7 @@ Un widget permet d'afficher des liens vers ces pages incluses dans votre menu de
 
 *This plugin provides a simple way to serve HTML templates and PHP scripts on public blog pages. It allows to include:*
 
-* *a PHP file, which will be executed on public side. It may be used for example to create a contact form.*
-* *or any HTML file, even containing Dotclear's template tags, which will be executed on public page as well.*
+* *a PHP file. It may be used for example to create any form.*
+* *an HTML file, which may contain Dotclear template tags.*
 
 *A widget allows to display links to these included pages in your blog's navaigation menu*
