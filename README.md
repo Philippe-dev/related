@@ -18,4 +18,4 @@ Un widget permet d'afficher des liens vers ces pages incluses dans votre menu de
 * *a PHP file. It may be used for example to create any form.*
 * *an HTML file, which may contain Dotclear template tags.*
 
-*A widget allows to display links to these included pages in your blog's navaigation menu*
+*A widget allows to display links to these included pages in your blog's navigation menu*
