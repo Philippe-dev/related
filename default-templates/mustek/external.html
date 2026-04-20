@@ -1,78 +1,83 @@
 <!DOCTYPE html>
 <html lang="{{tpl:BlogLanguage}}">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="ROBOTS" content="{{tpl:BlogMetaRobots}}">
 
-    <title>{{tpl:EntryTitle encode_html="1"}} - {{tpl:BlogName encode_html="1"}}</title>
-    <meta name="copyright" content="{{tpl:BlogCopyrightNotice encode_html="1"}}">
-    <meta name="author" content="{{tpl:EntryAuthorCommonName encode_html="1"}}">
-    <meta name="date" content="{{tpl:EntryDate iso8601="1"}}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="ROBOTS" content="{{tpl:BlogMetaRobots}}">
 
-    <link rel="schema.dc" href="http://purl.org/dc/elements/1.1/">
-    <meta property="dc.title" content="{{tpl:EntryTitle encode_html="1"}}">
-    <meta property="dc.creator" content="{{tpl:EntryAuthorCommonName encode_html="1"}}">
-    <meta property="dc.language" content="{{tpl:EntryLang}}">
-    <meta property="dc.publisher" content="{{tpl:BlogEditor encode_html="1"}}">
-    <meta property="dc.rights" content="{{tpl:BlogCopyrightNotice encode_html="1"}}">
-    <meta property="dc.date" content="{{tpl:EntryDate iso8601="1"}}">
-    <meta property="dc.type" content="text">
-    <meta property="dc.format" content="text/html">
+  <title>{{tpl:EntryTitle encode_html="1"}} - {{tpl:BlogName encode_html="1"}}</title>
+  <meta name="copyright" content="{{tpl:BlogCopyrightNotice encode_html=" 1"}}">
+  <meta name="author" content="{{tpl:EntryAuthorCommonName encode_html=" 1"}}">
+  <meta name="date" content="{{tpl:EntryDate iso8601=" 1"}}">
 
-    <link rel="top" href="{{tpl:BlogURL}}" title="{{tpl:lang Home}}">
-    <link rel="contents" href="{{tpl:BlogArchiveURL}}" title="{{tpl:lang Archives}}">
+  <link rel="schema.dc" href="http://purl.org/dc/elements/1.1/">
+  <meta property="dc.title" content="{{tpl:EntryTitle encode_html=" 1"}}">
+  <meta property="dc.creator" content="{{tpl:EntryAuthorCommonName encode_html=" 1"}}">
+  <meta property="dc.language" content="{{tpl:EntryLang}}">
+  <meta property="dc.publisher" content="{{tpl:BlogEditor encode_html=" 1"}}">
+  <meta property="dc.rights" content="{{tpl:BlogCopyrightNotice encode_html=" 1"}}">
+  <meta property="dc.date" content="{{tpl:EntryDate iso8601=" 1"}}">
+  <meta property="dc.type" content="text">
+  <meta property="dc.format" content="text/html">
 
-    <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="{{tpl:BlogFeedURL type="atom"}}">
+  <link rel="top" href="{{tpl:BlogURL}}" title="{{tpl:lang Home}}">
+  <link rel="contents" href="{{tpl:BlogArchiveURL}}" title="{{tpl:lang Archives}}">
 
-    {{tpl:include src="_head.html"}}
-  </head>
+  <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="{{tpl:BlogFeedURL type=" atom"}}">
 
-  <body class="dc-page">
-    <div id="page">
+  {{tpl:include src="_head.html"}}
+</head>
 
-      {{tpl:include src="_top.html"}}
+<body class="dc-page">
+  <div id="page">
 
-      <div id="wrapper">
+    {{tpl:include src="_top.html"}}
 
-	<div id="main" role="main">
-    
-    {{tpl:Breadcrumb}}
-    
-	  <div id="content">
+    <div id="wrapper">
 
-	    <div id="p{{tpl:EntryID}}" class="post" role="article">
-	      <h2 class="post-title">{{tpl:EntryTitle encode_html="1"}}</h2>
+      <div id="main" role="main">
 
-	      <!-- # --BEHAVIOR-- publicEntryBeforeContent -->
-	      {{tpl:SysBehavior behavior="publicEntryBeforeContent"}}
+        {{tpl:Breadcrumb}}
 
-	      <tpl:EntryIf extended="1">
-		<div class="post-excerpt">{{tpl:EntryExcerpt}}</div>
-	      </tpl:EntryIf>
-	      <div class="post-content">{{tpl:EntryContent}}</div>
+        <div id="content">
 
-	      <p class="page-info">{{tpl:lang Published on}} {{tpl:EntryDate}}
-		{{tpl:lang by}} {{tpl:EntryAuthorLink}}</p>
+          <div id="p{{tpl:EntryID}}" class="post" role="article">
+            <header>
+              <h2 class="post-title">{{tpl:EntryTitle encode_html="1"}}</h2>
+            </header>
 
-	      <!-- # --BEHAVIOR-- publicEntryAfterContent -->
-	      {{tpl:SysBehavior behavior="publicEntryAfterContent"}}
-	    </div>
-	  </div>
-	</div> <!-- End #main -->
+            <!-- # --BEHAVIOR-- publicEntryBeforeContent -->
+            {{tpl:SysBehavior behavior="publicEntryBeforeContent"}}
 
-	<div id="sidebar" role="complementary">
-	  <div id="blognav">
-	    {{tpl:Widgets type="nav"}}
-	  </div> <!-- End #blognav -->
+            <tpl:EntryIf extended="1">
+              <div class="post-excerpt">{{tpl:EntryExcerpt}}</div>
+            </tpl:EntryIf>
+            <div class="post-content">{{tpl:EntryContent}}</div>
 
-	  <div id="blogextra">
-	    {{tpl:Widgets type="extra"}}
-	  </div> <!-- End #blogextra -->
-	</div>
+            <p class="page-info">{{tpl:lang Published on}} {{tpl:EntryDate}}
+              {{tpl:lang by}} {{tpl:EntryAuthorLink}}
+            </p>
 
-      </div> <!-- End #wrapper -->
+            <!-- # --BEHAVIOR-- publicEntryAfterContent -->
+            {{tpl:SysBehavior behavior="publicEntryAfterContent"}}
+          </div>
+        </div>
+      </div> <!-- End #main -->
 
-      {{tpl:include src="_footer.html"}}
-    </div> <!-- End #page -->
-  </body>
+      <div id="sidebar" role="complementary">
+        <div id="blognav">
+          {{tpl:Widgets type="nav"}}
+        </div> <!-- End #blognav -->
+
+        <div id="blogextra">
+          {{tpl:Widgets type="extra"}}
+        </div> <!-- End #blogextra -->
+      </div>
+
+    </div> <!-- End #wrapper -->
+
+    {{tpl:include src="_footer.html"}}
+  </div> <!-- End #page -->
+</body>
+
 </html>
