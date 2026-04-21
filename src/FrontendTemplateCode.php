@@ -39,7 +39,7 @@ class FrontendTemplateCode
         }
 
         if (($related_file = App::frontend()->context()->posts->getRelatedFilename()) !== false) {
-            if (Dotclear\Helper\File\Files::getExtension($related_file) === 'php') {
+            if (\Dotclear\Helper\File\Files::getExtension($related_file) === 'php') {
                 echo App::frontend()->context()::global_filters(
                     '',
                     $_params_,
@@ -55,7 +55,7 @@ class FrontendTemplateCode
                 );
 
                 $previous_tpl_path = App::frontend()->template()->getPath();
-                App::frontend()->template()->setPath(Dotclear\Plugin\related\My::settings()->files_path);
+                App::frontend()->template()->setPath(\Dotclear\Plugin\related\My::settings()->files_path);
 
                 echo App::frontend()->template()->getData(basename($related_file));
 
