@@ -1,8 +1,14 @@
 # Pages incluses
 
-![Release 6.2](https://img.shields.io/badge/Release-6.2-b7d7ee)
+![Release 7.0](https://img.shields.io/badge/Release-7.0-b7d7ee)
 ![License AGPL 3.0](https://img.shields.io/badge/License-AGPL_3.0-a5cc52)
 ![Dotclear 2.36](https://img.shields.io/badge/Dotclear-2.36-137bbb)
+
+# Pré-requis
+
+Nécessite le plugin Template Helper.
+
+## Informations générales
 
 Ce plugin offre un moyen simple d'inclure des fichiers HTML ou des scripts PHP qui seront affichés sur des pages publiques du blog. Vous pouvez :
 
@@ -12,6 +18,12 @@ Ce plugin offre un moyen simple d'inclure des fichiers HTML ou des scripts PHP q
 Un widget permet d'afficher des liens vers ces pages incluses dans votre menu de navigation.
 
 # *Included pages*
+
+# *Required*
+
+*Plugin Template Helper is required.*
+
+## Informations générales
 
 *This plugin provides a simple way to serve HTML templates and PHP scripts on public blog pages. It allows to include:*
 
