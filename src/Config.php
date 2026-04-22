@@ -14,7 +14,7 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\related;
 
-use Exception;
+use Dotclear\App;
 use Dotclear\Helper\Process\TraitProcess;
 use Dotclear\Helper\Html\Form\Checkbox;
 use Dotclear\Helper\Html\Form\Div;
@@ -26,7 +26,7 @@ use Dotclear\Helper\Html\Form\Note;
 use Dotclear\Helper\Html\Form\Para;
 use Dotclear\Helper\Html\Form\Span;
 use Dotclear\Helper\Text;
-use Dotclear\App;
+use Exception;
 
 class Config
 {
@@ -59,7 +59,7 @@ class Config
 
         try {
             App::backend()->related_active = isset($_POST['related_active']);
-            $settings->put('active', App::backend()->related_active, 'boolean');
+            $settings->put('active', App::backend()->related_active, App::blogWorkspace()::NS_BOOL, 'Related plugin activated?');
 
             // change other settings only if they were in HTML page
             if ($already_active) {
@@ -75,10 +75,10 @@ class Config
                     $related_url_prefix = Text::str2URL(trim($_POST['related_url_prefix']));
                 }
 
-                $settings->put('url_prefix', $related_url_prefix);
+                $settings->put('url_prefix', $related_url_prefix, App::blogWorkspace()::NS_STRING, 'Prefix used by the URLHandler');
 
                 if (is_dir($tmp_files_path) && is_writable($tmp_files_path)) {
-                    $settings->put('files_path', $tmp_files_path);
+                    $settings->put('files_path', $tmp_files_path, App::blogWorkspace()::NS_STRING, 'Related files repository');
                 } else {
                     throw new Exception(sprintf(
                         __('Directory "%s" for related files repository needs to allow read and write access.'),
