@@ -22,11 +22,9 @@ use Dotclear\Helper\File\Path;
 
 class FrontendBehaviors
 {
-    public static function publicBreadcrumb($context, $separator)
+    public static function publicBreadcrumb(string $context): string
     {
-        if ($context == 'related') {
-            return App::frontend()->context()->posts->post_title;
-        }
+        return $context === 'related' ? App::frontend()->context()->posts->post_title : '';
     }
 
     /*
@@ -62,6 +60,7 @@ class FrontendBehaviors
 
         return '';
     }
+
     /**
      * Overload posts record extension
      *
