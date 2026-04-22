@@ -36,8 +36,8 @@ class Frontend
         App::behavior()->addBehavior('coreBlogGetPosts', FrontendBehaviors::coreBlogGetPosts(...));
         App::behavior()->addBehavior('publicBeforeDocumentV2', FrontendBehaviors::publicBeforeDocument(...));
         App::behavior()->addBehavior('templateBeforeBlockV2', FrontendBehaviors::templateBeforeBlock(...));
-        App::frontend()->template()->addValue('EntryContent', FrontendTemplate::EntryContent(...));
         App::behavior()->addBehavior('initWidgets', Widgets::initWidgets(...));
+        App::frontend()->template()->addValue('EntryContent', FrontendTemplate::EntryContent(...));
 
         return true;
     }
