@@ -79,7 +79,7 @@ class FrontendBehaviors
      * @param [type] $rs
      * @return bool|string
      */
-    public static function getRelatedFilename($rs): bool|string
+    public static function getRelatedFilename(MetaRecord $rs): bool|string
     {
         if (is_null(App::blog()->settings()->related->files_path)) {
             return false;
