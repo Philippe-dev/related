@@ -74,7 +74,7 @@ class FrontendBehaviors
     }
 
     /**
-     * getRelatedFilename function
+     * Get related file name
      *
      * @param [type] $rs
      * @return bool|string
