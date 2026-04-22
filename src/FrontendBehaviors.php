@@ -63,16 +63,14 @@ class FrontendBehaviors
         return '';
     }
     /**
-     * Prepare related filename query
+     * Overload posts record extension
      *
      * @param [type] $rs
      * @return string
      */
-    public static function coreBlogGetPosts(MetaRecord $rs): string
+    public static function coreBlogGetPosts(MetaRecord $rs): void
     {
         $rs->extend(self::class, 'getRelatedFilename');
-
-        return '';
     }
 
     /**
