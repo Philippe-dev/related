@@ -16,6 +16,9 @@ namespace Dotclear\Plugin\related;
 
 use ArrayObject;
 use Dotclear\App;
+use Dotclear\Database\MetaRecord;
+use Dotclear\Core\Frontend\Utility;
+use Dotclear\Helper\File\Path;
 
 class FrontendBehaviors
 {
@@ -26,16 +29,24 @@ class FrontendBehaviors
         }
     }
 
+    /*
+     * Adds related tpl path.
+     */
     public static function publicBeforeDocument(): void
     {
-        $tplset = App::themes()->moduleInfo(App::blog()->settings()->system->theme, 'tplset');
-        if (!empty($tplset) && is_dir(__DIR__ . '/../default-templates/' . $tplset)) {
-            App::frontend()->template()->setPath(App::frontend()->template()->getPath(), __DIR__ . '/../default-templates/' . $tplset);
+        $tplset           = App::themes()->moduleInfo(App::blog()->settings()->system->theme, 'tplset');
+        $default_template = Path::real(My::path()) . DIRECTORY_SEPARATOR . Utility::TPL_ROOT . DIRECTORY_SEPARATOR;
+
+        if (!empty($tplset) && is_dir($default_template . $tplset)) {
+            App::frontend()->template()->setPath(App::frontend()->template()->getPath(), $default_template . $tplset);
         } else {
-            App::frontend()->template()->setPath(App::frontend()->template()->getPath(), __DIR__ . '/../default-templates/' . DC_DEFAULT_TPLSET);
+            App::frontend()->template()->setPath(App::frontend()->template()->getPath(), $default_template . App::config()->defaultTplset());
         }
     }
 
+    /*
+     * @param  ArrayObject<array-key, mixed>    $attr
+     */
     public static function templateBeforeBlock(string $block, ArrayObject $attr): string
     {
         if ($block === 'Entries') {
@@ -51,13 +62,26 @@ class FrontendBehaviors
 
         return '';
     }
-
-    public static function coreBlogGetPosts($rs)
+    /**
+     * Prepare related filename query
+     *
+     * @param [type] $rs
+     * @return string
+     */
+    public static function coreBlogGetPosts(MetaRecord $rs): string
     {
         $rs->extend(self::class, 'getRelatedFilename');
+
+        return '';
     }
 
-    public static function getRelatedFilename($rs)
+    /**
+     * getRelatedFilename function
+     *
+     * @param [type] $rs
+     * @return bool|string
+     */
+    public static function getRelatedFilename($rs): bool|string
     {
         if (is_null(App::blog()->settings()->related->files_path)) {
             return false;

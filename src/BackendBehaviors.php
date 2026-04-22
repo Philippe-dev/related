@@ -14,13 +14,18 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\related;
 
+use ArrayObject;
 use Dotclear\Core\Auth;
 use Dotclear\Core\Backend\Favorites;
+use Dotclear\Helper\Stack\Filter;
 use Dotclear\App;
 
 class BackendBehaviors
 {
-    public static function dashboardFavorites(Favorites $favorites)
+    /*
+     * @param      Favorites  $favs   The favs
+     */
+    public static function dashboardFavorites(Favorites $favorites): string
     {
         $favorites->register('related', [
             'title'       => __('Included pages'),
@@ -30,21 +35,48 @@ class BackendBehaviors
             'permissions' => App::auth()->makePermissions([
                 Auth::PERMISSION_USAGE, Auth::PERMISSION_CONTENT_ADMIN,
             ]),
+            'dashboard_cb' => function (ArrayObject $icon): void {
+                /**
+                 * @var        ArrayObject<string, mixed>
+                 */
+                $params              = new ArrayObject();
+                $params['post_type'] = 'related';
+                $page_count          = App::blog()->getPosts($params, true)->f(0);
+                if ($page_count > 0) {
+                    $str_pages     = ($page_count > 1) ? __('%d included pages') : __('%d included page');
+                    $icon['title'] = sprintf($str_pages, $page_count);
+                }
+            }
         ]);
+
+        return '';
     }
 
-    public static function dashboardFavsIcon($name, $icon)
+    /**
+     * @param      ArrayObject<int, mixed>  $filters  The filters
+     */
+    public static function adminPostFilter(ArrayObject $filters): string
     {
-        if ($name === 'related') {
-            $params              = [];
-            $params['post_type'] = 'related';
-            $page_count          = App::blog()->getPosts($params, true)->f(0);
-            if ($page_count > 0) {
-                $str_pages = ($page_count > 1) ? __('%d included pages') : __('%d included page');
-                $icon[0]   = sprintf($str_pages, $page_count);
-            } else {
-                $icon[0] = __('Included pages');
-            }
+        if (App::backend()->getPageURL() === App::backend()->url()->get('admin.plugin.' . My::id())) {
+            $filters->append((new Filter('comment'))
+                ->param());
+
+            $filters->append((new Filter('trackback'))
+                ->param());
+
+            $filters->append((new Filter('cat_id'))
+                ->param());
+
+            $filters->append((new Filter('selected'))
+                ->param('post_selected')
+                ->title(__('In widget:'))
+                ->options([
+                    '-'       => '',
+                    __('yes') => '1',
+                    __('no')  => '0',
+                ]));
         }
+
+        return '';
     }
 }

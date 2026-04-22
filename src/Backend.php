@@ -14,10 +14,8 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\related;
 
-use ArrayObject;
 use Dotclear\Core\Backend\Utility;
 use Dotclear\Helper\Process\TraitProcess;
-use Dotclear\Helper\Stack\Filter;
 use Dotclear\App;
 
 class Backend
@@ -38,35 +36,9 @@ class Backend
         My::addBackendMenuItem(Utility::MENU_BLOG);
 
         App::behavior()->addBehavior('adminDashboardFavoritesV2', BackendBehaviors::dashboardFavorites(...));
-        App::behavior()->addBehavior('adminDashboardFavsIconV2', BackendBehaviors::dashboardFavsIcon(...));
-
-        App::behavior()->addBehavior('adminPostFilterV2', [self::class,  'adminPostFilter']);
-
+        App::behavior()->addBehavior('adminPostFilterV2', BackendBehaviors::adminPostFilter(...));
         App::behavior()->addBehavior('initWidgets', Widgets::initWidgets(...));
 
         return true;
-    }
-
-    public static function adminPostFilter(ArrayObject $filters)
-    {
-        if (App::backend()->getPageURL() === App::backend()->url()->get('admin.plugin.' . My::id())) {
-            $filters->append((new Filter('comment'))
-                ->param());
-
-            $filters->append((new Filter('trackback'))
-                ->param());
-
-            $filters->append((new Filter('cat_id'))
-                ->param());
-
-            $filters->append((new Filter('selected'))
-                ->param('post_selected')
-                ->title(__('In widget:'))
-                ->options([
-                    '-'       => '',
-                    __('yes') => '1',
-                    __('no')  => '0',
-                ]));
-        }
     }
 }
