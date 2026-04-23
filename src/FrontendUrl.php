@@ -25,7 +25,7 @@ use Dotclear\Helper\File\Path;
 class FrontendUrl
 {
     /**
-     * Output the Page page.
+     * Output the related page
      *
      * @param   null|string     $args   The arguments
      */
@@ -92,7 +92,7 @@ class FrontendUrl
     }
 
     /**
-     * Output the Page preview page.
+     * Output the related page preview
      *
      * @param   null|string     $args   The arguments
      */

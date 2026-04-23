@@ -14,9 +14,9 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\related;
 
-use Dotclear\Helper\Process\TraitProcess;
 use Dotclear\App;
 use Dotclear\Helper\File\Files;
+use Dotclear\Helper\Process\TraitProcess;
 
 class Install
 {
@@ -33,7 +33,10 @@ class Install
             return false;
         }
 
-        if (!My::settings()->files_path) {
+        // Init
+        $settings = My::settings();
+
+        if (!$settings->files_path) {
             $public_path = App::blog()->public_path;
             $files_path  = $public_path . '/related';
 
@@ -56,12 +59,12 @@ class Install
                 }
             }
         } else {
-            $files_path = My::settings()->files_path;
+            $files_path = $settings->files_path;
         }
 
-        My::settings()->put('active', false, 'boolean', 'Enable plugin', false, true);
-        My::settings()->put('url_prefix', 'static', 'string', 'Prefix used by the URLHandler', false, true);
-        My::settings()->put('files_path', $files_path, 'string', 'Related files repository', false, true);
+        $settings->put('active', true, App::blogWorkspace()::NS_BOOL, 'Enable plugin', false, true);
+        $settings->put('url_prefix', 'static', App::blogWorkspace()::NS_STRING, 'Prefix used by the URLHandler', false, true);
+        $settings->put('files_path', $files_path, App::blogWorkspace()::NS_STRING, 'Related files repository', false, true);
 
         return true;
     }
