@@ -23,7 +23,7 @@ Un widget permet d'afficher des liens vers ces pages incluses dans votre menu de
 
 *Plugin Template Helper is required.*
 
-## Informations générales
+## *Informations générales*
 
 *This plugin provides a simple way to serve HTML templates and PHP scripts on public blog pages. It allows to include:*
 
