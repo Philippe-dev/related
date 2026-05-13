@@ -19,7 +19,7 @@ Un widget permet d'afficher des liens vers ces pages incluses dans votre menu de
 
 # *Included pages*
 
-## *Required*
+## *Prerequisites*
 
 *Plugin Template Helper is required.*
 
