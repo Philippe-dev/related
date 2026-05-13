@@ -4,7 +4,7 @@
 ![License AGPL 3.0](https://img.shields.io/badge/License-AGPL_3.0-a5cc52)
 ![Dotclear 2.36](https://img.shields.io/badge/Dotclear-2.36-137bbb)
 
-# Pré-requis
+## Pré-requis
 
 Nécessite le plugin Template Helper.
 
@@ -19,7 +19,7 @@ Un widget permet d'afficher des liens vers ces pages incluses dans votre menu de
 
 # *Included pages*
 
-# *Required*
+## *Required*
 
 *Plugin Template Helper is required.*
 
