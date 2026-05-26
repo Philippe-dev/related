@@ -999,14 +999,17 @@ class ManagePage
                 $buttons[] = (new Hidden('id', (string) App::backend()->post_id));
             }
 
-            $format = (new Span(' &rsaquo; ' . App::formater()->getFormaterName(App::backend()->post_format)));
-            $title  = (App::backend()->post_id ? __('Edit page') : __('New page')) . $format->render();
+            $title = (App::backend()->post_id ? __('Edit post') : __('New post'));
 
             // Everything is ready, time to display this form
             echo (new Div())
                 ->class('multi-part')
                 ->title($title)
                 ->id('edit-entry')
+                ->data([
+                    'page-tabs-info'  => ' &rsaquo; ' . App::formater()->getFormaterName(App::backend()->post_format),
+                    'page-tabs-class' => 'edit-format-' . App::backend()->post_format,
+                ])
                 ->items([
                     (new Form('entry-form'))
                         ->method('post')
