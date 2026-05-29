@@ -38,7 +38,9 @@ class FrontendTemplateCode
             $content = App::frontend()->context()->posts->getContent($urls);
         }
 
-        if (($related_file = App::frontend()->context()->posts->getRelatedFilename()) !== false) {
+        $related_file = is_string($related_file = App::frontend()->context()->posts->getRelatedFilename()) ? $related_file : '';
+
+        if ($related_file !== '') {
             if (\Dotclear\Helper\File\Files::getExtension($related_file) === 'php') {
                 include $related_file;
             } else {

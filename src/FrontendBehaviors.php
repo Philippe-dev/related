@@ -76,12 +76,12 @@ class FrontendBehaviors
      * Get related file name
      *
      * @param [type] $rs
-     * @return bool|string
+     * @return string
      */
-    public static function getRelatedFilename(MetaRecord $rs): bool|string
+    public static function getRelatedFilename(MetaRecord $rs): string
     {
         if (is_null(App::blog()->settings()->related->files_path)) {
-            return false;
+            return '';
         }
 
         $meta_rs = App::meta()->getMetaRecordset($rs->post_meta, 'related_file');
@@ -92,9 +92,9 @@ class FrontendBehaviors
                 return $filename;
             }
 
-            return false;
+            return '';
         }
 
-        return false;
+        return '';
     }
 }
