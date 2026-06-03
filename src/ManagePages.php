@@ -16,7 +16,6 @@ namespace Dotclear\Plugin\related;
 
 use Dotclear\App;
 use Dotclear\Core\Backend\Filter\FilterPosts;
-use Dotclear\Helper\Process\TraitProcess;
 use Dotclear\Core\Backend\UserPref;
 use Dotclear\Helper\Html\Form\Button;
 use Dotclear\Helper\Html\Form\Div;
@@ -30,6 +29,7 @@ use Dotclear\Helper\Html\Form\Select;
 use Dotclear\Helper\Html\Form\Submit;
 use Dotclear\Helper\Html\Form\Text;
 use Dotclear\Helper\Html\Html;
+use Dotclear\Helper\Process\TraitProcess;
 use Exception;
 
 class ManagePages

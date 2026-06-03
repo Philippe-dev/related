@@ -15,8 +15,8 @@ namespace Dotclear\Plugin\related;
 
 use ArrayObject;
 use Dotclear\App;
-use Dotclear\Core\Backend\Listing\Pager;
 use Dotclear\Core\Backend\Listing\Listing;
+use Dotclear\Core\Backend\Listing\Pager;
 use Dotclear\Helper\Date;
 use Dotclear\Helper\Html\Form\Caption;
 use Dotclear\Helper\Html\Form\Checkbox;

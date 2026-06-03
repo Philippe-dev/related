@@ -14,8 +14,9 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\related;
 
-use Dotclear\Helper\Process\TraitProcess;
 use Dotclear\App;
+use Dotclear\Core\PostType;
+use Dotclear\Helper\Process\TraitProcess;
 
 class Prepend
 {
@@ -42,7 +43,8 @@ class Prepend
             unset($url_prefix, $url_pattern);
 
             // Registering new post_type
-            App::postTypes()->setPostType('related', 'plugin.php?p=related&part=page&id=%d', App::url()->getBase('related') . '/%s');
+
+            App::postTypes()->set(new PostType('related', '', App::url()->getURLFor('related', '%s'), 'Included pages', ''));
         }
 
         return true;

@@ -16,8 +16,8 @@ namespace Dotclear\Plugin\related;
 
 use ArrayObject;
 use Dotclear\App;
-use Dotclear\Database\MetaRecord;
 use Dotclear\Core\Frontend\Utility;
+use Dotclear\Database\MetaRecord;
 use Dotclear\Helper\File\Path;
 
 class FrontendBehaviors

@@ -15,7 +15,6 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\related;
 
 use Dotclear\App;
-use Dotclear\Helper\Process\TraitProcess;
 use Dotclear\Helper\Html\Form\Checkbox;
 use Dotclear\Helper\Html\Form\Div;
 use Dotclear\Helper\Html\Form\Fieldset;
@@ -25,6 +24,7 @@ use Dotclear\Helper\Html\Form\Legend;
 use Dotclear\Helper\Html\Form\Note;
 use Dotclear\Helper\Html\Form\Para;
 use Dotclear\Helper\Html\Form\Span;
+use Dotclear\Helper\Process\TraitProcess;
 use Dotclear\Helper\Text;
 use Exception;
 

@@ -14,9 +14,12 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\related;
 
-use Dotclear\Core\Backend\Utility;
-use Dotclear\Helper\Process\TraitProcess;
+use ArrayObject;
 use Dotclear\App;
+use Dotclear\Core\Backend\Favorites;
+use Dotclear\Core\Backend\Menus;
+use Dotclear\Core\PostType;
+use Dotclear\Helper\Process\TraitProcess;
 
 class Backend
 {
@@ -33,11 +36,87 @@ class Backend
             return false;
         }
 
-        My::addBackendMenuItem(Utility::MENU_BLOG);
+        $icon  = $icon_dark = '';
+        $icons = My::icons('np');
+        if ($icons !== []) {
+            $icon      = $icons[0];
+            $icon_dark = $icons[1] ?? $icons[0];
+        }
 
-        App::behavior()->addBehavior('adminDashboardFavoritesV2', BackendBehaviors::dashboardFavorites(...));
-        App::behavior()->addBehavior('adminPostFilterV2', BackendBehaviors::adminPostFilter(...));
-        App::behavior()->addBehavior('initWidgets', Widgets::initWidgets(...));
+        App::postTypes()->set(new PostType(
+            'related',
+            urldecode(My::manageUrl(['p' => 'related', 'part' => 'page', 'id' => '%d'], '&')),
+            App::url()->getURLFor('related', '%s'),
+            'Pages',
+            urldecode(My::manageUrl(['p' => 'related', 'part' => 'list'], '&')),   // Admin URL for list of pages
+            $icon,
+            $icon_dark,
+        ));
+
+        My::addBackendMenuItem(Menus::MENU_BLOG);
+
+        App::behavior()->addBehaviors([
+            'adminColumnsListsV2' => function (ArrayObject $cols): string {
+                $cols['pages'] = [My::name(), [
+                    'date'       => [true, __('Date')],
+                    'author'     => [true, __('Author')],
+                    'comments'   => [true, __('Comments')],
+                    'trackbacks' => [true, __('Trackbacks')],
+                ]];
+
+                return '';
+            },
+            'adminFiltersListsV2' => function (ArrayObject $sorts): string {
+                $sorts['pages'] = [
+                    My::name(),
+                    null,
+                    null,
+                    null,
+                    [__('pages per page'), 30],
+                ];
+
+                return '';
+            },
+            'adminDashboardFavoritesV2' => function (Favorites $favs): string {
+                $favs->register(My::id(), [
+                    'title'       => My::name(),
+                    'url'         => My::manageUrl(),
+                    'small-icon'  => My::icons(),
+                    'large-icon'  => My::icons(),
+                    'permissions' => App::auth()->makePermissions([
+                        App::auth()::PERMISSION_CONTENT_ADMIN,
+                    ]),
+                    'dashboard_cb' => function (ArrayObject $icon): void {
+                        /**                    ]),
+
+                         * @var        ArrayObject<string, mixed>
+                         */
+                        $params              = new ArrayObject();
+                        $params['post_type'] = 'related';
+                        $page_count          = App::blog()->getPosts($params, true)->cardinal();
+                        if ($page_count > 0) {
+                            $str_pages     = ($page_count > 1) ? __('%d included pages') : __('%d included page');
+                            $icon['title'] = sprintf($str_pages, $page_count);
+                        }
+                    },
+                    'active_cb' => fn (string $request, array $params): bool => isset($params['p']) && $params['p'] === My::id() && !isset($params['part']),
+                ]);
+                $favs->register('newpage', [
+                    'title'       => __('New included page'),
+                    'url'         => My::manageUrl(['part' => 'page']),
+                    'small-icon'  => My::icons('np'),
+                    'large-icon'  => My::icons('np'),
+                    'permissions' => App::auth()->makePermissions([
+                        App::auth()::PERMISSION_CONTENT_ADMIN,
+                    ]),
+                    'active_cb' => fn (string $request, array $params): bool => isset($params['p']) && $params['p'] === My::id() && isset($params['part']) && $params['part'] == 'page' && !isset($params['id']),
+                ]);
+
+                return '';
+            },
+            'adminUsersActionsHeaders' => fn (): string => My::jsLoad('_users_actions'),
+            'initWidgets'              => Widgets::initWidgets(...),
+        ]);
 
         return true;
     }
