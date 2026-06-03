@@ -47,7 +47,7 @@ class Backend
             'related',
             urldecode(My::manageUrl(['p' => 'related', 'part' => 'page', 'id' => '%d'], '&')),
             App::url()->getURLFor('related', '%s'),
-            'Pages',
+            'Included pages',
             urldecode(My::manageUrl(['p' => 'related', 'part' => 'list'], '&')),   // Admin URL for list of pages
             $icon,
             $icon_dark,
@@ -67,7 +67,7 @@ class Backend
                 return '';
             },
             'adminFiltersListsV2' => function (ArrayObject $sorts): string {
-                $sorts['pages'] = [
+                $sorts['related'] = [
                     My::name(),
                     null,
                     null,
