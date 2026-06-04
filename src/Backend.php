@@ -101,16 +101,6 @@ class Backend
                     },
                     'active_cb' => fn (string $request, array $params): bool => isset($params['p']) && $params['p'] === My::id() && !isset($params['part']),
                 ]);
-                $favs->register('newpage', [
-                    'title'       => __('New included page'),
-                    'url'         => My::manageUrl(['part' => 'page']),
-                    'small-icon'  => My::icons('np'),
-                    'large-icon'  => My::icons('np'),
-                    'permissions' => App::auth()->makePermissions([
-                        App::auth()::PERMISSION_CONTENT_ADMIN,
-                    ]),
-                    'active_cb' => fn (string $request, array $params): bool => isset($params['p']) && $params['p'] === My::id() && isset($params['part']) && $params['part'] == 'page' && !isset($params['id']),
-                ]);
 
                 return '';
             },
