@@ -17,10 +17,10 @@ namespace Dotclear\Plugin\related;
 use ArrayObject;
 use Dotclear\App;
 use Dotclear\Core\Backend\Favorites;
-use Dotclear\Helper\Stack\Filter;
 use Dotclear\Core\Backend\Menus;
 use Dotclear\Core\PostType;
 use Dotclear\Helper\Process\TraitProcess;
+use Dotclear\Helper\Stack\Filter;
 
 class Backend
 {
