@@ -100,7 +100,7 @@ class BackendList extends Listing
         App::behavior()->callBehavior('adminPagesListHeaderV2', $this->rs, $cols, true);
 
         // Cope with optional columns
-        $this->userColumns('pages', $cols, true);
+        $this->userColumns('related', $cols, true);
 
         // Prepare listing
         $lines = [];
@@ -309,7 +309,7 @@ class BackendList extends Listing
         App::behavior()->callBehavior('adminPagesListValueV2', $this->rs, $cols, true);
 
         // Cope with optional columns
-        $this->userColumns('posts', $cols);
+        $this->userColumns('related', $cols);
 
         return (new Tr())
             ->id('p' . $this->rs->post_id)
