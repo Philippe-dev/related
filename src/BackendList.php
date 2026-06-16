@@ -62,7 +62,7 @@ class BackendList extends Listing
             return;
         }
 
-        $pager   = (new Pager($page, (int) $this->rs_count, $nb_per_page, 10))->getLinks();
+        $pager   = (new Pager($page, $this->rs_count, $nb_per_page, 10))->getLinks();
         $entries = [];
         if (isset($_REQUEST['entries'])) {
             foreach ($_REQUEST['entries'] as $v) {

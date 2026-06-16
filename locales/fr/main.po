@@ -122,7 +122,7 @@ msgstr "Extensions de fichiers autorisées : *.php, *.html, *.txt, *.xml"
 
 #: src/Widgets.php:36
 msgid "Serve HTML templates and PHP scripts"
-msgstr "Inclure des templates HTML et des scripts PHP"
+msgstr "Inclure des gabarits HTML et des scripts PHP"
 
 #: src/Widgets.php:40
 msgid "Pages limit:"

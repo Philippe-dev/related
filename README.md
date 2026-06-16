@@ -1,6 +1,6 @@
 # Pages incluses
 
-![Release 7.4](https://img.shields.io/badge/Release-7.4-b7d7ee)
+![Release 7.5](https://img.shields.io/badge/Release-7.5-b7d7ee)
 ![License AGPL 3.0](https://img.shields.io/badge/License-AGPL_3.0-a5cc52)
 ![Dotclear 2.36](https://img.shields.io/badge/Dotclear-2.36-137bbb)
 
@@ -13,7 +13,7 @@ Nécessite le plugin Template Helper.
 Ce plugin offre un moyen simple d'inclure des fichiers HTML ou des scripts PHP qui seront affichés sur des pages publiques du blog. Vous pouvez :
 
 * inclure un fichier PHP. Cela peut servir par exemple à créer un formulaire.
-* inclure un fichier HTML. Celui-ci peut inclure des balises de template de Dotclear.
+* inclure un fichier HTML. Celui-ci peut inclure des balises de gabarit de Dotclear.
 
 Un widget permet d'afficher des liens vers ces pages incluses dans votre menu de navigation.
 
