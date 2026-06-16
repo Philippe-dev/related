@@ -100,8 +100,8 @@ class Backend
                         }
                     },
                     'active_cb'      => fn (string $request, array $params): bool => isset($params['p']) && $params['p'] === My::id() && !isset($params['part']),
-	                    'menu-icon'      => My::icon(),
-	                    'dashboard-icon' => My::icon(),
+                    'menu-icon'      => My::icon(),
+                    'dashboard-icon' => My::icon(),
                 ]);
 
                 return '';
