@@ -15,7 +15,7 @@ $this->registerModule(
     'Pep, Nicolas Roudaire and contributors',
     '7.5',
     [
-        'date'     => '2026-06-14T12:10:00+0100',
+        'date'     => '2026-06-16T12:10:00+0100',
         'requires' => [
             ['core', '2.36'],
             ['TemplateHelper'],
