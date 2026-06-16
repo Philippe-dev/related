@@ -83,8 +83,6 @@ class Backend
                 $favs->register(My::id(), [
                     'title'       => My::name(),
                     'url'         => My::manageUrl(),
-                    'small-icon'  => My::icons(),
-                    'large-icon'  => My::icons(),
                     'permissions' => App::auth()->makePermissions([
                         App::auth()::PERMISSION_CONTENT_ADMIN,
                     ]),
@@ -101,7 +99,9 @@ class Backend
                             $icon['title'] = sprintf($str_pages, $page_count);
                         }
                     },
-                    'active_cb' => fn (string $request, array $params): bool => isset($params['p']) && $params['p'] === My::id() && !isset($params['part']),
+                    'active_cb'      => fn (string $request, array $params): bool => isset($params['p']) && $params['p'] === My::id() && !isset($params['part']),
+	                    'menu-icon'      => My::icon(),
+	                    'dashboard-icon' => My::icon(),
                 ]);
 
                 return '';
