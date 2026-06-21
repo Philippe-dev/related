@@ -67,13 +67,15 @@ class Widgets
             return '';
         }
 
-        $limit = is_numeric($limit = $widget->get('limit')) ? abs((int) $limit) : 0;
-
         $params['post_type']     = 'related';
-        $params['limit']         = $limit;
         $params['no_content']    = true;
         $params['post_selected'] = true;
         $params['order']         = 'post_position ASC, post_title ASC';
+
+        $limit = is_numeric($limit = $widget->get('limit')) ? abs((int) $limit) : 0;
+        if ($limit > 0) {
+            $params['limit'] = $limit;
+        }
 
         $rs = App::blog()->getPosts($params);
 
