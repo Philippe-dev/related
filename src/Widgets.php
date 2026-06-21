@@ -92,6 +92,6 @@ class Widgets
 
         $res .= '</ul>';
 
-        return $widget->renderDiv($widget->content_only, 'related-pages-widget ' . $widget->class, '', $res);
+        return $widget->renderDiv((bool) $widget->content_only, 'related-pages-widget ' . $widget->class, '', $res);
     }
 }

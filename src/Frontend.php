@@ -38,6 +38,7 @@ class Frontend
         App::behavior()->addBehavior('publicBeforeDocumentV2', FrontendBehaviors::publicBeforeDocument(...));
         App::behavior()->addBehavior('templateBeforeBlockV2', FrontendBehaviors::templateBeforeBlock(...));
         App::behavior()->addBehavior('initWidgets', Widgets::initWidgets(...));
+
         App::frontend()->template()->addValue('EntryContent', FrontendTemplate::EntryContent(...));
 
         return true;
