@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @brief related, a plugin for Dotclear 2
  *
@@ -37,8 +38,9 @@ class Backend
             return false;
         }
 
-        $icon  = $icon_dark = '';
-        $icons = My::icons('np');
+        $icon      = '';
+        $icon_dark = '';
+        $icons     = My::icons('np');
         if ($icons !== []) {
             $icon      = $icons[0];
             $icon_dark = $icons[1] ?? $icons[0];

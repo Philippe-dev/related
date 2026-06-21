@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @brief related, a plugin for Dotclear 2
  *
@@ -20,6 +21,7 @@ use Dotclear\Core\Backend\Listing\Pager;
 use Dotclear\Helper\Date;
 use Dotclear\Helper\Html\Form\Caption;
 use Dotclear\Helper\Html\Form\Checkbox;
+use Dotclear\Helper\Html\Form\Component;
 use Dotclear\Helper\Html\Form\Div;
 use Dotclear\Helper\Html\Form\Img;
 use Dotclear\Helper\Html\Form\Link;
@@ -64,9 +66,11 @@ class BackendList extends Listing
 
         $pager   = (new Pager($page, $this->rs_count, $nb_per_page, 10))->getLinks();
         $entries = [];
-        if (isset($_REQUEST['entries'])) {
+        if (isset($_REQUEST['entries']) && is_array($_REQUEST['entries'])) {
             foreach ($_REQUEST['entries'] as $v) {
-                $entries[(int) $v] = true;
+                if (is_numeric($v)) {
+                    $entries[(int) $v] = true;
+                }
             }
         }
 
@@ -95,6 +99,9 @@ class BackendList extends Listing
             ]);
         }
 
+        /**
+         * @var ArrayObject<string, Component>
+         */
         $cols = new ArrayObject($cols);
         # --BEHAVIOR-- adminPagesListHeaderV2 -- MetaRecord, ArrayObject<string, mixed>, bool
         App::behavior()->callBehavior('adminPagesListHeaderV2', $this->rs, $cols, true);
@@ -107,7 +114,8 @@ class BackendList extends Listing
         $types = [];
         $count = 0;
         while ($this->rs->fetch()) {
-            $lines[] = $this->postLine($count, isset($entries[$this->rs->post_id]), $include_type);
+            $post_id = $this->rs->intField('post_id');
+            $lines[] = $this->postLine($count, isset($entries[$post_id]), $include_type);
             if (!in_array($this->rs->post_type, $types)) {
                 $types[] = $this->rs->post_type;
                 $count++;
@@ -124,7 +132,7 @@ class BackendList extends Listing
                 (new Text(null, sprintf((__('List of entries (%s)')), $this->rs_count))),
             ];
             foreach (App::status()->post()->dump(false) as $status) {
-                $nb = (int) App::blog()->getPosts(['post_status' => $status->level()], true)->f(0);
+                $nb = (int) App::blog()->getPosts(['post_status' => $status->level()], true)->cardinal();
                 if ($nb !== 0) {
                     $stats[] = (new Set())
                         ->separator(' ')
@@ -132,6 +140,7 @@ class BackendList extends Listing
                         ]);
                 }
             }
+
             $caption = (new Set())
                 ->separator('')
                 ->items($stats)
@@ -141,7 +150,7 @@ class BackendList extends Listing
             $caption = sprintf(__('List of entries (%s)'), $this->rs_count);
         }
 
-        $fmt = fn ($title, $image, $class): string => sprintf(
+        $fmt = fn (string $title, string $image, string $class): string => sprintf(
             (new Img('images/%2$s'))
                     ->alt('%1$s')
                     ->class(['mark', 'mark-%3$s'])
@@ -207,11 +216,14 @@ class BackendList extends Listing
             ->render();
 
         $post_classes = ['line'];
-        if (App::status()->post()->isRestricted((int) $this->rs->post_status)) {
+
+        $post_status = $this->rs->intField('post_status');
+        if (App::status()->post()->isRestricted($post_status)) {
             $post_classes[] = 'offline';
         }
+
         $img_status = '';
-        switch ((int) $this->rs->post_status) {
+        switch ($post_status) {
             case App::status()->post()::PUBLISHED:
                 $img_status     = sprintf($img, __('Published'), 'published.svg', 'published');
                 $post_classes[] = 'sts-online';
@@ -245,9 +257,9 @@ class BackendList extends Listing
         }
 
         $attach   = '';
-        $nb_media = $this->rs->countMedia();
+        $nb_media = is_numeric($nb_media = $this->rs->countMedia()) ? (int) $nb_media : 0;
         if ($nb_media > 0) {
-            $attach_str = $nb_media == 1 ? __('%d attachment') : __('%d attachments');
+            $attach_str = $nb_media === 1 ? __('%d attachment') : __('%d attachments');
             $attach     = sprintf($img, sprintf($attach_str, $nb_media), 'attach.svg', 'attach');
         }
 
@@ -256,19 +268,27 @@ class BackendList extends Listing
             $pos_classes[] = 'handle';
         }
 
+        $post_id    = $this->rs->intField('post_id');
+        $post_title = $this->rs->strField('post_title');
+        $post_type  = $this->rs->strField('post_type');
+        $post_dt    = $this->rs->strField('post_dt');
+        $user_id    = $this->rs->strField('user_id');
+
+        $user_tz = is_string($user_tz = App::auth()->getInfo('user_tz')) ? $user_tz : 'UTC';
+
         $cols = [
             'position' => (new Td())
                 ->class($pos_classes)->items([
-                    (new Number(['order[' . $this->rs->post_id . ']'], 1))
+                    (new Number(['order[' . $post_id . ']'], 1))
                         ->value($count + 1)
                         ->class('position')
-                        ->title(sprintf(__('position of %s'), Html::escapeHTML($this->rs->post_title))),
+                        ->title(sprintf(__('position of %s'), Html::escapeHTML($post_title))),
                 ]),
             'check' => (new Td())
                 ->class('nowrap')
                 ->items([
                     (new Checkbox(['entries[]'], $checked))
-                        ->value($this->rs->post_id)
+                        ->value($post_id)
                         ->disabled(!$this->rs->isEditable())
                         ->title(__('Select this page')),
                 ]),
@@ -276,18 +296,18 @@ class BackendList extends Listing
                 ->class('maximal')
                 ->items([
                     (new Link())
-                        ->href(App::postTypes()->get($this->rs->post_type)->adminUrl($this->rs->post_id))
-                        ->text(Html::escapeHTML($this->rs->post_title)),
+                        ->href(App::postTypes()->get($post_type)->adminUrl($post_id))
+                        ->text(Html::escapeHTML($post_title)),
                 ]),
             'date' => (new Td())
                 ->class(['nowrap', 'count'])
                 ->items([
-                    (new Timestamp(Date::dt2str(__('%Y-%m-%d %H:%M'), $this->rs->post_dt)))
-                        ->datetime(Date::iso8601((int) strtotime($this->rs->post_dt), App::auth()->getInfo('user_tz'))),
+                    (new Timestamp(Date::dt2str(__('%Y-%m-%d %H:%M'), $post_dt)))
+                        ->datetime(Date::iso8601((int) strtotime((string) $post_dt), $user_tz)),
                 ]),
             'author' => (new Td())
                 ->class('nowrap')
-                ->text($this->rs->user_id),
+                ->text($user_id),
             'status' => (new Td())
                 ->class(['nowrap', 'status'])
                 ->text($img_status . ' ' . $selected . ' ' . $protected . ' ' . $attach),
@@ -299,11 +319,14 @@ class BackendList extends Listing
                     ->class(['nowrap', 'status'])
                     ->separator(' ')
                     ->items([
-                        App::postTypes()->image($this->rs->post_type),
+                        App::postTypes()->image($post_type),
                     ]),
             ]);
         }
 
+        /**
+         * @var ArrayObject<string, Component>
+         */
         $cols = new ArrayObject($cols);
         # --BEHAVIOR-- adminPagesListValueV2 -- MetaRecord, ArrayObject<string, mixed>, bool
         App::behavior()->callBehavior('adminPagesListValueV2', $this->rs, $cols, true);
@@ -312,7 +335,7 @@ class BackendList extends Listing
         $this->userColumns('related', $cols);
 
         return (new Tr())
-            ->id('p' . $this->rs->post_id)
+            ->id('p' . $post_id)
             ->class($post_classes)
             ->items($cols);
     }

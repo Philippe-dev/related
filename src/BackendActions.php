@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @brief related, a plugin for Dotclear 2
  *
@@ -35,7 +36,7 @@ class BackendActions extends ActionsPosts
      * Constructs a new instance.
      *
      * @param      null|string              $uri            The uri
-     * @param      array<string, mixed>     $redirect_args  The redirect arguments
+     * @param      array<string, string>    $redirect_args  The redirect arguments
      */
     public function __construct(?string $uri, array $redirect_args = [])
     {
@@ -114,6 +115,7 @@ class BackendActions extends ActionsPosts
         if (!empty($this->from['reorder'])) {
             $this->from['action'] = 'reorder';
         }
+
         $this->from['post_type'] = 'related';
 
         return parent::process();

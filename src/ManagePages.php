@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @brief related, a plugin for Dotclear 2
  *
@@ -16,7 +17,6 @@ namespace Dotclear\Plugin\related;
 
 use Dotclear\App;
 use Dotclear\Core\Backend\Filter\FilterPosts;
-use Dotclear\Core\Backend\UserPref;
 use Dotclear\Helper\Html\Form\Button;
 use Dotclear\Helper\Html\Form\Div;
 use Dotclear\Helper\Html\Form\Form;
@@ -36,6 +36,38 @@ class ManagePages
 {
     use TraitProcess;
 
+    // Local static properties
+
+    /**
+     * Current page of pages list
+     */
+    private static int $page;
+
+    /**
+     * Maximum number of line in each page of pages list
+     */
+    private static int $nb_per_page;
+
+    /**
+     * Instance of backend actions
+     */
+    private static BackendActions $actions;
+
+    /**
+     * Have the current backend actions been rendered?
+     */
+    private static bool $actions_rendered;
+
+    /**
+     * Instance of pages list
+     */
+    private static BackendList $post_list;
+
+    /**
+     * Filter
+     */
+    private static FilterPosts $post_filter;
+
     public static function init(): bool
     {
         if (My::checkContext(My::MANAGE)) {
@@ -51,38 +83,31 @@ class ManagePages
             return false;
         }
 
-        $params = [
-            'post_type' => 'related',
-        ];
+        self::$page = isset($_GET['page']) && is_numeric($page = $_GET['page']) ? (int) $page : 1;
 
-        App::backend()->page        = empty($_GET['page']) ? 1 : max(1, (int) $_GET['page']);
-        App::backend()->nb_per_page = UserPref::getUserFilters('pages', 'nb');
+        $nb_per_page_filter = App::backend()->userPref()->getUserFilterNb('pages') ?? 30;
 
-        if (!empty($_GET['nb']) && (int) $_GET['nb'] > 0) {
-            App::backend()->nb_per_page = (int) $_GET['nb'];
-        }
+        self::$nb_per_page = isset($_GET['nb']) && is_numeric($nb_per_page = $_GET['nb']) ? (int) $nb_per_page : $nb_per_page_filter;
 
-        $params['limit'] = [((App::backend()->page - 1) * App::backend()->nb_per_page), App::backend()->nb_per_page];
-
+        $params['limit']      = [((self::$page - 1) * self::$nb_per_page), self::$nb_per_page];
+        $params['post_type']  = 'related';
         $params['no_content'] = true;
         $params['order']      = 'post_position ASC, post_title ASC';
-
-        App::backend()->post_list = null;
 
         try {
             $pages   = App::blog()->getPosts($params);
             $counter = App::blog()->getPosts($params, true);
 
-            App::backend()->post_list = new BackendList($pages, $counter->cardinal());
-        } catch (Exception $e) {
-            App::error()->add($e->getMessage());
+            self::$post_list = new BackendList($pages, $counter->cardinal());
+        } catch (Exception $exception) {
+            App::error()->add($exception->getMessage());
         }
 
         // Actions combo box
-        App::backend()->pages_actions_page          = new BackendActions(App::backend()->url()->get('admin.plugin'), ['p' => 'pages']);
-        App::backend()->pages_actions_page_rendered = null;
-        if (App::backend()->pages_actions_page->process()) {
-            App::backend()->pages_actions_page_rendered = true;
+        self::$actions          = new BackendActions(App::backend()->url()->get('admin.plugin'), ['p' => 'pages']);
+        self::$actions_rendered = false;
+        if (self::$actions->process()) {
+            self::$actions_rendered = true;
         }
 
         return true;
@@ -94,47 +119,46 @@ class ManagePages
             return;
         }
 
+        if (self::$actions_rendered) {
+            self::$actions->render();
+
+            return;
+        }
+
         // Filters
-        App::backend()->post_filter = new FilterPosts();
+        self::$post_filter = new FilterPosts();
 
-        $params = App::backend()->post_filter->params();
+        $params = self::$post_filter->params();
 
-        $params['limit']      = [((App::backend()->page - 1) * App::backend()->nb_per_page), App::backend()->nb_per_page];
+        $params['limit']      = [((self::$page - 1) * self::$nb_per_page), self::$nb_per_page];
         $params['post_type']  = 'related';
         $params['no_content'] = true;
         $params['order']      = 'post_position ASC, post_title ASC';
 
         App::backend()->post_list = null;
 
-        try {
-            $pages   = App::blog()->getPosts($params);
-            $counter = App::blog()->getPosts($params, true);
-
-            App::backend()->post_list = new BackendList($pages, $counter->cardinal());
-        } catch (Exception $e) {
-            App::error()->add($e->getMessage());
-        }
-
         // lexical sort
         $sortby_lex = [
             // key in sorty_combo (see above) => field in SQL request
             'post_title' => 'post_title',
-            'user_id'    => 'P.user_id', ];
+            'user_id'    => 'P.user_id',
+        ];
 
         # --BEHAVIOR-- adminPostsSortbyLexCombo -- array<int,array<string,string>>
         App::behavior()->callBehavior('adminPostsSortbyLexCombo', [&$sortby_lex]);
 
-        $params['order'] = (array_key_exists(App::backend()->post_filter->sortby, $sortby_lex) ?
-            App::db()->con()->lexFields($sortby_lex[App::backend()->post_filter->sortby]) :
-            App::backend()->post_filter->sortby) . ' ' . App::backend()->post_filter->order;
+        $sortby = is_string($sortby = self::$post_filter->sortby) ? $sortby : '';
+        $order  = is_string($order = self::$post_filter->order) ? $order : '';
 
-        App::backend()->page        = !empty($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
-        App::backend()->nb_per_page = UserPref::getUserFilters('pages', 'nb');
+        $params['order'] = (array_key_exists($sortby, $sortby_lex) ? App::db()->con()->lexFields($sortby_lex[$sortby]) : $sortby) . ' ' . $order;
 
-        if (App::backend()->pages_actions_page_rendered) {
-            App::backend()->pages_actions_page->render();
+        try {
+            $pages   = App::blog()->getPosts($params);
+            $counter = App::blog()->getPosts($params, true);
 
-            return;
+            self::$post_list = new BackendList($pages, $counter->cardinal());
+        } catch (Exception $exception) {
+            App::error()->add($exception->getMessage());
         }
 
         $head = '';
@@ -148,7 +172,7 @@ class ManagePages
             $head .
             App::backend()->page()->jsJson('pages_list', ['confirm_delete_posts' => __('Are you sure you want to delete selected pages?')]) .
             My::jsLoad('list') .
-            App::backend()->post_filter->js(App::backend()->url()->get('admin.plugin', ['p' => My::id(), 'part' => 'pages'], '&'))
+            self::$post_filter->js(App::backend()->url()->get('admin.plugin', ['p' => My::id(), 'part' => 'pages'], '&'))
         );
 
         echo
@@ -179,18 +203,18 @@ class ManagePages
         ->render();
 
         $hidden = (new Para())
-                    ->items([(new Hidden('part', 'pages')),
-                        (new Hidden('p', (string) My::id())),
-                    ])
-                ->render();
+            ->items([(new Hidden('part', 'pages')),
+                (new Hidden('p', (string) My::id())),
+            ])
+        ->render();
 
-        App::backend()->post_filter->display('admin.plugin.' . My::id(), $hidden);
+        self::$post_filter->display('admin.plugin.' . My::id(), $hidden);
 
-        if (!App::error()->flag() && App::backend()->post_list) {
+        if (!App::error()->flag() && self::$post_list->getCount() > 0) {
             // Show pages
-            App::backend()->post_list->display(
-                App::backend()->post_filter->page,
-                App::backend()->post_filter->nb,
+            self::$post_list->display(
+                self::$page,
+                self::$nb_per_page,
                 (new Form('form-entries'))
                     ->method('post')
                     ->action(App::backend()->getPageURL())
@@ -204,7 +228,7 @@ class ManagePages
                                     ->class(['col', 'right', 'form-buttons'])
                                     ->items([
                                         (new Select('action'))
-                                            ->items(App::backend()->pages_actions_page->getCombo())
+                                            ->items(self::$actions->getCombo())
                                             ->label((new Label(__('Selected pages action:'), Label::OUTSIDE_TEXT_BEFORE))->class('classic')),
                                         (new Submit('do-action', __('ok'))),
                                     ]),
@@ -226,7 +250,7 @@ class ManagePages
                             ]),
                     ])
                 ->render(),
-                App::backend()->post_filter->show()
+                self::$post_filter->show()
             );
         }
 

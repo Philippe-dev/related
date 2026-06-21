@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @brief related, a plugin for Dotclear 2
  *
@@ -50,6 +51,7 @@ class BackendDefaultActions
                 ActionsPostsDefault::doChangePostStatus(...)
             );
         }
+
         if (App::auth()->check(App::auth()->makePermissions([
             App::auth()::PERMISSION_PUBLISH,
             App::auth()::PERMISSION_CONTENT_ADMIN,
@@ -62,6 +64,7 @@ class BackendDefaultActions
                 ActionsPostsDefault::doChangePostFirstPub(...)
             );
         }
+
         if (App::auth()->check(App::auth()->makePermissions([
             App::auth()::PERMISSION_ADMIN,
         ]), App::blog()->id())) {
@@ -115,33 +118,37 @@ class BackendDefaultActions
      */
     public static function doReorderPages(BackendActions $ap, ArrayObject $post): void
     {
-        foreach ($post['order'] as $post_id => $value) {
-            if (!App::auth()->check(App::auth()->makePermissions([
-                App::auth()::PERMISSION_PUBLISH,
-                App::auth()::PERMISSION_CONTENT_ADMIN,
-            ]), App::blog()->id())) {
-                throw new Exception(__('You are not allowed to change this entry status'));
+        if (is_array($post['order'])) {
+            foreach ($post['order'] as $post_id => $value) {
+                if (!App::auth()->check(App::auth()->makePermissions([
+                    App::auth()::PERMISSION_PUBLISH,
+                    App::auth()::PERMISSION_CONTENT_ADMIN,
+                ]), App::blog()->id())) {
+                    throw new Exception(__('You are not allowed to change this entry status'));
+                }
+
+                $value = is_numeric($value) ? (int) $value : 0;
+
+                $cur                = App::blog()->openPostCursor();
+                $cur->post_position = $value - 1;
+                $cur->post_upddt    = date('Y-m-d H:i:s');
+
+                $sql = new UpdateStatement();
+                $sql
+                    ->where('blog_id = ' . $sql->quote(App::blog()->id()))
+                    ->and('post_id ' . $sql->in($post_id));
+
+                #If user can only publish, we need to check the post's owner
+                if (!App::auth()->check(App::auth()->makePermissions([
+                    App::auth()::PERMISSION_CONTENT_ADMIN,
+                ]), App::blog()->id())) {
+                    $sql->and('user_id = ' . $sql->quote((string) App::auth()->userID()));
+                }
+
+                $sql->update($cur);
+
+                App::blog()->triggerBlog();
             }
-
-            $cur                = App::blog()->openPostCursor();
-            $cur->post_position = (int) $value - 1;
-            $cur->post_upddt    = date('Y-m-d H:i:s');
-
-            $sql = new UpdateStatement();
-            $sql
-                ->where('blog_id = ' . $sql->quote(App::blog()->id()))
-                ->and('post_id ' . $sql->in($post_id));
-
-            #If user can only publish, we need to check the post's owner
-            if (!App::auth()->check(App::auth()->makePermissions([
-                App::auth()::PERMISSION_CONTENT_ADMIN,
-            ]), App::blog()->id())) {
-                $sql->and('user_id = ' . $sql->quote((string) App::auth()->userID()));
-            }
-
-            $sql->update($cur);
-
-            App::blog()->triggerBlog();
         }
 
         App::backend()->notices()->addSuccessNotice(__('Pages have been successfully reordered.'));
@@ -151,7 +158,7 @@ class BackendDefaultActions
     /**
      * Does a change post author.
      *
-     * @param   ActionsPosts                    $ap     The ActionsPosts instance
+     * @param   BackendActions                  $ap     The ActionsPosts instance
      * @param   ArrayObject<string, mixed>      $post   The parameters ($_POST)
      *
      * @throws  Exception   If no entry selected
@@ -161,11 +168,16 @@ class BackendDefaultActions
         if (isset($post['new_auth_id']) && App::auth()->check(App::auth()->makePermissions([
             App::auth()::PERMISSION_ADMIN,
         ]), App::blog()->id())) {
-            $new_user_id = $post['new_auth_id'];
-            $ids         = $ap->getIDs();
+            $new_user_id = isset($post['new_auth_id']) && is_string($new_user_id = $post['new_auth_id']) ? $new_user_id : '';
+            if ($new_user_id === '') {
+                throw new Exception(__('New user not selected'));
+            }
+
+            $ids = $ap->getIDs();
             if ($ids === []) {
                 throw new Exception(__('No entry selected'));
             }
+
             if (App::users()->getUser($new_user_id)->isEmpty()) {
                 throw new Exception(__('This user does not exist'));
             }
@@ -209,6 +221,7 @@ class BackendDefaultActions
                     $usersList[] = $rsStatic->user_id;
                 }
             }
+
             $ap->beginPage(
                 App::backend()->page()->breadcrumb(
                     [
@@ -253,7 +266,7 @@ class BackendDefaultActions
     /**
      * Does a change post language.
      *
-     * @param   ActionsPosts                    $ap     The ActionsPosts instance
+     * @param   BackendActions                  $ap     The ActionsPosts instance
      * @param   ArrayObject<string, mixed>      $post   The parameters ($_POST)
      *
      * @throws  Exception   If no entry selected
@@ -264,8 +277,13 @@ class BackendDefaultActions
         if ($ids === []) {
             throw new Exception(__('No entry selected'));
         }
+
         if (isset($post['new_lang'])) {
-            $new_lang       = $post['new_lang'];
+            $new_lang = isset($post['new_lang']) && is_string($new_lang = $post['new_lang']) ? $new_lang : '';
+            if ($new_lang === '') {
+                throw new Exception(__('New language not selected'));
+            }
+
             $cur            = App::blog()->openPostCursor();
             $cur->post_lang = $new_lang;
 
@@ -296,13 +314,15 @@ class BackendDefaultActions
                     ]
                 )
             );
+
             // Prepare languages combo
             $lang_combo = App::backend()->combos()->getLangsCombo(
                 App::blog()->getLangs([
                     'order_by' => 'nb_post',
                     'order'    => 'desc',
                 ]),
-                true    // Also show never used languages
+                true,    // Also show never used languages
+                true
             );
 
             echo (new Form('dochangepostlang'))
@@ -337,7 +357,8 @@ class BackendDefaultActions
     /**
      * Does an update selected post.
      *
-     * @param   ActionsPosts    $ap     The ActionsPosts instance
+     * @param   BackendActions                  $ap     The ActionsPosts instance
+     * @param   ArrayObject<string, mixed>      $post   The parameters ($_POST)
      *
      * @throws  Exception
      */
@@ -373,6 +394,7 @@ class BackendDefaultActions
                 )
             );
         }
+
         $ap->redirect(true);
     }
 }

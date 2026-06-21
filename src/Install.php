@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @brief related, a plugin for Dotclear 2
  *
@@ -17,6 +18,7 @@ namespace Dotclear\Plugin\related;
 use Dotclear\App;
 use Dotclear\Helper\File\Files;
 use Dotclear\Helper\Process\TraitProcess;
+use Exception;
 
 class Install
 {
@@ -37,7 +39,7 @@ class Install
         $settings = My::settings();
 
         if (!$settings->files_path) {
-            $public_path = App::blog()->public_path;
+            $public_path = App::blog()->publicPath();
             $files_path  = $public_path . '/related';
 
             if (is_dir($files_path)) {
@@ -45,17 +47,13 @@ class Install
                     throw new Exception(__('Directory for related files repository needs to allow read and write access.'));
                 }
             } else {
-                try {
-                    Files::makeDir($files_path);
-                } catch (Exception $e) {
-                    throw $e;
-                }
+                Files::makeDir($files_path);
             }
 
             if (!is_file($files_path . '/.htaccess')) {
                 try {
                     file_put_contents($files_path . '/.htaccess', "Deny from all\n");
-                } catch (Exception $e) {
+                } catch (Exception) {
                 }
             }
         } else {

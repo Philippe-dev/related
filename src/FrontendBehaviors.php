@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @brief related, a plugin for Dotclear 2
  *
@@ -24,38 +25,43 @@ class FrontendBehaviors
 {
     public static function publicBreadcrumb(string $context): string
     {
-        return $context === 'related' ? App::frontend()->context()->posts->post_title : '';
+        if ($context === 'related'
+            && App::frontend()->context()->posts instanceof MetaRecord
+        ) {
+            return App::frontend()->context()->posts->strField('post_title');
+        }
+
+        return '';
     }
 
-    /*
+    /**
      * Adds related tpl path.
      */
     public static function publicBeforeDocument(): void
     {
-        $tplset           = App::themes()->moduleInfo(App::blog()->settings()->system->theme, 'tplset');
-        $default_template = Path::real(My::path()) . DIRECTORY_SEPARATOR . Utility::TPL_ROOT . DIRECTORY_SEPARATOR;
+        $theme  = is_string($theme = App::blog()->settings()->system->theme) ? $theme : '';
+        $tplset = is_string($tplset = App::themes()->moduleInfo($theme, 'tplset')) ? $tplset : '';
 
-        if (!empty($tplset) && is_dir($default_template . $tplset)) {
+        $default_template = Path::real(My::path()) . DIRECTORY_SEPARATOR . Utility::TPL_ROOT . DIRECTORY_SEPARATOR;
+        if ($tplset !== '' && is_dir($default_template . $tplset)) {
             App::frontend()->template()->setPath(App::frontend()->template()->getPath(), $default_template . $tplset);
         } else {
             App::frontend()->template()->setPath(App::frontend()->template()->getPath(), $default_template . App::config()->defaultTplset());
         }
     }
 
-    /*
+    /**
      * @param  ArrayObject<array-key, mixed>    $attr
      */
     public static function templateBeforeBlock(string $block, ArrayObject $attr): string
     {
-        if ($block === 'Entries') {
-            if (!empty($attr['type']) && $attr['type'] == 'related') {
-                $p = "<?php \$params['post_type'] = 'related'; ?>\n";
-                if (!empty($attr['basename'])) {
-                    $p .= "<?php \$params['post_url'] = '" . $attr['basename'] . "'; ?>\n";
-                }
-
-                return $p;
+        if ($block === 'Entries' && !empty($attr['type']) && $attr['type'] == 'related') {
+            $p = "<?php \$params['post_type'] = 'related'; ?>\n";
+            if (isset($attr['basename']) && is_string($attr['basename']) && $attr['basename'] !== '') {
+                $p .= "<?php \$params['post_url'] = '" . $attr['basename'] . "'; ?>\n";
             }
+
+            return $p;
         }
 
         return '';
@@ -63,38 +69,9 @@ class FrontendBehaviors
 
     /**
      * Overload posts record extension
-     *
-     * @param [type] $rs
-     * @return string
      */
     public static function coreBlogGetPosts(MetaRecord $rs): void
     {
-        $rs->extend(self::class, 'getRelatedFilename');
-    }
-
-    /**
-     * Get related file name
-     *
-     * @param [type] $rs
-     * @return string
-     */
-    public static function getRelatedFilename(MetaRecord $rs): string
-    {
-        if (is_null(App::blog()->settings()->related->files_path)) {
-            return '';
-        }
-
-        $meta_rs = App::meta()->getMetaRecordset($rs->post_meta, 'related_file');
-
-        if (!$meta_rs->isEmpty()) {
-            $filename = App::blog()->settings()->related->files_path . '/' . $meta_rs->meta_id;
-            if (is_readable($filename)) {
-                return $filename;
-            }
-
-            return '';
-        }
-
-        return '';
+        $rs->extend(RelatedExtentions::class);
     }
 }

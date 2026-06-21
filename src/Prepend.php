@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @brief related, a plugin for Dotclear 2
  *
@@ -34,8 +35,11 @@ class Prepend
         }
 
         if (My::settings()->active) {
-            $url_prefix  = My::settings()->url_prefix;
-            $url_prefix  = (empty($url_prefix)) ? 'static' : $url_prefix;
+            $url_prefix = is_string($url_prefix = My::settings()->url_prefix) ? $url_prefix : 'static';
+            if ($url_prefix === '') {
+                $url_prefix = 'static';
+            }
+
             $url_pattern = $url_prefix . '/(.+)$';
 
             App::url()->register('related', $url_prefix, $url_pattern, FrontendUrl::related(...));

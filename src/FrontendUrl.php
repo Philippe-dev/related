@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @brief related, a plugin for Dotclear 2
  *
@@ -31,7 +32,7 @@ class FrontendUrl
      */
     public static function related(?string $args): void
     {
-        if ($args == '') {
+        if (!$args) {
             // No page was specified.
             App::url()->p404();
         } else {
@@ -39,12 +40,13 @@ class FrontendUrl
 
             $params = new ArrayObject([
                 'post_type' => 'related',
-                'post_url'  => $args, ]);
+                'post_url'  => $args,
+            ]);
 
             # --BEHAVIOR-- publicPagesBeforeGetPosts -- ArrayObject, string
             App::behavior()->callBehavior('publicPagesBeforeGetPosts', $params, $args);
 
-            App::frontend()->context()->posts = App::blog()->getPosts($params);
+            App::frontend()->context()->posts = App::blog()->getPosts($params->getArrayCopy());
 
             App::blog()->withoutPassword(true);
 
@@ -52,14 +54,14 @@ class FrontendUrl
                 # The specified page does not exist.
                 App::url()->p404();
             } else {
-                $post_id       = App::frontend()->context()->posts->post_id;
-                $post_password = App::frontend()->context()->posts->post_password;
+                $post_id       = is_numeric($post_id = App::frontend()->context()->posts->post_id) ? (int) $post_id : 0;
+                $post_password = is_string($post_password = App::frontend()->context()->posts->post_password) ? $post_password : '';
 
                 # Password protected entry
-                if ($post_password != '' && !App::frontend()->context()->preview) {
+                if ($post_password !== '' && !App::frontend()->context()->preview) {
                     # Get passwords cookie
-                    if (isset($_COOKIE['dc_passwd'])) {
-                        $pwd_cookie = json_decode((string) $_COOKIE['dc_passwd'], null, 512, JSON_THROW_ON_ERROR);
+                    if (isset($_COOKIE['dc_passwd']) && is_string($_COOKIE['dc_passwd'])) {
+                        $pwd_cookie = json_decode($_COOKIE['dc_passwd'], null, 512, JSON_THROW_ON_ERROR);
                         $pwd_cookie = $pwd_cookie === null ? [] : (array) $pwd_cookie;
                     } else {
                         $pwd_cookie = [];
@@ -68,8 +70,8 @@ class FrontendUrl
                     # Check for match
                     # Note: We must prefix post_id key with '#'' in pwd_cookie array in order to avoid integer conversion
                     # because MyArray["12345"] is treated as MyArray[12345]
-                    if ((!empty($_POST['password']) && $_POST['password'] == $post_password)
-                        || (isset($pwd_cookie['#' . $post_id]) && $pwd_cookie['#' . $post_id] == $post_password)) {
+                    if ((!empty($_POST['password']) && $_POST['password'] === $post_password)
+                        || (isset($pwd_cookie['#' . $post_id]) && $pwd_cookie['#' . $post_id] === $post_password)) {
                         $pwd_cookie['#' . $post_id] = $post_password;
                         setcookie('dc_passwd', json_encode($pwd_cookie, JSON_THROW_ON_ERROR), ['expires' => 0, 'path' => '/']);
                     } else {
@@ -79,13 +81,17 @@ class FrontendUrl
                     }
                 }
 
-                $tplset           = App::themes()->moduleInfo(App::blog()->settings()->system->theme, 'tplset');
-                $default_template = Path::real(App::plugins()->moduleInfo('related', 'root')) . DIRECTORY_SEPARATOR . Utility::TPL_ROOT . DIRECTORY_SEPARATOR;
-                if (!empty($tplset) && is_dir($default_template . $tplset)) {
+                $theme  = is_string($theme = App::blog()->settings()->system->theme) ? $theme : '';
+                $tplset = is_string($tplset = App::themes()->moduleInfo($theme, 'tplset')) ? $tplset : '';
+                $root   = is_string($root = App::plugins()->moduleInfo('related', 'root')) ? $root : '';
+
+                $default_template = Path::real($root) . DIRECTORY_SEPARATOR . Utility::TPL_ROOT . DIRECTORY_SEPARATOR;
+                if ($tplset !== '' && is_dir($default_template . $tplset)) {
                     App::frontend()->template()->setPath(App::frontend()->template()->getPath(), $default_template . $tplset);
                 } else {
                     App::frontend()->template()->setPath(App::frontend()->template()->getPath(), $default_template . App::config()->defaultTplset());
                 }
+
                 App::url()::serveDocument('external.html');
             }
         }

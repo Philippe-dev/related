@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @brief related, a plugin for Dotclear 2
  *
@@ -28,7 +29,10 @@ class FrontendTemplate
 
         return Code::getPHPTemplateValueCode(
             FrontendTemplateCode::EntryContent(...),
-            [],
+            [
+                !empty($attr['absolute_urls']),
+                !empty($attr['full']),
+            ],
             attr: $attr,
         );
     }

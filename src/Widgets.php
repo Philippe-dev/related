@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @brief related, a plugin for Dotclear 2
  *
@@ -34,20 +35,19 @@ class Widgets
             self::pagesList(...),
             null,
             __('Serve HTML templates and PHP scripts')
-        );
-
-        $widgets->related->setting('title', __('Title (optional)') . ' :', __('Included pages'));
-        $widgets->related->setting('limit', __('Pages limit:'), 10);
-        $widgets->related->setting(
+        )
+        ->setting('title', __('Title (optional)') . ' :', __('Included pages'))
+        ->setting('limit', __('Pages limit:'), 10)
+        ->setting(
             'homeonly',
             __('Display on:'),
             0,
             'combo',
             [__('All pages') => 0, __('Home page only') => 1, __('Except on home page') => 2]
-        );
-        $widgets->related->setting('content_only', __('Content only'), 0, 'check');
-        $widgets->related->setting('class', __('CSS class:'), '');
-        $widgets->related->setting('offline', __('Offline'), 0, 'check');
+        )
+        ->setting('content_only', __('Content only'), 0, 'check')
+        ->setting('class', __('CSS class:'), '')
+        ->setting('offline', __('Offline'), 0, 'check');
     }
 
     /*
@@ -55,18 +55,22 @@ class Widgets
      *
      * @param   WidgetsElement  $widgets     The widget
      */
-    public static function pagesList(WidgetsElement $widgets)
+    public static function pagesList(WidgetsElement $widget): string
     {
-        if ($widgets->offline) {
-            return;
+        if ($widget->offline) {
+            return '';
         }
 
-        if (($widgets->homeonly == 1 && App::url()->getType() != 'default') || ($widgets->homeonly == 2 && App::url()->getType() == 'default')) {
-            return;
+        if (($widget->homeonly === 1 && App::url()->getType() !== 'default')
+            || ($widget->homeonly === 2 && App::url()->getType() === 'default')
+        ) {
+            return '';
         }
+
+        $limit = is_numeric($limit = $widget->get('limit')) ? abs((int) $limit) : 0;
 
         $params['post_type']     = 'related';
-        $params['limit']         = abs((int) $widgets->get('limit'));
+        $params['limit']         = $limit;
         $params['no_content']    = true;
         $params['post_selected'] = true;
         $params['order']         = 'post_position ASC, post_title ASC';
@@ -74,17 +78,20 @@ class Widgets
         $rs = App::blog()->getPosts($params);
 
         if ($rs->isEmpty()) {
-            return;
+            return '';
         }
 
-        $res = ($widgets->title ? $widgets->renderTitle(Html::escapeHTML($widgets->title)) : '');
+        $res = $widget->title !== '' ? $widget->renderTitle(Html::escapeHTML($widget->title)) : '';
 
         $res .= '<ul>';
+
         while ($rs->fetch()) {
-            $res .= '<li><a href="' . $rs->getURL() . '">' . Html::escapeHTML($rs->post_title) . '</a></li>';
+            $url = is_string($url = $rs->getURL()) ? $url : '';
+            $res .= '<li><a href="' . $url . '">' . Html::escapeHTML($rs->strField('post_title')) . '</a></li>';
         }
+
         $res .= '</ul>';
 
-        return $widgets->renderDiv((bool) $widgets->content_only, 'related-pages-widget ' . $widgets->class, '', $res);
+        return $widget->renderDiv($widget->content_only, 'related-pages-widget ' . $widget->class, '', $res);
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @brief related, a plugin for Dotclear 2
  *
@@ -21,13 +22,13 @@ class Manage
 {
     use TraitProcess;
 
-    private static $active_part = 'pages';
+    private static string $active_part = 'pages';
 
     public static function init(): bool
     {
         if (My::checkContext(My::MANAGE)) {
-            $default_part                       = 'pages';
-            self::$active_part                  = $_REQUEST['part'] ?? $default_part;
+            self::$active_part = isset($_REQUEST['part']) && is_string($_REQUEST['part']) ? $_REQUEST['part'] : 'pages';
+
             App::backend()->related_default_tab = self::$active_part;
 
             if (self::$active_part === 'pages') {
