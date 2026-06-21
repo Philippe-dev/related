@@ -18,7 +18,7 @@ namespace Dotclear\Plugin\related;
 use Dotclear\App;
 use Dotclear\Database\MetaRecord;
 
-class RelatedExtentions
+class RelatedExtensions
 {
     /**
      * Get related file name

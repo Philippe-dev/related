@@ -72,6 +72,6 @@ class FrontendBehaviors
      */
     public static function coreBlogGetPosts(MetaRecord $rs): void
     {
-        $rs->extend(RelatedExtentions::class);
+        $rs->extend(RelatedExtensions::class);
     }
 }
