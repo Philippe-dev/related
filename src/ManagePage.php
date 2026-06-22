@@ -621,12 +621,12 @@ class ManagePage
         }
 
         if ($post_id && !App::status()->post()->isRestricted($post_status) && App::backend()->post instanceof MetaRecord) {
-            $post_url = is_string($post_url = App::backend()->post->getURL()) ? $post_url : '';
+            $post_view_url = is_string($post_view_url = App::backend()->post->getURL()) ? $post_view_url : '';
             echo (new Para())
                 ->items([
                     (new Link())
                         ->class(['onblog_link', 'outgoing'])
-                        ->href($post_url)
+                        ->href($post_view_url)
                         ->title(Html::escapeHTML(trim(Html::clean($post_title))))
                         ->text(__('Go to this page on the site') . ' ' . (new Img('images/outgoing-link.svg'))->alt('')->render()),
                 ])
