@@ -17,9 +17,7 @@ namespace Dotclear\Plugin\related;
 use ArrayObject;
 use Dotclear\App;
 use Dotclear\Core\Backend\Listing\Listing;
-use Dotclear\Core\Backend\Listing\Pager;
 use Dotclear\Helper\Date;
-use Dotclear\Helper\Html\Form\Caption;
 use Dotclear\Helper\Html\Form\Checkbox;
 use Dotclear\Helper\Html\Form\Component;
 use Dotclear\Helper\Html\Form\Div;
@@ -27,7 +25,7 @@ use Dotclear\Helper\Html\Form\Img;
 use Dotclear\Helper\Html\Form\Link;
 use Dotclear\Helper\Html\Form\Number;
 use Dotclear\Helper\Html\Form\Para;
-use Dotclear\Helper\Html\Form\Set;
+use Dotclear\Helper\Html\Form\Strong;
 use Dotclear\Helper\Html\Form\Table;
 use Dotclear\Helper\Html\Form\Tbody;
 use Dotclear\Helper\Html\Form\Td;
@@ -57,14 +55,15 @@ class BackendList extends Listing
         if ($this->rs->isEmpty()) {
             echo (new Para())
                 ->items([
-                    (new Text('strong', $filter ? __('No entry matches the filter') : __('No entry'))),
+                    (new Strong(__('No page'))),
                 ])
             ->render();
 
             return;
         }
 
-        $pager   = (new Pager($page, $this->rs_count, $nb_per_page, 10))->getLinks();
+        $pager = App::backend()->listing()->pager($page, $this->rs_count, $nb_per_page, 10)->getLinks();
+
         $entries = [];
         if (isset($_REQUEST['entries']) && is_array($_REQUEST['entries'])) {
             foreach ($_REQUEST['entries'] as $v) {
@@ -122,34 +121,6 @@ class BackendList extends Listing
             }
         }
 
-        if ($filter) {
-            $caption = sprintf(
-                __('List of %s entry matching the filter.', 'List of %s entries matching the filter.', $this->rs_count),
-                $this->rs_count
-            );
-        } elseif (count($types) === 1) {
-            $stats = [
-                (new Text(null, sprintf((__('List of entries (%s)')), $this->rs_count))),
-            ];
-            foreach (App::status()->post()->dump(false) as $status) {
-                $nb = (int) App::blog()->getPosts(['post_status' => $status->level()], true)->cardinal();
-                if ($nb !== 0) {
-                    $stats[] = (new Set())
-                        ->separator(' ')
-                        ->items([
-                        ]);
-                }
-            }
-
-            $caption = (new Set())
-                ->separator('')
-                ->items($stats)
-            ->render();
-        } else {
-            // Different types of entries
-            $caption = sprintf(__('List of entries (%s)'), $this->rs_count);
-        }
-
         $fmt = fn (string $title, string $image, string $class): string => sprintf(
             (new Img('images/%2$s'))
                     ->alt('%1$s')
@@ -165,12 +136,11 @@ class BackendList extends Listing
             ->items([
                 (new Table())
                     ->class(['maximal', 'dragable'])
-                    ->caption(new Caption($caption))
                     ->items([
                         (new Thead())
                             ->rows([
                                 (new Tr())
-                                    ->items($cols),
+                                    ->items(iterator_to_array($cols)),
                             ]),
                         (new Tbody())
                             ->id('pageslist')
