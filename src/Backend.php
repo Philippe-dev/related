@@ -21,7 +21,6 @@ use Dotclear\Core\Backend\Favorites;
 use Dotclear\Core\Backend\Menus;
 use Dotclear\Core\PostType;
 use Dotclear\Helper\Process\TraitProcess;
-use Dotclear\Helper\Stack\Filter;
 
 class Backend
 {
@@ -70,17 +69,6 @@ class Backend
 
                 return '';
             },
-            'adminFiltersListsV2' => function (ArrayObject $sorts): string {
-                $sorts['related'] = [
-                    My::name(),
-                    null,
-                    null,
-                    null,
-                    [__('pages per page'), 30],
-                ];
-
-                return '';
-            },
             'adminDashboardFavoritesV2' => function (Favorites $favs): string {
                 $favs->register(My::id(), [
                     'title'       => My::name(),
@@ -110,37 +98,8 @@ class Backend
             },
             'adminUsersActionsHeaders' => fn (): string => My::jsLoad('_users_actions'),
             'initWidgets'              => Widgets::initWidgets(...),
-            'adminPostFilterV2'        => self::adminPostFilter(...),
         ]);
 
         return true;
-    }
-
-    /**
-     * @param      ArrayObject<int, mixed>  $filters  The filters
-     */
-    public static function adminPostFilter(ArrayObject $filters): string
-    {
-        if (App::backend()->getPageURL() === App::backend()->url()->get('admin.plugin.' . My::id())) {
-            $filters->append((new Filter('comment'))
-                ->param());
-
-            $filters->append((new Filter('trackback'))
-                ->param());
-
-            $filters->append((new Filter('cat_id'))
-                ->param());
-
-            $filters->append((new Filter('selected'))
-                ->param('post_selected')
-                ->title(__('In widget:'))
-                ->options([
-                    '-'       => '',
-                    __('yes') => '1',
-                    __('no')  => '0',
-                ]));
-        }
-
-        return '';
     }
 }
