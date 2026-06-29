@@ -16,7 +16,6 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\related;
 
 use Dotclear\App;
-use Dotclear\Core\Backend\Filter\FilterPosts;
 use Dotclear\Helper\Html\Form\Button;
 use Dotclear\Helper\Html\Form\Div;
 use Dotclear\Helper\Html\Form\Form;
@@ -63,10 +62,7 @@ class ManagePages
      */
     private static BackendList $post_list;
 
-    /**
-     * Filter
-     */
-    private static FilterPosts $post_filter;
+   
 
     public static function init(): bool
     {
@@ -125,42 +121,6 @@ class ManagePages
             return;
         }
 
-        // Filters
-        self::$post_filter = new FilterPosts();
-
-        $params = self::$post_filter->params();
-
-        $params['limit']      = [((self::$page - 1) * self::$nb_per_page), self::$nb_per_page];
-        $params['post_type']  = 'related';
-        $params['no_content'] = true;
-        $params['order']      = 'post_position ASC, post_title ASC';
-
-        App::backend()->post_list = null;
-
-        // lexical sort
-        $sortby_lex = [
-            // key in sorty_combo (see above) => field in SQL request
-            'post_title' => 'post_title',
-            'user_id'    => 'P.user_id',
-        ];
-
-        # --BEHAVIOR-- adminPostsSortbyLexCombo -- array<int,array<string,string>>
-        App::behavior()->callBehavior('adminPostsSortbyLexCombo', [&$sortby_lex]);
-
-        $sortby = is_string($sortby = self::$post_filter->sortby) ? $sortby : '';
-        $order  = is_string($order = self::$post_filter->order) ? $order : '';
-
-        $params['order'] = (array_key_exists($sortby, $sortby_lex) ? App::db()->con()->lexFields($sortby_lex[$sortby]) : $sortby) . ' ' . $order;
-
-        try {
-            $pages   = App::blog()->getPosts($params);
-            $counter = App::blog()->getPosts($params, true);
-
-            self::$post_list = new BackendList($pages, $counter->cardinal());
-        } catch (Exception $exception) {
-            App::error()->add($exception->getMessage());
-        }
-
         $head = '';
         if (!App::auth()->prefs()->accessibility->nodragdrop) {
             $head = App::backend()->page()->jsLoad('js/jquery/jquery-ui.custom.js') .
@@ -171,8 +131,7 @@ class ManagePages
             __('Included pages'),
             $head .
             App::backend()->page()->jsJson('pages_list', ['confirm_delete_posts' => __('Are you sure you want to delete selected pages?')]) .
-            My::jsLoad('list') .
-            self::$post_filter->js(App::backend()->url()->get('admin.plugin', ['p' => My::id(), 'part' => 'pages'], '&'))
+            My::jsLoad('list')
         );
 
         echo
@@ -207,8 +166,6 @@ class ManagePages
                 (new Hidden('p', (string) My::id())),
             ])
         ->render();
-
-        self::$post_filter->display('admin.plugin.' . My::id(), $hidden);
 
         if (!App::error()->flag() && self::$post_list->getCount() > 0) {
             // Show pages
@@ -249,8 +206,7 @@ class ManagePages
                                 (new Button(['back'], __('Back')))->class(['go-back','reset','hidden-if-no-js']),
                             ]),
                     ])
-                ->render(),
-                self::$post_filter->show()
+                ->render()
             );
         }
 
