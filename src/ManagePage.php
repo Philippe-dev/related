@@ -351,7 +351,7 @@ class ManagePage
 
                 if (!is_null($related_upl)) {
                     try {
-                        if ($related_upl && $up_file) {
+                        if ($related_upl) {
                             Files::uploadStatus($up_file);
                             $src_file = $up_file['tmp_name'];
                             $trg_file = $files_path . '/' . $up_file['name'];
@@ -359,7 +359,7 @@ class ManagePage
                                 self::$file_name = $up_file['name'];
                             }
                         } else {
-                            self::$file_name = isset($_POST['files_dir']) && is_string($_POST['files_dir']) ? $_POST['files_dir'] : '';
+                            self::$file_name = is_string($_POST['files_dir']) ? $_POST['files_dir'] : '';
                         }
                     } catch (Exception $e) {
                         App::backend()->notices()->addErrorNotice($e->getMessage());
