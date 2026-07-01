@@ -62,8 +62,6 @@ class ManagePages
      */
     private static BackendList $post_list;
 
-   
-
     public static function init(): bool
     {
         if (My::checkContext(My::MANAGE)) {
@@ -158,12 +156,6 @@ class ManagePages
                     ->class(['button', 'add'])
                     ->href(My::manageUrl(['part' => 'page', 'type' => 'file']))
                     ->text(__('New included page')),
-            ])
-        ->render();
-
-        $hidden = (new Para())
-            ->items([(new Hidden('part', 'pages')),
-                (new Hidden('p', (string) My::id())),
             ])
         ->render();
 
