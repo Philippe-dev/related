@@ -38,7 +38,7 @@ class Install
         // Init
         $settings = My::settings();
 
-        if (!$settings->files_path) {
+        if ($settings->getStr('files_path', false) === '') {
             $public_path = App::blog()->publicPath();
             $files_path  = $public_path . '/related';
 
@@ -57,7 +57,7 @@ class Install
                 }
             }
         } else {
-            $files_path = $settings->files_path;
+            $files_path = $settings->getStr('files_path', false);
         }
 
         $settings->put('active', true, App::blogWorkspace()::NS_BOOL, 'Enable plugin', false, true);

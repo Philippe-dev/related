@@ -53,13 +53,11 @@ class Config
 
         $settings = My::settings();
 
-        App::backend()->related_active = (bool) $settings->active;
-
-        $already_active = App::backend()->related_active;
+        $already_active = $settings->getBool('active', false);
 
         try {
-            App::backend()->related_active = isset($_POST['related_active']);
-            $settings->put('active', App::backend()->related_active, App::blogWorkspace()::NS_BOOL, 'Related plugin activated?');
+            $already_active = isset($_POST['related_active']);
+            $settings->put('active', $already_active, App::blogWorkspace()::NS_BOOL, 'Related plugin activated?');
 
             // change other settings only if they were in HTML page
             if ($already_active) {
@@ -114,7 +112,7 @@ class Config
                     ->fields([
                         (new Para())
                             ->items([
-                                (new Checkbox('related_active', (bool) $settings->active))
+                                (new Checkbox('related_active', $settings->getBool('active', false)))
                                     ->value(1),
                                 (new Label(__('Enable Related plugin'), Label::OUTSIDE_LABEL_AFTER))
                                     ->for('related_active')
@@ -124,9 +122,9 @@ class Config
             ])
         ->render();
 
-        if ($settings->active) {
-            $files_path = is_string($files_path = $settings->files_path) ? trim($files_path) : '';
-            $url_prefix = is_string($url_prefix = $settings->url_prefix) ? trim($url_prefix) : '';
+        if ($settings->getBool('active')) {
+            $files_path = trim((string) $settings->getStr('files_path', false));
+            $url_prefix = trim((string) $settings->getStr('url_prefix', false));
 
             echo
             (new Div())

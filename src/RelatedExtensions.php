@@ -25,7 +25,7 @@ class RelatedExtensions
      */
     public static function getRelatedFilename(MetaRecord $rs): string
     {
-        $files_path = is_string($files_path = App::blog()->settings()->related->files_path) ? $files_path : '';
+        $files_path = App::blog()->settings()->get('related')->getStr('files_path', false);
         if ($files_path === '') {
             return '';
         }

@@ -44,7 +44,7 @@ class FrontendTemplateCode
                     include $related_file;
                 } else {
                     $previous_tpl_path = App::frontend()->template()->getPath();
-                    App::frontend()->template()->setPath(\Dotclear\Plugin\related\My::settings()->files_path);
+                    App::frontend()->template()->setPath(\Dotclear\Plugin\related\My::settings()->getStr('files_path', false));
 
                     echo App::frontend()->template()->getData(basename($related_file));
 

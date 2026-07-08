@@ -81,7 +81,7 @@ class FrontendUrl
                     }
                 }
 
-                $theme  = is_string($theme = App::blog()->settings()->system->theme) ? $theme : '';
+                $theme  = App::blog()->settings()->get('system')->getStr('theme', false);
                 $tplset = is_string($tplset = App::themes()->moduleInfo($theme, 'tplset')) ? $tplset : '';
                 $root   = is_string($root = App::plugins()->moduleInfo('related', 'root')) ? $root : '';
 

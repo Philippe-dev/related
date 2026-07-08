@@ -34,12 +34,8 @@ class Prepend
             return false;
         }
 
-        if (My::settings()->active) {
-            $url_prefix = is_string($url_prefix = My::settings()->url_prefix) ? $url_prefix : 'static';
-            if ($url_prefix === '') {
-                $url_prefix = 'static';
-            }
-
+        if (My::settings()->getBool('active')) {
+            $url_prefix  = My::settings()->getStr('url_prefix', false) ?: 'static';
             $url_pattern = $url_prefix . '/(.+)$';
 
             App::url()->register('related', $url_prefix, $url_pattern, FrontendUrl::related(...));
