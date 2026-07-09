@@ -218,7 +218,7 @@ class BackendDefaultActions
                 $rsStatic = $rsStatic->toExtStatic();
                 $rsStatic->lexicalSort('user_id');
                 while ($rsStatic->fetch()) {
-                    $usersList[] = $rsStatic->user_id;
+                    $usersList[] = $rsStatic->strField('user_id');
                 }
             }
 

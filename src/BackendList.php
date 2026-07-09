@@ -115,8 +115,8 @@ class BackendList extends Listing
         while ($this->rs->fetch()) {
             $post_id = $this->rs->intField('post_id');
             $lines[] = $this->postLine($count, isset($entries[$post_id]), $include_type);
-            if (!in_array($this->rs->post_type, $types)) {
-                $types[] = $this->rs->post_type;
+            if (!in_array($this->rs->strField('post_type'), $types)) {
+                $types[] = $this->rs->strField('post_type');
                 $count++;
             }
         }
@@ -217,12 +217,12 @@ class BackendList extends Listing
         }
 
         $protected = '';
-        if ($this->rs->post_password) {
+        if ($this->rs->strField('post_password') !== '') {
             $protected = sprintf($img, __('Protected'), 'locker.svg', 'locked');
         }
 
         $selected = '';
-        if ($this->rs->post_selected) {
+        if ($this->rs->boolField('post_selected')) {
             $selected = sprintf($img, __('In widget'), 'selected.svg', 'selected');
         }
 

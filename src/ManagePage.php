@@ -168,22 +168,22 @@ class ManagePage
             } else {
                 App::backend()->post_id            = (int) App::backend()->post->intField('post_id');
                 App::backend()->post_dt            = date('Y-m-d H:i', (int) strtotime((string) App::backend()->post->strField('post_dt')));
-                App::backend()->post_format        = App::backend()->post->post_format;
-                App::backend()->post_password      = App::backend()->post->post_password;
-                App::backend()->post_url           = App::backend()->post->post_url;
-                App::backend()->post_lang          = App::backend()->post->post_lang;
-                App::backend()->post_title         = App::backend()->post->post_title;
-                App::backend()->post_excerpt       = App::backend()->post->post_excerpt;
-                App::backend()->post_excerpt_xhtml = App::backend()->post->post_excerpt_xhtml;
-                App::backend()->post_content       = App::backend()->post->post_content;
-                App::backend()->post_content_xhtml = App::backend()->post->post_content_xhtml;
-                App::backend()->post_notes         = App::backend()->post->post_notes;
-                App::backend()->post_status        = App::backend()->post->post_status;
-                App::backend()->post_position      = (int) App::backend()->post->intField('post_position');
-                App::backend()->post_open_comment  = (bool) App::backend()->post->post_open_comment;
-                App::backend()->post_open_tb       = (bool) App::backend()->post->post_open_tb;
-                App::backend()->post_selected      = (bool) App::backend()->post->post_selected;
-                App::backend()->post_meta          = App::backend()->post->post_meta;
+                App::backend()->post_format        = App::backend()->post->strField('post_format', true);
+                App::backend()->post_password      = App::backend()->post->strField('post_password', true);
+                App::backend()->post_url           = App::backend()->post->strField('post_url', true);
+                App::backend()->post_lang          = App::backend()->post->strField('post_lang', true);
+                App::backend()->post_title         = App::backend()->post->strField('post_title', true);
+                App::backend()->post_excerpt       = App::backend()->post->strField('post_excerpt', true);
+                App::backend()->post_excerpt_xhtml = App::backend()->post->strField('post_excerpt_xhtml', true);
+                App::backend()->post_content       = App::backend()->post->strField('post_content', true);
+                App::backend()->post_content_xhtml = App::backend()->post->strField('post_content_xhtml', true);
+                App::backend()->post_notes         = App::backend()->post->strField('post_notes', true);
+                App::backend()->post_status        = App::backend()->post->intField('post_status', true);
+                App::backend()->post_position      = App::backend()->post->intField('post_position', true);
+                App::backend()->post_open_comment  = App::backend()->post->boolField('post_open_comment', true);
+                App::backend()->post_open_tb       = App::backend()->post->boolField('post_open_tb', true);
+                App::backend()->post_selected      = App::backend()->post->boolField('post_selected', true);
+                App::backend()->post_meta          = App::backend()->post->strField('post_meta', true);
 
                 self::$page_title = __('Edit page');
 

@@ -54,8 +54,8 @@ class FrontendUrl
                 # The specified page does not exist.
                 App::url()->p404();
             } else {
-                $post_id       = is_numeric($post_id = App::frontend()->context()->posts->post_id) ? (int) $post_id : 0;
-                $post_password = is_string($post_password = App::frontend()->context()->posts->post_password) ? $post_password : '';
+                $post_id       = App::frontend()->context()->posts->intField('post_id');
+                $post_password = App::frontend()->context()->posts->strField('post_password');
 
                 # Password protected entry
                 if ($post_password !== '' && !App::frontend()->context()->preview) {
