@@ -621,7 +621,7 @@ class ManagePage
         }
 
         if ($post_id && !App::status()->post()->isRestricted($post_status) && App::backend()->post instanceof MetaRecord) {
-            $post_view_url = is_string($post_view_url = App::backend()->post->getURL()) ? $post_view_url : '';
+            $post_view_url = App::backend()->post->getURL();
             echo (new Para())
                 ->items([
                     (new Link())

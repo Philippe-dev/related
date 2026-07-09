@@ -88,7 +88,7 @@ class Widgets
         $res .= '<ul>';
 
         while ($rs->fetch()) {
-            $url = is_string($url = $rs->getURL()) ? $url : '';
+            $url = $rs->getURL();
             $res .= '<li><a href="' . $url . '">' . Html::escapeHTML($rs->strField('post_title')) . '</a></li>';
         }
 

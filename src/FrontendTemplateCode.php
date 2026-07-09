@@ -31,14 +31,14 @@ class FrontendTemplateCode
         string $_tag_
     ): void {
         if (App::frontend()->context()->posts instanceof \Dotclear\Database\MetaRecord) {
-            $content = is_string($content = App::frontend()->context()->posts->getContent($_absolute_urls_)) ? $content : '';
+            $content = App::frontend()->context()->posts->getContent($_absolute_urls_);
             if ($_full_) {
-                $excerpt = is_string($excerpt = App::frontend()->context()->posts->getExcerpt($_absolute_urls_)) ? $excerpt : '';
+                $excerpt = App::frontend()->context()->posts->getExcerpt($_absolute_urls_);
                 $content = $excerpt . $content;
                 unset($excerpt);
             }
 
-            $related_file = is_string($related_file = App::frontend()->context()->posts->getRelatedFilename()) ? $related_file : '';
+            $related_file = App::frontend()->context()->posts->getRelatedFilename();
             if ($related_file !== '') {
                 if (\Dotclear\Helper\File\Files::getExtension($related_file) === 'php') {
                     include $related_file;
