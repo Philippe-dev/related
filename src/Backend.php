@@ -85,7 +85,7 @@ class Backend
                         $params['post_type'] = 'related';
                         $page_count          = App::blog()->getPosts($params, true)->cardinal();
                         if ($page_count > 0) {
-                            $str_pages     = ($page_count > 1) ? __('%d included pages') : __('%d included page');
+                            $str_pages = __('One included page', '%d included pages', $page_count);
                             $icon['title'] = sprintf($str_pages, $page_count);
                         }
                     },
