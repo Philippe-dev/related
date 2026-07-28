@@ -61,8 +61,8 @@ class Widgets
             return '';
         }
 
-        if (($widget->homeonly === 1 && !App::url()->isType('default'))
-            || ($widget->homeonly === 2 && App::url()->isType('default'))
+        if (($widget->homeonly == 1 && !App::url()->isType('default'))
+            || ($widget->homeonly == 2 && App::url()->isType('default'))
         ) {
             return '';
         }
