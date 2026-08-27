@@ -112,7 +112,7 @@ class BackendDefaultActions
      * Does reorder pages.
      *
      * @param   BackendActions                  $ap     Admin actions instance
-     * @param   ArrayObject<string, mixed>      $post   The post
+     * @param   ArrayObject<string,mixed>       $post   The post
      *
      * @throws  Exception   If user permission not granted
      */
@@ -124,14 +124,14 @@ class BackendDefaultActions
                     App::auth()::PERMISSION_PUBLISH,
                     App::auth()::PERMISSION_CONTENT_ADMIN,
                 ]), App::blog()->id())) {
-                    throw new Exception(__('You are not allowed to change this entry status'));
+                    throw new Exception(__('You are not allowed to change this entry status.'));
                 }
 
                 $value = is_numeric($value) ? (int) $value : 0;
 
-                $cur                = App::blog()->openPostCursor();
-                $cur->post_position = $value - 1;
-                $cur->post_upddt    = date('Y-m-d H:i:s');
+                $cur = App::blog()->openPostCursor();
+                $cur->setIntField('post_position', $value - 1);
+                $cur->setStrField('post_upddt', date('Y-m-d H:i:s'));
 
                 $sql = new UpdateStatement();
                 $sql
@@ -151,7 +151,7 @@ class BackendDefaultActions
             }
         }
 
-        App::backend()->notices()->addSuccessNotice(__('Pages have been successfully reordered.'));
+        App::backend()->notices()->addSuccessNotice(__('Selected pages have been successfully reordered.'));
         $ap->redirect(false);
     }
 
