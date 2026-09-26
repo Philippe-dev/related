@@ -53,8 +53,6 @@ class Config
 
         $settings = My::settings();
 
-        $already_active = $settings->getBool('active', false);
-
         try {
             $already_active = isset($_POST['related_active']);
             $settings->put('active', $already_active, App::blogWorkspace()::NS_BOOL, 'Related plugin activated?');
