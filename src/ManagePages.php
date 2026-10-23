@@ -83,10 +83,12 @@ class ManagePages
 
         self::$nb_per_page = isset($_GET['nb']) && is_numeric($nb_per_page = $_GET['nb']) ? (int) $nb_per_page : $nb_per_page_filter;
 
-        $params['limit']      = [((self::$page - 1) * self::$nb_per_page), self::$nb_per_page];
-        $params['post_type']  = 'related';
-        $params['no_content'] = true;
-        $params['order']      = 'post_position ASC, post_title ASC';
+        $params = [
+            'limit'      => [((self::$page - 1) * self::$nb_per_page), self::$nb_per_page],
+            'post_type'  => 'related',
+            'no_content' => true,
+            'order'      => 'post_position ASC, post_title ASC',
+        ];
 
         try {
             $pages   = App::blog()->getPosts($params);
