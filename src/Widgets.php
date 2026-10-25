@@ -57,13 +57,11 @@ class Widgets
      */
     public static function pagesList(WidgetsElement $widget): string
     {
-        if ($widget->offline) {
+        if ($widget->isOffline()) {
             return '';
         }
 
-        if (($widget->homeonly == 1 && !App::url()->isType('default'))
-            || ($widget->homeonly == 2 && App::url()->isType('default'))
-        ) {
+        if (!$widget->checkHomeOnly(App::url()->getType())) {
             return '';
         }
 
@@ -85,7 +83,7 @@ class Widgets
             return '';
         }
 
-        $res = $widget->title !== '' ? $widget->renderTitle(Html::escapeHTML($widget->title)) : '';
+        $res = $widget->getTitle() !== '' ? $widget->renderTitle(Html::escapeHTML($widget->getTitle())) : '';
 
         $res .= '<ul>';
 
@@ -96,6 +94,6 @@ class Widgets
 
         $res .= '</ul>';
 
-        return $widget->renderDiv((bool) $widget->content_only, 'related-pages-widget ' . $widget->class, '', $res);
+        return $widget->renderDiv($widget->getContentOnly(), 'related-pages-widget ' . $widget->getClass(), '', $res);
     }
 }

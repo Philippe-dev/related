@@ -21,7 +21,7 @@ if (isset($this) && is_object($this) && method_exists($this, 'registerModule') &
         [
             'date'     => '2026-08-29T12:16:00+0100',
             'requires' => [
-                ['core', '2.39'],
+                ['core', '2.40'],
                 ['TemplateHelper'],
             ],
             'permissions' => 'My',
