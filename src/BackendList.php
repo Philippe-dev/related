@@ -230,7 +230,7 @@ class BackendList extends Listing
         $nb_media = $this->rs->countMedia();
         if ($nb_media > 0) {
             $attach_str = __('One attachment', '%d attachments', $nb_media);
-            $attach = sprintf($img, sprintf($attach_str, $nb_media), 'attach.svg', 'attach');
+            $attach     = sprintf($img, sprintf($attach_str, $nb_media), 'attach.svg', 'attach');
         }
 
         $pos_classes = ['nowrap', 'minimal'];
@@ -273,7 +273,7 @@ class BackendList extends Listing
                 ->class(['nowrap', 'count'])
                 ->items([
                     (new Timestamp(Date::dt2str(__('%Y-%m-%d %H:%M'), $post_dt)))
-                        ->datetime(Date::iso8601((int) strtotime((string) $post_dt), $user_tz)),
+                        ->datetime(Date::iso8601((int) strtotime($post_dt), $user_tz)),
                 ]),
             'author' => (new Td())
                 ->class('nowrap')

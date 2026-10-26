@@ -166,8 +166,8 @@ class ManagePage
                 App::backend()->notices()->addErrorNotice(__('This page does not exist.'));
                 My::redirect();
             } else {
-                App::backend()->post_id            = (int) App::backend()->post->intField('post_id');
-                App::backend()->post_dt            = date('Y-m-d H:i', (int) strtotime((string) App::backend()->post->strField('post_dt')));
+                App::backend()->post_id            = App::backend()->post->intField('post_id');
+                App::backend()->post_dt            = date('Y-m-d H:i', (int) strtotime(App::backend()->post->strField('post_dt')));
                 App::backend()->post_format        = App::backend()->post->strField('post_format', true);
                 App::backend()->post_password      = App::backend()->post->strField('post_password', true);
                 App::backend()->post_url           = App::backend()->post->strField('post_url', true);
@@ -311,7 +311,7 @@ class ManagePage
             try {
                 # --BEHAVIOR-- adminBeforePageDelete -- int
                 App::behavior()->callBehavior('adminBeforePageDelete', App::backend()->post_id);
-                App::blog()->delPost((int) App::backend()->post_id);
+                App::blog()->delPost(App::backend()->post_id);
                 My::redirect();
             } catch (Exception $e) {
                 App::error()->add($e->getMessage());
@@ -322,7 +322,7 @@ class ManagePage
             // Create or update page
 
             if (self::$page_is_file) {
-                $files_path = trim((string) My::settings()->getStr('files_path', false));
+                $files_path = trim(My::settings()->getStr('files_path', false));
 
                 $dir          = @dir($files_path);
                 $allowed_exts = ['php', 'html', 'xml', 'txt'];

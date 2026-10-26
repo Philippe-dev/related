@@ -121,8 +121,8 @@ class Config
         ->render();
 
         if ($settings->getBool('active')) {
-            $files_path = trim((string) $settings->getStr('files_path', false));
-            $url_prefix = trim((string) $settings->getStr('url_prefix', false));
+            $files_path = trim($settings->getStr('files_path', false));
+            $url_prefix = trim($settings->getStr('url_prefix', false));
 
             echo
             (new Div())
