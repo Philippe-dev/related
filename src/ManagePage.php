@@ -332,7 +332,7 @@ class ManagePage
                 if ($dir) {
                     while (($entry = $dir->read()) !== false) {
                         $entry_path = $dir->path . '/' . $entry;
-                        if (in_array(Files::getExtension($entry), $allowed_exts) && is_file($entry_path) && is_readable($entry_path)) {
+                        if (in_array(Files::getExtension($entry), $allowed_exts, true) && is_file($entry_path) && is_readable($entry_path)) {
                             self::$files_list[$entry] = $entry;
                         }
                     }
@@ -345,7 +345,7 @@ class ManagePage
                 $related_upl = null;
                 if (!empty($up_file['name'])) {
                     $related_upl = true;
-                } elseif (!empty($_POST['files_dir']) && in_array($_POST['files_dir'], self::$files_list)) {
+                } elseif (!empty($_POST['files_dir']) && in_array($_POST['files_dir'], self::$files_list, true)) {
                     $related_upl = false;
                 }
 
@@ -359,7 +359,7 @@ class ManagePage
                                 self::$file_name = $up_file['name'];
                             }
                         } else {
-                            self::$file_name = is_string($_POST['files_dir']) ? $_POST['files_dir'] : '';
+                            self::$file_name = $_POST['files_dir'];
                         }
                     } catch (Exception $e) {
                         App::backend()->notices()->addErrorNotice($e->getMessage());
@@ -856,7 +856,7 @@ class ManagePage
                 if ($dir) {
                     while (($entry = $dir->read()) !== false) {
                         $entry_path = $dir->path . '/' . $entry;
-                        if (in_array(Files::getExtension($entry), $allowed_exts) && is_file($entry_path) && is_readable($entry_path)) {
+                        if (in_array(Files::getExtension($entry), $allowed_exts, true) && is_file($entry_path) && is_readable($entry_path)) {
                             self::$files_list[$entry] = $entry;
                         }
                     }

@@ -115,7 +115,7 @@ class BackendList extends Listing
         while ($this->rs->fetch()) {
             $post_id = $this->rs->intField('post_id');
             $lines[] = $this->postLine($count, isset($entries[$post_id]), $include_type);
-            if (!in_array($this->rs->strField('post_type'), $types)) {
+            if (!in_array($this->rs->strField('post_type'), $types, true)) {
                 $types[] = $this->rs->strField('post_type');
                 $count++;
             }
