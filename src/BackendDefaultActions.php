@@ -371,7 +371,7 @@ class BackendDefaultActions
 
         $action = $ap->getAction();
         App::blog()->updPostsSelected($ids, $action === 'selected');
-        if ($action == 'selected') {
+        if ($action === 'selected') {
             App::backend()->notices()->addSuccessNotice(
                 sprintf(
                     __(

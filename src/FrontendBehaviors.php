@@ -55,7 +55,7 @@ class FrontendBehaviors
      */
     public static function templateBeforeBlock(string $block, ArrayObject $attr): string
     {
-        if ($block === 'Entries' && !empty($attr['type']) && $attr['type'] == 'related') {
+        if ($block === 'Entries' && !empty($attr['type']) && $attr['type'] === 'related') {
             $p = "<?php \$params['post_type'] = 'related'; ?>\n";
             if (isset($attr['basename']) && is_string($attr['basename']) && $attr['basename'] !== '') {
                 $p .= "<?php \$params['post_url'] = '" . $attr['basename'] . "'; ?>\n";
