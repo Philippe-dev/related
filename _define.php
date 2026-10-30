@@ -17,9 +17,9 @@ if (isset($this) && is_object($this) && method_exists($this, 'registerModule') &
         'Included pages',
         'Serve HTML templates & PHP scripts',
         'Pep, Nicolas Roudaire and contributors',
-        '7.12',
+        '7.13',
         [
-            'date'     => '2026-08-29T12:16:00+0100',
+            'date'     => '2026-10-30T12:16:00+0100',
             'requires' => [
                 ['core', '2.40'],
                 ['TemplateHelper'],

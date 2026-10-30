@@ -1,8 +1,8 @@
 # Pages incluses
 
-![Release 7.12](https://img.shields.io/badge/Release-7.12-b7d7ee)
+![Release 7.13](https://img.shields.io/badge/Release-7.13-b7d7ee)
 ![License AGPL 3.0](https://img.shields.io/badge/License-AGPL_3.0-a5cc52)
-![Dotclear 2.39](https://img.shields.io/badge/Dotclear-2.39-137bbb)
+![Dotclear 2.40](https://img.shields.io/badge/Dotclear-2.40-137bbb)
 
 ## Pré-requis
 
