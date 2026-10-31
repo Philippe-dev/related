@@ -1006,7 +1006,7 @@ class ManagePage
                     App::url()->getURLFor(
                         'relatedpreview',
                         App::auth()->userID() . '/' .
-                        Http::browserUID(App::config()->masterKey() . App::auth()->userID() . App::auth()->cryptLegacy((string) App::auth()->userID())) .
+                        Http::browserUID(App::config()->masterKey() . App::auth()->userID() . App::auth()->cryptLegacy(App::auth()->userID())) .
                         '/' . $post_url
                     );
 
