@@ -50,7 +50,7 @@ class BackendList extends Listing
      * @param   string  $enclose_block  The enclose block
      * @param   bool    $include_type   Include the post type column
      */
-    public function display(int $page, int $nb_per_page, string $enclose_block = '', bool $filter = false, bool $include_type = false): void
+    public function display(int $page, int $nb_per_page, string $enclose_block = '', bool $_filter = false, bool $include_type = false): void
     {
         if ($this->rs->isEmpty()) {
             echo (new Para())
@@ -234,7 +234,7 @@ class BackendList extends Listing
         }
 
         $pos_classes = ['nowrap', 'minimal'];
-        if (!App::auth()->prefs()->get('accessibility')->getBool('nodragdrop')) {
+        if (!App::auth()->prefs()->get('accessibility')->getBool('nodragdrop', false)) {
             $pos_classes[] = 'handle';
         }
 

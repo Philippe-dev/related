@@ -120,7 +120,7 @@ class Config
             ])
         ->render();
 
-        if ($settings->getBool('active')) {
+        if ($settings->getBool('active', false)) {
             $files_path = trim($settings->getStr('files_path', false));
             $url_prefix = trim($settings->getStr('url_prefix', false));
 

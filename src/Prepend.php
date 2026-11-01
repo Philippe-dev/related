@@ -34,7 +34,7 @@ class Prepend
             return false;
         }
 
-        if (My::settings()->getBool('active')) {
+        if (My::settings()->getBool('active', false)) {
             $url_prefix  = My::settings()->getStr('url_prefix', false) ?: 'static';
             $url_pattern = $url_prefix . '/(.+)$';
 

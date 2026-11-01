@@ -251,7 +251,7 @@ class ManagePage
             } else {
                 try {
                     App::backend()->post_dt = strtotime(is_string($_POST['post_dt']) ? $_POST['post_dt'] : '');
-                    if (!App::backend()->post_dt || App::backend()->post_dt === -1) {
+                    if (!(bool) App::backend()->post_dt || App::backend()->post_dt === -1) {
                         App::backend()->bad_dt = true;
 
                         throw new Exception(__('Invalid publication date'));
@@ -329,7 +329,7 @@ class ManagePage
 
                 self::$files_list = ['-' => ''];
 
-                if ($dir) {
+                if ($dir !== false) {
                     while (($entry = $dir->read()) !== false) {
                         $entry_path = $dir->path . '/' . $entry;
                         if (in_array(Files::getExtension($entry), $allowed_exts, true) && is_file($entry_path) && is_readable($entry_path)) {
@@ -373,7 +373,7 @@ class ManagePage
             App::blog()->settings()->get('system')->set('post_url_format', '{t}');
 
             $cur->post_type          = 'related';
-            $cur->post_dt            = App::backend()->post_dt ? date('Y-m-d H:i:00', (int) strtotime((string) App::backend()->post_dt)) : '';
+            $cur->post_dt            = is_string(App::backend()->post_dt) ? date('Y-m-d H:i:00', (int) strtotime(App::backend()->post_dt)) : '';
             $cur->post_format        = App::backend()->post_format;
             $cur->post_password      = App::backend()->post_password;
             $cur->post_lang          = App::backend()->post_lang;
@@ -396,14 +396,15 @@ class ManagePage
             // Back to UTC in order to keep UTC datetime for creadt/upddt
             Date::setTZ('UTC');
 
-            if (App::backend()->post_id) {
+            $post_id = is_numeric($post_id = App::backend()->post_id) ? $post_id : 0;
+            if ($post_id !== 0) {
                 // Update post
 
                 try {
                     # --BEHAVIOR-- adminBeforePageUpdate -- Cursor, int
-                    App::behavior()->callBehavior('adminBeforePageUpdate', $cur, App::backend()->post_id);
+                    App::behavior()->callBehavior('adminBeforePageUpdate', $cur, $post_id);
 
-                    App::blog()->updPost(App::backend()->post_id, $cur);
+                    App::blog()->updPost($post_id, $cur);
 
                     App::db()->con()->begin();
                     if (self::$page_is_file) {
@@ -420,7 +421,7 @@ class ManagePage
                     App::db()->con()->commit();
 
                     # --BEHAVIOR-- adminAfterPageUpdate -- Cursor, int
-                    App::behavior()->callBehavior('adminAfterPageUpdate', $cur, App::backend()->post_id);
+                    App::behavior()->callBehavior('adminAfterPageUpdate', $cur, $post_id);
 
                     App::backend()->notices()->addSuccessNotice(__('Page has been updated.'));
 
@@ -473,7 +474,7 @@ class ManagePage
         }
 
         App::backend()->default_tab = 'edit-entry';
-        if (!App::backend()->can_edit_page) {
+        if (!(bool) App::backend()->can_edit_page) {
             App::backend()->default_tab = '';
         }
 
@@ -528,7 +529,7 @@ class ManagePage
         }
 
         $admin_post_behavior = '';
-        if (App::backend()->post_editor && is_array(App::backend()->post_editor)) {
+        if (is_array(App::backend()->post_editor)) {
             $p_edit = '';
             $c_edit = '';
 
@@ -620,7 +621,7 @@ class ManagePage
             App::backend()->notices()->message(__('Don\'t forget to validate your HTML conversion by saving your post.'));
         }
 
-        if ($post_id && !App::status()->post()->isRestricted($post_status) && App::backend()->post instanceof MetaRecord) {
+        if ($post_id !== 0 && !App::status()->post()->isRestricted($post_status) && App::backend()->post instanceof MetaRecord) {
             $post_view_url = App::backend()->post->getURL();
             echo (new Para())
                 ->items([
@@ -653,7 +654,7 @@ class ManagePage
         }
 
         # Exit if we cannot view page
-        if (!App::backend()->can_view_page) {
+        if (!(bool) App::backend()->can_view_page) {
             App::backend()->page()->closeModule();
 
             return;
@@ -661,7 +662,7 @@ class ManagePage
 
         /* Post form if we can edit page
         -------------------------------------------------------- */
-        if (App::backend()->can_edit_page) {
+        if ((bool) App::backend()->can_edit_page) {
             $sidebar_items = new ArrayObject([
                 'status-box' => [
                     'title' => __('Status'),
@@ -670,7 +671,7 @@ class ManagePage
                             (new Select('post_status'))
                                 ->items(App::status()->post()->combo())
                                 ->default($post_status)
-                                ->disabled(!App::backend()->can_publish)
+                                ->disabled(!(bool) App::backend()->can_publish)
                                 ->label(new Label(__('Page status') . ' ' . $img_status, Label::OUTSIDE_LABEL_BEFORE)),
                         ])
                         ->render(),
@@ -678,7 +679,7 @@ class ManagePage
                         'post_dt' => (new Para())->items([
                             (new Datetime('post_dt'))
                                 ->value(Html::escapeHTML(Date::str('%Y-%m-%dT%H:%M', strtotime($post_dt) === 0 ? null : strtotime($post_dt))))
-                                ->class(App::backend()->bad_dt ? 'invalid' : [])
+                                ->class((bool) App::backend()->bad_dt ? 'invalid' : [])
                                 ->label(new Label(__('Publication date and hour'), Label::OUTSIDE_LABEL_BEFORE)),
                         ])
                         ->render(),
@@ -853,7 +854,7 @@ class ManagePage
 
                 self::$files_list = ['-' => ''];
 
-                if ($dir) {
+                if ($dir !== false) {
                     while (($entry = $dir->read()) !== false) {
                         $entry_path = $dir->path . '/' . $entry;
                         if (in_array(Files::getExtension($entry), $allowed_exts, true) && is_file($entry_path) && is_readable($entry_path)) {
@@ -1011,9 +1012,9 @@ class ManagePage
                     );
 
                 // Prevent browser caching on preview
-                $preview_url .= (parse_url($preview_url, PHP_URL_QUERY) ? '&' : '?') . 'rand=' . md5((string) random_int(0, mt_getrandmax()));
+                $preview_url .= (parse_url($preview_url, PHP_URL_QUERY) !== null ? '&' : '?') . 'rand=' . md5((string) random_int(0, mt_getrandmax()));
 
-                $blank_preview = App::auth()->prefs()->get('interface')->getBool('blank_preview');
+                $blank_preview = App::auth()->prefs()->get('interface')->getBool('blank_preview', false);
 
                 $preview_class  = $blank_preview ? '' : 'modal';
                 $preview_target = $blank_preview ? 'target="_blank"' : '';
@@ -1033,7 +1034,7 @@ class ManagePage
                     ->text(__('Cancel') . ' (c)');
             }
 
-            if (App::backend()->can_delete) {
+            if ((bool) App::backend()->can_delete) {
                 $buttons[] = (new Submit(['delete'], __('Delete')))
                     ->class('delete');
             }
